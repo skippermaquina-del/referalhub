@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000/ -o /dev/null -w \"Home: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/offers -o /dev/null -w \"Offers: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/disclosure -o /dev/null -w \"Disclosure: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/offers?category=banking -o /dev/null -w \"Offers filtered: %{http_code}\\\\n\")",
+      "Bash(curl -sI http://localhost:3000/go/chime)",
+      "Skill(artifact-design)",
+      "Artifact",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(vercel --version)"
+    ]
+  }
+}
