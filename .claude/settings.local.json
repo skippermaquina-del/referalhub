@@ -15,7 +15,14 @@
       "Bash(git add *)",
       "Bash(gh --version)",
       "Bash(gh auth *)",
-      "Bash(vercel --version)"
+      "Bash(vercel --version)",
+      "Bash(git commit -m ' *)",
+      "Bash(npx *)",
+      "Bash(curl -s -o /dev/null -w \"Home: %{http_code}\\\\n\" https://referalhub.vercel.app/)",
+      "Bash(curl -s -o /dev/null -w \"Offers: %{http_code}\\\\n\" https://referalhub.vercel.app/offers)",
+      "Bash(curl -s -o /dev/null -w \"Disclosure: %{http_code}\\\\n\" https://referalhub.vercel.app/disclosure)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
