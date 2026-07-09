@@ -168,6 +168,18 @@ export const offers: Offer[] = [
     requirements: "Claim and complete a qualifying offer.",
     referralUrl: "REPLACE_ME",
   },
+  {
+    slug: "capital-one-shopping",
+    name: "Capital One Shopping",
+    category: "apps",
+    emoji: "🛍️",
+    bonus: "Automatic price comparison + rewards",
+    description:
+      "Free browser extension that auto-applies coupon codes and compares prices while you shop online.",
+    requirements: "Install the extension and shop as usual — rewards accrue automatically.",
+    referralUrl: "https://capitaloneshopping.com/r/475bc1e4-9488-40a0-96ba-1cb6bde381b1?e=ezi2m",
+    featured: true,
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
