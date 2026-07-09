@@ -76,6 +76,18 @@ export const offers: Offer[] = [
     referralUrl: "REPLACE_ME",
   },
   {
+    slug: "mercury",
+    name: "Mercury",
+    category: "banking",
+    emoji: "🏢",
+    bonus: "Referral reward (check current terms)",
+    description:
+      "Business banking for startups and LLCs — no monthly fees, free ACH/wire transfers, and virtual cards.",
+    requirements: "For business accounts (LLC/corp) only, not personal banking.",
+    referralUrl: "https://mercury.com/r/gftc-llc",
+    featured: true,
+  },
+  {
     slug: "chase-sapphire-preferred",
     name: "Chase Sapphire Preferred",
     category: "cards",
