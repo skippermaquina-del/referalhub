@@ -236,6 +236,17 @@ export const offers: Offer[] = [
     referralUrl: "REPLACE_ME",
   },
   {
+    slug: "airtable",
+    name: "Airtable",
+    category: "apps",
+    emoji: "🗂️",
+    bonus: "Account credit",
+    description:
+      "Flexible spreadsheet-database hybrid for organizing projects, content calendars, and workflows.",
+    requirements: "Sign up and start a workspace to trigger the referral credit.",
+    referralUrl: "https://airtable.com/invite/r/7TlWU5Vu",
+  },
+  {
     slug: "capital-one-shopping",
     name: "Capital One Shopping",
     category: "apps",
