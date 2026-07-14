@@ -258,6 +258,16 @@ export const offers: Offer[] = [
     referralUrl: "https://capitaloneshopping.com/r/475bc1e4-9488-40a0-96ba-1cb6bde381b1?e=ezi2m",
     featured: true,
   },
+  {
+    slug: "replit",
+    name: "Replit",
+    category: "apps",
+    emoji: "💻",
+    bonus: "Account credit",
+    description: "Cloud-based coding platform for building, deploying, and hosting apps from the browser.",
+    requirements: "Sign up using the referral link to trigger the credit.",
+    referralUrl: "https://replit.com/refer/skippermaquina",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {

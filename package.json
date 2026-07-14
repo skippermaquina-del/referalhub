@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:posts": "node --env-file=.env.local scripts/generate-posts.ts"
   },
   "dependencies": {
     "next": "16.2.10",
