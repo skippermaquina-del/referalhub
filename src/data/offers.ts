@@ -223,7 +223,7 @@ export const offers: Offer[] = [
     bonus: "$10-$20",
     description: "Cash back on groceries and everyday shopping, in-store and online.",
     requirements: "Redeem a qualifying offer after signing up.",
-    referralUrl: "REPLACE_ME",
+    referralUrl: "https://ibotta.onelink.me/iUfE/8cc13c64?friend_code=vlwpwqn",
   },
   {
     slug: "upside",
@@ -267,6 +267,26 @@ export const offers: Offer[] = [
     description: "Cloud-based coding platform for building, deploying, and hosting apps from the browser.",
     requirements: "Sign up using the referral link to trigger the credit.",
     referralUrl: "https://replit.com/refer/skippermaquina",
+  },
+  {
+    slug: "marathon-arco-rewards",
+    name: "Marathon ARCO Rewards",
+    category: "apps",
+    emoji: "⛽",
+    bonus: "Rewards on gas purchases",
+    description: "Loyalty rewards program for Marathon and ARCO gas stations — earn points on fuel purchases.",
+    requirements: "Sign up with the referral link or code DLU0KAV5 to start earning.",
+    referralUrl: "https://app.marathonarcorewards.com/r/DLU0KAV5",
+  },
+  {
+    slug: "claude",
+    name: "Claude",
+    category: "apps",
+    emoji: "🤖",
+    bonus: "Account credit",
+    description: "AI assistant from Anthropic for writing, coding, research, and more.",
+    requirements: "Sign up using the referral link to trigger the credit.",
+    referralUrl: "https://claude.ai/referral/u655IQCi2w?s=ios",
   },
 ];
 
