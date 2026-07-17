@@ -338,6 +338,17 @@ export const offers: Offer[] = [
     requirements: "Complete a qualifying in-app action after signing up with the referral link.",
     referralUrl: "REPLACE_ME",
   },
+  {
+    slug: "uber-driver",
+    name: "Uber (Drive/Deliver)",
+    category: "apps",
+    emoji: "🚗",
+    bonus: "$1,750",
+    description: "Earn money driving passengers or delivering with Uber, on your own schedule.",
+    requirements: "Complete your first 153 passenger trips within 30 days of signing up.",
+    referralUrl: "https://www.uber.com/signup/drive/deliver/?invite_code=zuxek45",
+    featured: true,
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
