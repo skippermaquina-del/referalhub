@@ -24,6 +24,27 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
+        <div className="flex flex-col gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div>
+            <h2 className="text-lg font-semibold">GFTC Academy</h2>
+            <p className="mt-1 max-w-xl text-sm text-neutral-500">
+              Aprende sobre tokenización de activos: cómo el dinero, los bienes raíces y otros
+              activos se convierten en tokens digitales que se pueden transferir y fraccionar en
+              blockchain.
+            </p>
+          </div>
+          <a
+            href="https://gftc.finance/academy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block shrink-0 rounded-md bg-emerald-500 px-6 py-3 text-center font-medium text-white hover:bg-emerald-600"
+          >
+            Ir a GFTC Academy
+          </a>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-16">
         <h2 className="text-xl font-semibold">Featured offers</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((offer) => (
