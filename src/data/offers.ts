@@ -349,6 +349,16 @@ export const offers: Offer[] = [
     referralUrl: "https://www.uber.com/signup/drive/deliver/?invite_code=zuxek45",
     featured: true,
   },
+  {
+    slug: "capital-one-savor-student",
+    name: "Capital One Savor Student",
+    category: "cards",
+    emoji: "🍽️",
+    bonus: "No sign-up bonus",
+    description: "3% cash back on dining, entertainment, popular streaming services, and grocery stores, with no annual fee — built for students building credit.",
+    requirements: "Apply and get approved for the card using the link below.",
+    referralUrl: "https://www.capitalone.com/credit-cards/savor-student/?external_id=EASEAPP_CMA_CSXM_EASE_CSX_3399550_PDP_1013_CTA00_20240709",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
