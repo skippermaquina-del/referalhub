@@ -14,6 +14,14 @@ export function Header() {
           <Link href="/disclosure" className="hover:text-emerald-500">
             Disclosure
           </Link>
+          <a
+            href="https://join.slack.com/t/skipper-me72160/shared_invite/zt-42nitluao-GSnP5ixwuzlrLdSW2d23MQ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-emerald-500"
+          >
+            Join our Slack
+          </a>
         </nav>
       </div>
     </header>
