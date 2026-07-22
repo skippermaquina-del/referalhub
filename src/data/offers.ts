@@ -202,7 +202,7 @@ export const offers: Offer[] = [
     bonus: "Free stocks",
     description: "Commission-free trading platform with free stock promos for new accounts.",
     requirements: "Open an account and make a qualifying deposit.",
-    referralUrl: "REPLACE_ME",
+    referralUrl: "https://www.webull.com/s/3KhusCJYE5cJEnp6dX",
   },
   {
     slug: "rakuten",
