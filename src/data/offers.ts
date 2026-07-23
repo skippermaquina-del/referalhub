@@ -306,7 +306,7 @@ export const offers: Offer[] = [
     bonus: "Referral reward (uncapped)",
     description: "Online bank with checking, savings, and no monthly fees. One of the few referral programs with no limit on referrals.",
     requirements: "Referred friend must open and fund an account.",
-    referralUrl: "REPLACE_ME",
+    referralUrl: "https://share.axosbank.com/andriy!2ff1a65fbc!a",
   },
   {
     slug: "acorns",
