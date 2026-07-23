@@ -346,7 +346,7 @@ export const offers: Offer[] = [
     bonus: "$1,750",
     description: "Earn money driving passengers or delivering with Uber, on your own schedule.",
     requirements: "Complete your first 153 passenger trips within 30 days of signing up.",
-    referralUrl: "https://www.uber.com/signup/drive/deliver/?invite_code=zuxek45",
+    referralUrl: "https://www.uber.com/signup/drive/deliver/?invite_code=dj7bng",
     featured: true,
   },
   {
