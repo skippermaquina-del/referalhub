@@ -389,6 +389,16 @@ export const offers: Offer[] = [
     requirements: "Download the app and complete the sign-up steps using code \"andsams17\". Valid until 08/03/2026.",
     referralUrl: "https://lemon.go.link/9TbV8",
   },
+  {
+    slug: "bitso",
+    name: "Bitso",
+    category: "investing",
+    emoji: "🪙",
+    bonus: "Weekly yield rewards",
+    description: "Invest in crypto or 5,000+ global stocks from one app, with weekly yield on your holdings.",
+    requirements: "Download the app and make your first purchase within 7 days using code \"erwlx\".",
+    referralUrl: "https://bitso.go.link/23Q19?adj_label=erwlx",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
