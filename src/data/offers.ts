@@ -369,6 +369,16 @@ export const offers: Offer[] = [
     requirements: "Sign up and complete a qualifying survey or offer.",
     referralUrl: "https://app.kashkick.com?ref=JtyYN7hmfGda",
   },
+  {
+    slug: "libertex",
+    name: "Libertex",
+    category: "investing",
+    emoji: "📈",
+    bonus: "Free stock up to $200",
+    description: "Online trading platform for stocks, crypto, and CFDs — gift a free share to new users you refer.",
+    requirements: "Sign up and complete your first investment of any amount using promo code \"GIFT\".",
+    referralUrl: "https://app.libertex.org/goto/raf2?rid=51158472",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
