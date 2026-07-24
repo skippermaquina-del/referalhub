@@ -233,7 +233,7 @@ export const offers: Offer[] = [
     bonus: "Extra cents/gallon",
     description: "Cash back on gas, groceries, and restaurants near you.",
     requirements: "Claim and complete a qualifying offer.",
-    referralUrl: "REPLACE_ME",
+    referralUrl: "https://upside.app.link/4PPUKQ",
   },
   {
     slug: "airtable",
