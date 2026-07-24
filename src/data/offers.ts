@@ -379,6 +379,16 @@ export const offers: Offer[] = [
     requirements: "Sign up and complete your first investment of any amount using promo code \"GIFT\".",
     referralUrl: "https://app.libertex.org/goto/raf2?rid=51158472",
   },
+  {
+    slug: "lemon",
+    name: "Lemon",
+    category: "investing",
+    emoji: "🍋",
+    bonus: "Free Bitcoin",
+    description: "Crypto app where you can buy, sell, and earn Bitcoin — both you and the person you refer earn a reward.",
+    requirements: "Download the app and complete the sign-up steps using code \"andsams17\". Valid until 08/03/2026.",
+    referralUrl: "https://lemon.go.link/9TbV8",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
