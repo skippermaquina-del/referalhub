@@ -326,7 +326,7 @@ export const offers: Offer[] = [
     bonus: "Points redeemable for gift cards",
     description: "Cash back by scanning grocery and shopping receipts — one of the easiest apps to get started with.",
     requirements: "Scan your first receipt after signing up with the referral link.",
-    referralUrl: "REPLACE_ME",
+    referralUrl: "https://referral.fetch.com/vvv3/referralqr?code=8FFMQG",
   },
   {
     slug: "shopkick",
