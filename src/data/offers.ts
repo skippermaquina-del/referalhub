@@ -359,6 +359,16 @@ export const offers: Offer[] = [
     requirements: "Apply and get approved for the card using the link below.",
     referralUrl: "https://www.capitalone.com/credit-cards/savor-student/?external_id=EASEAPP_CMA_CSXM_EASE_CSX_3399550_PDP_1013_CTA00_20240709",
   },
+  {
+    slug: "kashkick",
+    name: "KashKick",
+    category: "apps",
+    emoji: "💰",
+    bonus: "Cash payouts",
+    description: "Get-paid-to site — earn cash for surveys, offers, and playing games, paid via PayPal.",
+    requirements: "Sign up and complete a qualifying survey or offer.",
+    referralUrl: "https://app.kashkick.com?ref=JtyYN7hmfGda",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
