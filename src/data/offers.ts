@@ -399,6 +399,16 @@ export const offers: Offer[] = [
     requirements: "Download the app and make your first purchase within 7 days using code \"erwlx\".",
     referralUrl: "https://bitso.go.link/23Q19?adj_label=erwlx",
   },
+  {
+    slug: "instacart",
+    name: "Instacart",
+    category: "apps",
+    emoji: "🛒",
+    bonus: "$10 off",
+    description: "Grocery delivery app — get your order from local stores brought to your door.",
+    requirements: "Use code \"G909CC6\" at checkout or sign up through the link. Terms apply.",
+    referralUrl: "https://inst.cr/t/3b9de9410",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
