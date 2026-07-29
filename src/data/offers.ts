@@ -409,6 +409,16 @@ export const offers: Offer[] = [
     requirements: "Use code \"G909CC6\" at checkout or sign up through the link. Terms apply.",
     referralUrl: "https://inst.cr/t/3b9de9410",
   },
+  {
+    slug: "paypal",
+    name: "PayPal",
+    category: "apps",
+    emoji: "💸",
+    bonus: "$10 per friend (up to $100/year)",
+    description: "Widely-used payment app for sending, receiving, and shopping online.",
+    requirements: "Sign up with the link, link a bank or card, verify your phone, and complete a $5+ transaction within 30 days.",
+    referralUrl: "https://py.pl/8KhV5fuHiz",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
