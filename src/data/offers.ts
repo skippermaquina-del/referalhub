@@ -419,6 +419,16 @@ export const offers: Offer[] = [
     requirements: "Sign up with the link, link a bank or card, verify your phone, and complete a $5+ transaction within 30 days.",
     referralUrl: "https://py.pl/8KhV5fuHiz",
   },
+  {
+    slug: "claude",
+    name: "Claude AI",
+    category: "apps",
+    emoji: "🤖",
+    bonus: "7 days of Claude Pro free",
+    description: "AI assistant by Anthropic for writing, coding, research, and more.",
+    requirements: "Sign up with the link to get a free 7-day Claude Pro trial. Offer valid while guest passes last.",
+    referralUrl: "https://claude.ai/referral/u655IQCi2w?s=ios",
+  },
 ];
 
 export function getOffersByCategory(category: Category): Offer[] {
