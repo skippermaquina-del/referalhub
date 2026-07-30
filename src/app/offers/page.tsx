@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { categories, offers, type Category } from "@/data/offers";
-import { OfferCard } from "@/components/OfferCard";
+import { OffersExplorer } from "@/components/OffersExplorer";
 
 export default async function OffersPage({
   searchParams,
@@ -49,11 +49,7 @@ export default async function OffersPage({
         ))}
       </div>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {visibleOffers.map((offer) => (
-          <OfferCard key={offer.slug} offer={offer} />
-        ))}
-      </div>
+      <OffersExplorer offers={visibleOffers} />
     </main>
   );
 }
