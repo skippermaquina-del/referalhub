@@ -2,7 +2,8 @@
 // (Instagram Business Login — graph.instagram.com, not graph.facebook.com).
 //
 // Usage:
-//   IG_ACCESS_TOKEN=xxx IG_USER_ID=xxx node scripts/publish-instagram.cjs <image_url> "<caption>"
+//   Add IG_ACCESS_TOKEN and IG_USER_ID to .env.local, then:
+//   npm run publish:instagram -- <image_url> "<caption>"
 //
 // IG_ACCESS_TOKEN: an "IGAA..." token generated via the app's
 //   Customize use case > API setup with Instagram login > Generate access tokens.

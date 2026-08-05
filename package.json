@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "generate:posts": "node --env-file=.env.local scripts/generate-posts.ts",
-    "generate:shorts": "node --env-file=.env.local scripts/generate-shorts.ts"
+    "generate:shorts": "node --env-file=.env.local scripts/generate-shorts.ts",
+    "publish:instagram": "node --env-file=.env.local scripts/publish-instagram.cjs"
   },
   "dependencies": {
     "next": "16.2.10",
@@ -20,6 +21,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vercel/og": "^0.11.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
