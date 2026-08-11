@@ -64,6 +64,42 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
+        <div className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-lg sm:p-8 dark:border-neutral-800 dark:bg-neutral-950">
+          <span className="inline-block rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium uppercase tracking-wide text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400">
+            Destacado
+          </span>
+          <div className="relative mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <Image
+                src="/elevenlabs-logo.png"
+                alt="ElevenLabs"
+                width={248}
+                height={32}
+                unoptimized
+                priority
+                className="shrink-0 dark:invert"
+              />
+              <div>
+                <h2 className="text-xl font-bold">Voz con IA</h2>
+                <p className="mt-2 max-w-xl text-sm text-neutral-500">
+                  Genera voces realistas a partir de texto, cloná tu propia voz y traducí videos
+                  automáticamente a otros idiomas manteniendo tu tono.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://try.elevenlabs.io/ReferralHub"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-block shrink-0 rounded-md bg-black px-6 py-3 text-center font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+            >
+              Probar ElevenLabs
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-16">
         <h2 className="text-xl font-semibold">Featured offers</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((offer) => (
