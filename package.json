@@ -9,6 +9,8 @@
     "lint": "eslint",
     "generate:posts": "node --env-file=.env.local scripts/generate-posts.ts",
     "generate:shorts": "node --env-file=.env.local scripts/generate-shorts.ts",
+    "generate:carousel": "node --env-file=.env.local scripts/generate-carousel.ts",
+    "generate:elevenlabs-promo": "node --env-file=.env.local scripts/generate-elevenlabs-promo.ts",
     "publish:instagram": "node --env-file=.env.local scripts/publish-instagram.cjs"
   },
   "dependencies": {
