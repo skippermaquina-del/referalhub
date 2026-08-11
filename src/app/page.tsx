@@ -31,7 +31,7 @@ export default function Home() {
             className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[#c9a84c]/20 blur-3xl"
           />
           <span className="inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/70">
-            Sponsored
+            Destacado
           </span>
           <div className="relative mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -54,7 +54,7 @@ export default function Home() {
             <a
               href="https://gftc.finance/academy/"
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer"
               className="inline-block shrink-0 rounded-md bg-[#c9a84c] px-6 py-3 text-center font-semibold text-[#0f1923] hover:bg-[#dab868]"
             >
               Empezar curso gratis
