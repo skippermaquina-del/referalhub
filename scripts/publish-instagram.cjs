@@ -50,7 +50,9 @@ async function createMediaContainer(base, token, body) {
 // processing the images server-side right after creation. Publishing too
 // early fails with "Media ID is not available" (code 9007 / 2207027), so
 // poll status_code until Instagram reports FINISHED before publishing.
-async function waitUntilReady(base, token, containerId, { attempts = 10, delayMs = 5000 } = {}) {
+async function waitUntilReady(base, token, containerId, { attempts = 24, delayMs = 5000 } = {}) {
+  // Carousels with several images have taken over a minute to process in
+  // practice, so this allows up to 2 minutes (24 x 5s) before giving up.
   for (let i = 0; i < attempts; i++) {
     const res = await fetch(`${base}/${containerId}?fields=status_code&access_token=${token}`);
     const data = await res.json();
@@ -61,7 +63,10 @@ async function waitUntilReady(base, token, containerId, { attempts = 10, delayMs
     }
     await new Promise((r) => setTimeout(r, delayMs));
   }
-  console.error(`Container ${containerId} never became ready after ${attempts} checks.`);
+  console.error(
+    `Container ${containerId} still not ready after ${attempts} checks (~${(attempts * delayMs) / 1000}s). ` +
+      `It may just need more time — check status manually and retry media_publish with this creation_id.`
+  );
   process.exit(1);
 }
 
