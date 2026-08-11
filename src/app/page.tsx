@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { categories, getFeaturedOffers } from "@/data/offers";
 import { OfferCard } from "@/components/OfferCard";
@@ -24,23 +25,41 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
-        <div className="flex flex-col gap-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div>
-            <h2 className="text-lg font-semibold">GFTC Academy</h2>
-            <p className="mt-1 max-w-xl text-sm text-neutral-500">
-              Aprende sobre tokenización de activos: cómo el dinero, los bienes raíces y otros
-              activos se convierten en tokens digitales que se pueden transferir y fraccionar en
-              blockchain.
-            </p>
+        <div className="relative overflow-hidden rounded-2xl bg-[#0f1923] p-6 text-white shadow-lg sm:p-8">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[#c9a84c]/20 blur-3xl"
+          />
+          <span className="inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white/70">
+            Sponsored
+          </span>
+          <div className="relative mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <Image
+                src="/gftc-logo.png"
+                alt="GFTC Finance"
+                width={92}
+                height={85}
+                className="shrink-0"
+              />
+              <div>
+                <h2 className="text-xl font-bold text-[#c9a84c]">GFTC Academy</h2>
+                <p className="mt-2 max-w-xl text-sm text-white/70">
+                  Curso gratis de tokenización de activos: cómo el dinero, los bienes raíces y
+                  otros activos se convierten en tokens digitales que se pueden transferir y
+                  fraccionar en blockchain.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://gftc.finance/academy/"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-block shrink-0 rounded-md bg-[#c9a84c] px-6 py-3 text-center font-semibold text-[#0f1923] hover:bg-[#dab868]"
+            >
+              Empezar curso gratis
+            </a>
           </div>
-          <a
-            href="https://gftc.finance/academy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block shrink-0 rounded-md bg-emerald-500 px-6 py-3 text-center font-medium text-white hover:bg-emerald-600"
-          >
-            Ir a GFTC Academy
-          </a>
         </div>
       </section>
 
