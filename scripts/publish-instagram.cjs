@@ -46,7 +46,28 @@ async function createMediaContainer(base, token, body) {
   return data.id;
 }
 
+// Carousel containers (and sometimes single-image ones) can still be
+// processing the images server-side right after creation. Publishing too
+// early fails with "Media ID is not available" (code 9007 / 2207027), so
+// poll status_code until Instagram reports FINISHED before publishing.
+async function waitUntilReady(base, token, containerId, { attempts = 10, delayMs = 5000 } = {}) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(`${base}/${containerId}?fields=status_code&access_token=${token}`);
+    const data = await res.json();
+    if (data.status_code === 'FINISHED') return;
+    if (data.status_code === 'ERROR' || data.status_code === 'EXPIRED') {
+      console.error('Container failed to process:', data);
+      process.exit(1);
+    }
+    await new Promise((r) => setTimeout(r, delayMs));
+  }
+  console.error(`Container ${containerId} never became ready after ${attempts} checks.`);
+  process.exit(1);
+}
+
 async function publishContainer(base, token, creationId) {
+  await waitUntilReady(base, token, creationId);
+
   const res = await fetch(`${base}/media_publish`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
