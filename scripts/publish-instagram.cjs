@@ -46,44 +46,39 @@ async function createMediaContainer(base, token, body) {
   return data.id;
 }
 
-// Carousel containers (and sometimes single-image ones) can still be
-// processing the images server-side right after creation. Publishing too
-// early fails with "Media ID is not available" (code 9007 / 2207027), so
-// poll status_code until Instagram reports FINISHED before publishing.
-async function waitUntilReady(base, token, containerId, { attempts = 24, delayMs = 5000 } = {}) {
-  // Carousels with several images have taken over a minute to process in
-  // practice, so this allows up to 2 minutes (24 x 5s) before giving up.
+// Containers can still be processing the image(s) server-side right after
+// creation. Publishing too early fails with "Media ID is not available"
+// (code 9007 / error_subcode 2207027). Polling status_code before publishing
+// turned out to be unreliable — for plain single-image containers the status
+// endpoint returns "Tried accessing nonexisting field" the whole time even
+// though the container is fine, so instead just retry media_publish itself
+// on that specific transient error, which is the pattern Meta's own docs
+// recommend.
+function isNotReadyError(data) {
+  return data?.error?.code === 9007 || data?.error?.error_subcode === 2207027;
+}
+
+async function publishContainer(base, token, creationId, { attempts = 10, delayMs = 8000 } = {}) {
   for (let i = 0; i < attempts; i++) {
-    const res = await fetch(`${base}/${containerId}?fields=status_code&access_token=${token}`);
+    const res = await fetch(`${base}/media_publish`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ creation_id: creationId, access_token: token }),
+    });
     const data = await res.json();
-    if (data.status_code === 'FINISHED') return;
-    if (data.status_code === 'ERROR' || data.status_code === 'EXPIRED') {
-      console.error('Container failed to process:', data);
+    if (res.ok && data.id) return data.id;
+    if (!isNotReadyError(data)) {
+      console.error('Failed to publish media:', data);
       process.exit(1);
     }
+    console.log(`Not ready yet (attempt ${i + 1}/${attempts}), waiting ${delayMs / 1000}s...`);
     await new Promise((r) => setTimeout(r, delayMs));
   }
   console.error(
-    `Container ${containerId} still not ready after ${attempts} checks (~${(attempts * delayMs) / 1000}s). ` +
-      `It may just need more time — check status manually and retry media_publish with this creation_id.`
+    `Container ${creationId} still wasn't ready after ${attempts} publish attempts (~${(attempts * delayMs) / 1000}s). ` +
+      `It may just need more time — retry media_publish with this creation_id later.`
   );
   process.exit(1);
-}
-
-async function publishContainer(base, token, creationId) {
-  await waitUntilReady(base, token, creationId);
-
-  const res = await fetch(`${base}/media_publish`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ creation_id: creationId, access_token: token }),
-  });
-  const data = await res.json();
-  if (!res.ok || !data.id) {
-    console.error('Failed to publish media:', data);
-    process.exit(1);
-  }
-  return data.id;
 }
 
 async function publishSingle(imageUrl, caption) {
