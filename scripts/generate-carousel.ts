@@ -6,6 +6,7 @@
 import { ImageResponse } from "@vercel/og";
 import { mkdir, writeFile } from "node:fs/promises";
 import React from "react";
+import QRCode from "qrcode";
 
 const h = React.createElement;
 
@@ -13,11 +14,12 @@ const EMERALD = "#10b981";
 const AMBER = "#d97706";
 const WIDTH = 1080;
 const HEIGHT = 1350;
+const SITE_URL = "https://referalhub.vercel.app";
 
 type SlideContent =
   | { kind: "cover"; title: string; subtitle: string }
   | { kind: "offer"; emoji: string; name: string; bonus: string; description: string }
-  | { kind: "cta"; heading: string; sub: string; tagline: string };
+  | { kind: "cta"; heading: string; sub: string; tagline: string; qrCodeDataUrl: string };
 
 function brandMark() {
   return h(
@@ -49,7 +51,27 @@ function renderSlide(content: SlideContent) {
       },
       h("div", { style: { fontSize: 64, fontWeight: 700 } }, content.heading),
       h("div", { style: { fontSize: 48, fontWeight: 700, color: AMBER, marginTop: 40 } }, content.sub),
-      h("div", { style: { fontSize: 28, marginTop: 24, opacity: 0.9 } }, content.tagline)
+      h("div", { style: { fontSize: 28, marginTop: 24, opacity: 0.9 } }, content.tagline),
+      h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "white",
+            padding: 24,
+            borderRadius: 24,
+            marginTop: 48,
+          },
+        },
+        h("img", {
+          src: content.qrCodeDataUrl,
+          width: 220,
+          height: 220,
+        })
+      ),
+      h("div", { style: { fontSize: 22, marginTop: 20, opacity: 0.85 } }, "Escaneá para entrar")
     );
   }
 
@@ -201,6 +223,7 @@ const slides: { file: string; content: SlideContent }[] = [
       heading: "ReferralHub",
       sub: "Link en mi bio 👆",
       tagline: "Todas las ofertas de referidos en un solo lugar",
+      qrCodeDataUrl: "", // filled in by main() — Instagram doesn't allow clickable links on images, so this QR is the workaround
     },
   },
 ];
@@ -208,6 +231,15 @@ const slides: { file: string; content: SlideContent }[] = [
 async function main() {
   const outDir = "public/social/carousel";
   await mkdir(outDir, { recursive: true });
+
+  const ctaSlide = slides.find((slide) => slide.content.kind === "cta");
+  if (ctaSlide && ctaSlide.content.kind === "cta") {
+    ctaSlide.content.qrCodeDataUrl = await QRCode.toDataURL(SITE_URL, {
+      width: 440, // 2x for crispness at the 220px render size
+      margin: 1,
+      color: { dark: "#171717", light: "#ffffff" },
+    });
+  }
 
   for (const slide of slides) {
     const response = new ImageResponse(renderSlide(slide.content) as React.ReactElement, {
