@@ -1,17 +1,22 @@
 /* Estilos de la landing de Yana Samsonova.
-   Todo va acotado bajo `.yana` para no tocar el resto del sitio. */
+   Todo va acotado bajo `.yana` para no tocar el resto del sitio.
+   Paleta real: crema cálido + tinta navy + acento dorado (ysartofsoul.com). */
 
 .yana {
-  --yana-accent: #2997ff;
-  --yana-ink: #f5f5f7;
-  --yana-ink-dim: rgba(245, 245, 247, 0.66);
-  --yana-paper: #f5f5f7;
-  --yana-paper-ink: #1d1d1f;
-  --yana-paper-ink-dim: #6e6e73;
-  --yana-hairline: rgba(245, 245, 247, 0.14);
+  --yana-accent: #c9a45c;
+  --yana-accent-dim: #b98b52;
+  --yana-ink: #16203a;
+  --yana-ink-dim: rgba(22, 32, 58, 0.66);
+  --yana-paper: #faf7f2;
+  --yana-paper-dim: #f2ebe0;
+  --yana-hairline: rgba(22, 32, 58, 0.12);
+  --yana-navy: #16203a;
+  --yana-navy-deep: #0f1923;
+  --yana-navy-ink: rgba(250, 247, 242, 0.7);
+  --yana-navy-ink-dim: rgba(250, 247, 242, 0.5);
   --yana-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-  background: #000;
+  background: var(--yana-paper);
   color: var(--yana-ink);
   font-family: var(--font-yana-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
@@ -27,17 +32,48 @@
 
 /* Los anclas del menú no deben quedar debajo de la barra fija. */
 .yana [id] {
-  scroll-margin-top: 3.5rem;
+  scroll-margin-top: 4.5rem;
 }
 
 /* El fondo del documento también, para que el rebote de scroll no destelle. */
 html:has(.yana),
 body:has(.yana) {
-  background: #000;
+  background: var(--yana-paper);
 }
 
 html:has(.yana) {
   scroll-behavior: smooth;
+}
+
+/* Wordmark cursiva de respaldo, por si el logo real no carga. */
+.yana-script {
+  font-family: var(--font-yana-script), cursive;
+}
+
+/* Logo real (public/yana/logo.jpg): el fondo casi blanco del jpeg
+   desaparece sobre cualquier fondo — claro u oscuro — con multiply. */
+.yana-logo {
+  mix-blend-mode: multiply;
+}
+
+/* El trazo dorado del isotipo, en movimiento continuo (ver GoldLine.tsx). */
+.yana-goldline {
+  overflow: visible;
+  display: block;
+}
+
+.yana-goldline path {
+  animation: yana-goldline-flow 6s ease-in-out infinite;
+}
+
+@keyframes yana-goldline-flow {
+  0%,
+  100% {
+    transform: translateX(-12%);
+  }
+  50% {
+    transform: translateX(12%);
+  }
 }
 
 /* Aparición al entrar en pantalla (ver components/yana/Reveal.tsx). */
@@ -72,5 +108,9 @@ html:has(.yana) {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .yana-goldline path {
+    animation: none;
   }
 }

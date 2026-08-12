@@ -1,20 +1,20 @@
 /**
- * CONTENIDO PLACEHOLDER — Yana Samsonova
- * =====================================
- * Todo lo que hay en este archivo es inventado y está pensado para ser
- * reemplazado por material real. No publicar tal cual.
+ * CONTENIDO REAL — Yana Samsonova / Art & Soul
+ * =============================================
+ * Transcripto del sitio en producción (ysartofsoul.com): copy, obras,
+ * colecciones, contacto y paleta de color son los reales de la artista.
  *
- * Para sustituirlo:
- *  - Textos: editar directamente los strings de abajo.
- *  - Imágenes: cada obra usa por ahora un lienzo generativo (`palette` + `seed`).
- *    Cuando tengas las fotos reales, añade `image: "/yana/obra-x.jpg"` a la obra
- *    y `components/yana/Artwork.tsx` renderizará la foto en lugar del generativo.
+ * Las obras siguen sin fotografía: usan el mismo lienzo generativo
+ * (`palette` + `seed`) que el resto del sitio, con paletas extraídas de los
+ * degradados reales de ysartofsoul.com. Cuando haya fotos, añadir
+ * `image: "/yana/obra-x.jpg"` y `components/yana/Artwork.tsx` las usa en
+ * lugar del generativo.
  */
 
 export type Palette = {
   /** Color de fondo del lienzo. */
   base: string;
-  /** Colores de las manchas, de la más grande a la más pequeña. */
+  /** Colores de las manchas, de la más oscura a la más clara. */
   layers: string[];
   /** Color de los trazos finos superpuestos. */
   stroke: string;
@@ -23,288 +23,178 @@ export type Palette = {
 export type Artwork = {
   slug: string;
   title: string;
-  year: number;
+  /** Frase corta en cursiva, solo la obra destacada la usa. */
+  tagline?: string;
   medium: string;
-  /** Alto × ancho en cm, tal y como se rotula en una ficha de sala. */
   dimensions: string;
-  /** Serie a la que pertenece (`Series["slug"]`). */
-  series: string;
   /** Texto de sala, 1–2 frases. */
   note: string;
   available: boolean;
-  /** Semilla del lienzo generativo. Cambiarla cambia la composición. */
   seed: number;
   palette: Palette;
   /** Ruta a la foto real. Si existe, sustituye al lienzo generativo. */
   image?: string;
 };
 
-export type Series = {
+export type Collection = {
   slug: string;
   title: string;
-  years: string;
-  tagline: string;
   description: string;
   seed: number;
   palette: Palette;
-  image?: string;
 };
 
-const deshielo: Palette = {
-  base: "#0d1b26",
-  layers: ["#1f4a63", "#3d8ba8", "#96c9d6", "#e8f1f2"],
-  stroke: "#cfe6ec",
+export type BlogPost = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  status: string;
 };
 
-const ecos: Palette = {
-  base: "#1a1013",
-  layers: ["#5c2230", "#a34b45", "#d98b6a", "#f0d9c0"],
-  stroke: "#f2c9a8",
+// Paletas extraídas de los degradados reales de ysartofsoul.com.
+const mar: Palette = {
+  base: "#0d333d",
+  layers: ["#0f4a55", "#14606b", "#4f9ea6", "#dcbc8a"],
+  stroke: "#f4e7d3",
 };
 
-const interiores: Palette = {
-  base: "#101512",
-  layers: ["#22402f", "#4a7a55", "#9dbd8a", "#e6ead6"],
-  stroke: "#d3e0c4",
+const atardecer: Palette = {
+  base: "#241531",
+  layers: ["#5c2a4a", "#c2541f", "#f2941b", "#ffd98a"],
+  stroke: "#ffe3a8",
 };
 
-const arcilla: Palette = {
-  base: "#151109",
-  layers: ["#4a3618", "#8a6a33", "#c9a86a", "#eee0c4"],
-  stroke: "#e3cfa4",
+const horizonte: Palette = {
+  base: "#2a1d10",
+  layers: ["#4a3320", "#7d5733", "#b98b52", "#dcbc8a"],
+  stroke: "#f2ebe0",
+};
+
+const naturaleza: Palette = {
+  base: "#0f1923",
+  layers: ["#1d2e1a", "#31502c", "#5e8a4e", "#a8c087"],
+  stroke: "#e7ebd6",
+};
+
+const realismo: Palette = {
+  base: "#241531",
+  layers: ["#3d1f36", "#5c2a4a", "#b98b52", "#dcbc8a"],
+  stroke: "#f2ebe0",
 };
 
 export const artist = {
   name: "Yana Samsonova",
-  role: "Pintura contemporánea",
-  /** Frase de portada. Corta: se compone a 90px en escritorio. */
-  headline: "La luz antes de que se decida.",
-  /** Subtítulo de portada, 1 frase. */
+  brand: "Art & Soul",
+  role: "Artista plástica en formación",
+  headline: "Arte que conecta tu alma con lo que te rodea",
   subhead:
-    "Óleo sobre lino a gran formato. Paisajes que se deshacen en el momento exacto en que dejan de ser un lugar.",
-  /** Bio larga, para la sección de estudio. */
+    "Obras originales en acrílico y óleo. Cada pieza es única, firmada y viaja con su certificado de autenticidad.",
   bio: [
-    "Yana Samsonova pinta el intervalo: ese tramo de minutos en que un paisaje deja de describir un sitio concreto y empieza a describir una temperatura. Trabaja en veladuras finas de óleo sobre lino, levantando y volviendo a cerrar la superficie hasta que el color parece venir de detrás de la tela.",
-    "Formada en pintura y en restauración, arrastra de ese segundo oficio una obsesión por el envejecimiento de los materiales: prepara sus propios soportes y muele parte de sus pigmentos. Cada pieza grande le lleva entre cuatro y nueve meses.",
+    "Soy Yana Samsonova, artista plástica en formación. Pinto para expresar emociones, sensaciones y momentos que no siempre pueden decirse con palabras.",
+    "Trabajo con acrílico y óleo, explorando el realismo, la naturaleza y la abstracción. El mar, la luz, los animales y las emociones humanas son mi principal inspiración.",
+    "Cada obra es una búsqueda personal: crear imágenes que conecten, transmitan y acompañen a quien las observa.",
+    "Creo en el arte como una forma de emocionar, conectar y transformar espacios.",
   ],
-  location: "Estudio en Valencia, España",
-  email: "estudio@yanasamsonova.com",
-  instagram: "https://instagram.com/",
-  /** Cifras de la franja de credibilidad. */
-  facts: [
-    { value: "14", label: "años de práctica" },
-    { value: "9", label: "exposiciones individuales" },
-    { value: "4", label: "colecciones públicas" },
-    { value: "6-9", label: "meses por pieza grande" },
+  closing: "Bienvenidos a mi mundo de Arte & Soul.",
+  whatsapp: "+54 9 2804 61 2293",
+  whatsappLink: "https://wa.me/5492804612293",
+  email: "syana33.ys@gmail.com",
+  instagram: "https://instagram.com/ys_artofthesoul",
+  instagramHandle: "@ys_artofthesoul",
+  /** Franja de confianza bajo la portada. */
+  trust: [
+    { title: "Obra original", detail: "Única y auténtica" },
+    { title: "Firmada", detail: "Por la artista" },
+    { title: "Certificado", detail: "De autenticidad" },
+    { title: "Embalaje seguro", detail: "Envíos a todo el país" },
+  ],
+  /** Franja de condiciones, justo antes del pie. */
+  footerTrust: [
+    { title: "Envíos", detail: "A todo el país, con embalaje profesional." },
+    { title: "Medios de pago", detail: "Transferencia, efectivo o Mercado Pago." },
+    { title: "Obra única", detail: "Una vez vendida, ya no estará disponible." },
   ],
 };
-
-/** Retrato / foto de estudio de la sección «Estudio». */
-export const studioShot = {
-  slug: "estudio",
-  title: "Yana Samsonova en el estudio",
-  seed: 7781,
-  palette: arcilla,
-  // image: "/yana/estudio.jpg",
-};
-
-export const series: Series[] = [
-  {
-    slug: "deshielo",
-    title: "Deshielo",
-    years: "2023 — 2025",
-    tagline: "Ocho lienzos sobre el agua que todavía no sabe que lo es.",
-    description:
-      "Pintada a lo largo de tres inviernos en el norte, la serie sigue un mismo motivo —una superficie helada que cede— hasta agotarlo. El azul se enfría lienzo a lienzo hasta volverse casi blanco.",
-    seed: 1042,
-    palette: deshielo,
-  },
-  {
-    slug: "camara-de-eco",
-    title: "Cámara de eco",
-    years: "2021 — 2023",
-    tagline: "Interiores rojos donde la figura ya se ha ido.",
-    description:
-      "La serie más caliente y la más pequeña en formato. Habitaciones vacías tratadas como retratos: la huella de un cuerpo en la temperatura de una pared.",
-    seed: 2087,
-    palette: ecos,
-  },
-  {
-    slug: "interiores-de-agua",
-    title: "Interiores de agua",
-    years: "2019 — 2021",
-    tagline: "Vegetación vista desde debajo de la superficie.",
-    description:
-      "El primer conjunto en gran formato. Verdes densos aplicados en más de veinte veladuras, con la luz entrando siempre desde fuera del cuadro.",
-    seed: 3311,
-    palette: interiores,
-  },
-];
 
 export const works: Artwork[] = [
   {
-    slug: "deshielo-vii",
-    title: "Deshielo VII",
-    year: 2025,
-    medium: "Óleo sobre lino",
-    dimensions: "180 × 240 cm",
-    series: "deshielo",
-    note: "La pieza que cierra la serie. Nueve meses de trabajo y la paleta reducida a cuatro pigmentos.",
+    slug: "entre-mar-y-arena",
+    title: "Entre Mar y Arena",
+    tagline: "Fluir es recordar quién sos",
+    medium: "Acrílico con textura y detalles en dorado",
+    dimensions: "1,00 × 0,80 m",
+    note: "Donde la fuerza del mar se encuentra con la calma de la tierra. Texturas que invitan a sentir y líneas doradas que representan los caminos del alma. Pensada para espacios que buscan armonía, energía y sofisticación.",
     available: true,
-    seed: 1042,
-    palette: deshielo,
+    seed: 4471,
+    palette: mar,
   },
   {
-    slug: "deshielo-iii",
-    title: "Deshielo III",
-    year: 2024,
-    medium: "Óleo sobre lino",
-    dimensions: "150 × 150 cm",
-    series: "deshielo",
-    note: "Primer lienzo en que la línea de horizonte desaparece por completo.",
-    available: false,
-    seed: 1187,
-    palette: deshielo,
-  },
-  {
-    slug: "sala-roja",
-    title: "Sala roja",
-    year: 2023,
-    medium: "Óleo sobre tabla preparada",
-    dimensions: "90 × 70 cm",
-    series: "camara-de-eco",
-    note: "Colección privada, Lisboa.",
-    available: false,
-    seed: 2087,
-    palette: ecos,
-  },
-  {
-    slug: "eco-ii",
-    title: "Eco II",
-    year: 2022,
-    medium: "Óleo sobre tabla preparada",
-    dimensions: "60 × 45 cm",
-    series: "camara-de-eco",
-    note: "Uno de los cuatro estudios pequeños que dieron origen a la serie.",
+    slug: "atardecer-sobre-el-mar",
+    title: "Atardecer sobre el mar",
+    medium: "Acrílico sobre lienzo",
+    dimensions: "60 × 80 cm",
+    note: "Una escena marina llena de luz y movimiento.",
     available: true,
-    seed: 2210,
-    palette: ecos,
+    seed: 5820,
+    palette: atardecer,
   },
   {
-    slug: "bajo-la-superficie",
-    title: "Bajo la superficie",
-    year: 2021,
-    medium: "Óleo sobre lino",
-    dimensions: "200 × 160 cm",
-    series: "interiores-de-agua",
-    note: "Veintitrés veladuras. Adquirida por una colección pública en 2022.",
-    available: false,
-    seed: 3311,
-    palette: interiores,
-  },
-  {
-    slug: "raiz",
-    title: "Raíz",
-    year: 2020,
-    medium: "Óleo sobre lino",
-    dimensions: "130 × 97 cm",
-    series: "interiores-de-agua",
-    note: "El cuadro con el que arranca el uso sistemático de pigmento molido en estudio.",
+    slug: "hacia-el-horizonte",
+    title: "Hacia el Horizonte",
+    medium: "Óleo y acrílico sobre lienzo",
+    dimensions: "50 × 70 cm",
+    note: "Una obra que invita a soltar, confiar y seguir.",
     available: true,
-    seed: 3498,
-    palette: arcilla,
-  },
-  {
-    slug: "deshielo-i",
-    title: "Deshielo I",
-    year: 2023,
-    medium: "Óleo sobre lino",
-    dimensions: "120 × 120 cm",
-    series: "deshielo",
-    note: "El punto de partida de la serie, pintado del natural en tres sesiones.",
-    available: true,
-    seed: 1355,
-    palette: deshielo,
+    seed: 6203,
+    palette: horizonte,
   },
 ];
 
-export type Exhibition = {
-  year: string;
-  title: string;
-  venue: string;
-  city: string;
-  kind: "Individual" | "Colectiva" | "Feria" | "Colección";
+export const collections: Collection[] = [
+  {
+    slug: "mar",
+    title: "Mar",
+    description: "El mar y la luz: olas, atardeceres y horizontes.",
+    seed: 4471,
+    palette: mar,
+  },
+  {
+    slug: "naturaleza",
+    title: "Naturaleza",
+    description: "Los animales y la materia viva, en acrílico y óleo.",
+    seed: 7310,
+    palette: naturaleza,
+  },
+  {
+    slug: "realismo",
+    title: "Realismo",
+    description: "La figura y la emoción humana.",
+    seed: 8890,
+    palette: realismo,
+  },
+];
+
+/** Retrato / imagen que acompaña la sección «La artista». */
+export const portraitShot = {
+  slug: "la-artista",
+  title: "Yana Samsonova",
+  seed: 9142,
+  palette: realismo,
 };
 
-export const exhibitions: Exhibition[] = [
+export const blogPosts: BlogPost[] = [
   {
-    year: "2025",
-    title: "Deshielo",
-    venue: "Galería Norte",
-    city: "Madrid",
-    kind: "Individual",
+    slug: "arte-y-decoracion",
+    title: "Arte y decoración",
+    excerpt:
+      "Cómo elegir una obra según la luz, el tamaño de la pared y los colores que ya tenés en casa.",
+    status: "Próximamente",
   },
   {
-    year: "2024",
-    title: "Pintura ahora",
-    venue: "Centro de Arte Contemporáneo",
-    city: "Valencia",
-    kind: "Colectiva",
-  },
-  {
-    year: "2024",
-    title: "Estand B12",
-    venue: "Feria de Arte Contemporáneo",
-    city: "Basilea",
-    kind: "Feria",
-  },
-  {
-    year: "2023",
-    title: "Cámara de eco",
-    venue: "Fundação Serralves — Sala 3",
-    city: "Oporto",
-    kind: "Individual",
-  },
-  {
-    year: "2022",
-    title: "Adquisición permanente",
-    venue: "Colección del Estado",
-    city: "Madrid",
-    kind: "Colección",
-  },
-  {
-    year: "2021",
-    title: "Interiores de agua",
-    venue: "Espacio Lienzo",
-    city: "Barcelona",
-    kind: "Individual",
+    slug: "proceso-creativo",
+    title: "Proceso creativo",
+    excerpt:
+      "Del boceto a la última capa: cómo nace una obra con textura y por qué cada una lleva su tiempo.",
+    status: "Próximamente",
   },
 ];
-
-/** Pasos del apartado "El proceso". */
-export const process = [
-  {
-    step: "01",
-    title: "El soporte",
-    body: "Lino belga tensado y preparado a mano con cola de conejo y creta. Tres semanas de secado antes de que la primera capa de color toque la tela.",
-  },
-  {
-    step: "02",
-    title: "El pigmento",
-    body: "Parte de los azules y los ocres se muelen en el estudio. Es lo que permite mantener la misma temperatura de color a lo largo de toda una serie.",
-  },
-  {
-    step: "03",
-    title: "La veladura",
-    body: "Entre quince y veinticinco capas translúcidas. Cada una necesita secar por completo, así que el cuadro avanza a razón de una capa por semana.",
-  },
-  {
-    step: "04",
-    title: "El cierre",
-    body: "El último gesto es sustractivo: se levanta color con trapo hasta encontrar la luz que ya estaba debajo. No hay barniz final.",
-  },
-];
-
-export function getWorksBySeries(slug: string): Artwork[] {
-  return works.filter((work) => work.series === slug);
-}
