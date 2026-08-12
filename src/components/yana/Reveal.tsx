@@ -7,7 +7,7 @@ type Props = {
   /** Retardo en ms, para escalonar varios elementos de una misma fila. */
   delay?: number;
   className?: string;
-  as?: "div" | "li" | "section" | "figure";
+  as?: "div" | "li" | "section" | "figure" | "article";
 };
 
 /**
