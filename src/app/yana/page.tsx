@@ -436,11 +436,11 @@ export default function YanaPage() {
             directamente contra el fondo oscuro del pie. */}
         <div className="inline-block rounded-2xl bg-[color:var(--yana-paper)] px-6 py-3">
           <Image
-            src="/yana/logo-wordmark.jpg"
+            src="/yana/logo-wordmark-transparent.png"
             alt={`${artist.name} — ${artist.brand}`}
             width={900}
             height={330}
-            className="yana-logo h-9 w-auto"
+            className="h-9 w-auto"
           />
         </div>
         <p className="mx-auto mt-8 max-w-[46ch] px-5 text-[12px] leading-[1.6] text-[color:var(--yana-navy-ink-dim)]">

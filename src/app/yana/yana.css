@@ -50,12 +50,6 @@ html:has(.yana) {
   font-family: var(--font-yana-script), cursive;
 }
 
-/* Logo real (public/yana/logo.jpg): el fondo casi blanco del jpeg
-   desaparece sobre cualquier fondo — claro u oscuro — con multiply. */
-.yana-logo {
-  mix-blend-mode: multiply;
-}
-
 /* El trazo dorado del isotipo, en movimiento continuo (ver GoldLine.tsx). */
 .yana-goldline {
   overflow: visible;

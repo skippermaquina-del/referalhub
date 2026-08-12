@@ -65,17 +65,19 @@ export function Nav() {
         aria-label="Principal"
         className="mx-auto flex h-16 max-w-[1152px] items-center justify-between px-5 sm:px-6"
       >
+        {/* El isotipo real es tinta navy: sobre el hero (foto oscura) se
+            perdería sin una base clara detrás. */}
         <a
           href="#inicio"
-          className="rounded-lg bg-[color:var(--yana-paper)]/95 px-2.5 py-1.5 shadow-[0_1px_2px_rgba(22,32,58,0.08)] transition-opacity hover:opacity-75"
+          className="rounded-lg bg-[color:var(--yana-paper)]/90 px-2.5 py-1.5 transition-opacity hover:opacity-75"
         >
           <Image
-            src="/yana/logo-wordmark.jpg"
+            src="/yana/logo-wordmark-transparent.png"
             alt={`${artist.name} — ${artist.brand}`}
             width={900}
             height={330}
             priority
-            className="yana-logo h-8 w-auto sm:h-9"
+            className="h-8 w-auto sm:h-9"
           />
         </a>
 
