@@ -13,6 +13,7 @@
     "generate:elevenlabs-promo": "node --env-file=.env.local scripts/generate-elevenlabs-promo.ts",
     "generate:offers-promo": "node --env-file=.env.local scripts/generate-offers-promo.ts",
     "generate:offers-reel": "node --env-file=.env.local scripts/generate-offers-reel.ts",
+    "generate:spotlight-reel": "node --env-file=.env.local scripts/generate-spotlight-reel.ts",
     "publish:instagram": "node --env-file=.env.local scripts/publish-instagram.cjs"
   },
   "dependencies": {
