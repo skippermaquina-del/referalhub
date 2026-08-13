@@ -53,10 +53,14 @@ function progress(start: number, dur: number, time: number): number {
   return easeOutCubic(Math.min(1, Math.max(0, raw)));
 }
 
+// Some bonus strings have more than one dollar figure (e.g. "$10 per friend
+// (up to $100/year)") — animate up to the largest one since that's the
+// stronger hook, not necessarily the first number in the string.
 function parseBonusAmount(bonus: string): number | null {
-  const match = bonus.match(/\$([\d,]+)/);
-  if (!match) return null;
-  return parseInt(match[1].replace(/,/g, ""), 10);
+  const matches = [...bonus.matchAll(/\$([\d,]+)/g)];
+  if (matches.length === 0) return null;
+  const amounts = matches.map((m) => parseInt(m[1].replace(/,/g, ""), 10));
+  return Math.max(...amounts);
 }
 
 function brandMark() {
@@ -111,6 +115,13 @@ async function run(offer: (typeof offers)[number]) {
         ? `$${Math.round(bonusAmount * numberP).toLocaleString("en-US")}`
         : offer.bonus;
     const bonusOpacity = bonusAmount !== null ? Math.min(1, numberP * 4) : numberP;
+    // The hero number is just the largest dollar figure for punch (e.g. "$100"
+    // out of "$10 per friend (up to $100/year)") — when the full bonus string
+    // carries more nuance than that bare number, show it as a smaller caption
+    // once the count-up settles, so the terms stay accurate.
+    const bonusIsPlainNumber =
+      bonusAmount !== null && offer.bonus.replace(/[$,]/g, "").trim() === String(bonusAmount);
+    const showBonusCaption = bonusAmount !== null && !bonusIsPlainNumber;
 
     return h(
       "div",
@@ -144,6 +155,22 @@ async function run(offer: (typeof offers)[number]) {
         },
         bonusText
       ),
+      showBonusCaption
+        ? h(
+            "div",
+            {
+              style: {
+                display: "flex",
+                fontSize: 30,
+                fontWeight: 700,
+                color: "#525252",
+                marginTop: 12,
+                opacity: nameP,
+              },
+            },
+            offer.bonus
+          )
+        : null,
       h(
         "div",
         {
