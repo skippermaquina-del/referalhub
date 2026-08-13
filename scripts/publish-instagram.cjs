@@ -10,6 +10,9 @@
 //   Carousel post (2-10 images):
 //     npm run publish:instagram -- --carousel "<caption>" <image_url_1> <image_url_2> ...
 //
+//   Reel (video must be a publicly reachable mp4 url, e.g. deployed to Vercel):
+//     npm run publish:instagram -- --reel "<caption>" <video_url>
+//
 // IG_ACCESS_TOKEN: an "IGAA..." token generated via the app's
 //   Customize use case > API setup with Instagram login > Generate access tokens.
 //   Short-lived by default (~1 hour) — exchange for a long-lived token (60 days) via
@@ -81,6 +84,53 @@ async function publishContainer(base, token, creationId, { attempts = 10, delayM
   process.exit(1);
 }
 
+// Video containers (Reels) genuinely need time to transcode server-side, and
+// unlike plain images the status_code field is reliable for them, so poll it
+// before even attempting media_publish instead of relying solely on the
+// publish-and-retry trick isNotReadyError() handles for images.
+async function waitForVideoReady(token, containerId, { attempts = 30, delayMs = 10000 } = {}) {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(
+      `${GRAPH_HOST}/${GRAPH_VERSION}/${containerId}?fields=status_code&access_token=${token}`
+    );
+    const data = await res.json();
+    if (data.status_code === 'FINISHED') return;
+    if (data.status_code === 'ERROR') {
+      console.error('Video processing failed:', data);
+      process.exit(1);
+    }
+    console.log(
+      `Video processing... (${data.status_code ?? 'unknown'}), attempt ${i + 1}/${attempts}, waiting ${delayMs / 1000}s...`
+    );
+    await new Promise((r) => setTimeout(r, delayMs));
+  }
+  console.error(
+    `Container ${containerId} still wasn't done processing after ${attempts} checks. It may just need more time — retry later.`
+  );
+  process.exit(1);
+}
+
+async function publishReel(caption, videoUrl) {
+  const { token, base } = getAuth();
+  if (!videoUrl) {
+    console.error('Usage: node scripts/publish-instagram.cjs --reel "<caption>" <video_url>');
+    process.exit(1);
+  }
+
+  const containerId = await createMediaContainer(base, token, {
+    media_type: 'REELS',
+    video_url: videoUrl,
+    caption: caption || '',
+    share_to_feed: true,
+  });
+  console.log('Reel container created:', containerId);
+
+  await waitForVideoReady(token, containerId);
+
+  const mediaId = await publishContainer(base, token, containerId);
+  console.log('Published! Media ID:', mediaId);
+}
+
 async function publishSingle(imageUrl, caption) {
   const { token, base } = getAuth();
   if (!imageUrl) {
@@ -129,6 +179,9 @@ const args = process.argv.slice(2);
 if (args[0] === '--carousel') {
   const [, caption, ...imageUrls] = args;
   publishCarousel(caption, imageUrls);
+} else if (args[0] === '--reel') {
+  const [, caption, videoUrl] = args;
+  publishReel(caption, videoUrl);
 } else {
   const [imageUrl, caption] = args;
   publishSingle(imageUrl, caption);
