@@ -5,8 +5,13 @@
 // becomes an mp4 loop). Reusable for any offer in src/data/offers.ts so we
 // don't need one throwaway script per spotlight post.
 //
-// Usage: node scripts/generate-spotlight-reel.ts <offer-slug>
+// Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"]
 //   e.g. node scripts/generate-spotlight-reel.ts uber-driver
+//   e.g. node scripts/generate-spotlight-reel.ts mercury --hero "$0 monthly fees"
+//
+// --hero overrides what the big headline says, for offers whose bonus field
+// isn't real marketing copy (e.g. "Referral reward (check current terms)")
+// — it's shown as plain fading-in text, not run through the dollar count-up.
 
 import { ImageResponse } from "@vercel/og";
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
@@ -86,7 +91,7 @@ function brandMark() {
 function main() {
   const slug = process.argv[2];
   if (!slug) {
-    console.error("Usage: node scripts/generate-spotlight-reel.ts <offer-slug>");
+    console.error("Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero \"text\"]");
     process.exit(1);
   }
   const offer = offers.find((o) => o.slug === slug);
@@ -94,13 +99,19 @@ function main() {
     console.error(`No offer with slug "${slug}" in src/data/offers.ts`);
     process.exit(1);
   }
-  run(offer);
+  const heroFlagIndex = process.argv.indexOf("--hero");
+  const heroOverride = heroFlagIndex !== -1 ? process.argv[heroFlagIndex + 1] : undefined;
+  run(offer, heroOverride);
 }
 
-async function run(offer: (typeof offers)[number]) {
+async function run(offer: (typeof offers)[number], heroOverride?: string) {
   const FRAMES_DIR = `scripts/output/spotlight-frames-${offer.slug}`;
   const OUT_FILE = `public/social/spotlight-${offer.slug}.mp4`;
-  const bonusAmount = parseBonusAmount(offer.bonus);
+  // --hero skips the dollar count-up path entirely: it's shown as plain
+  // fading-in text, since a forced override is usually there precisely
+  // because the real bonus field isn't a number worth animating.
+  const bonusAmount = heroOverride ? null : parseBonusAmount(offer.bonus);
+  const bonusSource = heroOverride ?? offer.bonus;
 
   await rm(FRAMES_DIR, { recursive: true, force: true });
   await mkdir(FRAMES_DIR, { recursive: true });
@@ -124,14 +135,14 @@ async function run(offer: (typeof offers)[number]) {
     const bonusText =
       bonusAmount !== null
         ? `$${Math.round(bonusAmount * numberP).toLocaleString("en-US")}`
-        : offer.bonus;
+        : bonusSource;
     const bonusOpacity = bonusAmount !== null ? Math.min(1, numberP * 4) : numberP;
     // The hero number is just the largest dollar figure for punch (e.g. "$100"
     // out of "$10 per friend (up to $100/year)") — when the full bonus string
     // carries more nuance than that bare number, show it as a smaller caption
     // once the count-up settles, so the terms stay accurate.
     const bonusIsPlainNumber =
-      bonusAmount !== null && offer.bonus.replace(/[$,]/g, "").trim() === String(bonusAmount);
+      bonusAmount !== null && bonusSource.replace(/[$,]/g, "").trim() === String(bonusAmount);
     const showBonusCaption = bonusAmount !== null && !bonusIsPlainNumber;
     const bonusFontSize = heroFontSize(bonusText);
 
