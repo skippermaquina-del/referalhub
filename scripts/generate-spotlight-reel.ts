@@ -56,6 +56,17 @@ function progress(start: number, dur: number, time: number): number {
 // Some bonus strings have more than one dollar figure (e.g. "$10 per friend
 // (up to $100/year)") — animate up to the largest one since that's the
 // stronger hook, not necessarily the first number in the string.
+// Dollar-figure bonuses ("$1,750", "$100") stay short through the whole
+// count-up, but non-numeric bonuses ("Lower trading fees", "Account credit")
+// can run long enough to wrap to two lines and swallow the whole frame at a
+// fixed size — scale the hero font down as the text gets longer so it still
+// reads as a punchy headline instead of a wall of green text.
+function heroFontSize(text: string): number {
+  if (text.length <= 12) return 148;
+  if (text.length <= 20) return 92;
+  return 72;
+}
+
 function parseBonusAmount(bonus: string): number | null {
   const matches = [...bonus.matchAll(/\$([\d,]+)/g)];
   if (matches.length === 0) return null;
@@ -122,6 +133,7 @@ async function run(offer: (typeof offers)[number]) {
     const bonusIsPlainNumber =
       bonusAmount !== null && offer.bonus.replace(/[$,]/g, "").trim() === String(bonusAmount);
     const showBonusCaption = bonusAmount !== null && !bonusIsPlainNumber;
+    const bonusFontSize = heroFontSize(bonusText);
 
     return h(
       "div",
@@ -145,7 +157,8 @@ async function run(offer: (typeof offers)[number]) {
         {
           style: {
             display: "flex",
-            fontSize: 148,
+            fontSize: bonusFontSize,
+            lineHeight: 1.1,
             fontWeight: 800,
             color: EMERALD,
             marginTop: 56,
