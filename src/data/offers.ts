@@ -410,6 +410,17 @@ export const offers: Offer[] = [
     referralUrl: "https://inst.cr/t/3b9de9410",
   },
   {
+    slug: "instacart-shopper",
+    name: "Instacart Shopper",
+    category: "apps",
+    emoji: "🛍️",
+    bonus: "Referral reward (check current terms)",
+    description: "Earn money shopping and delivering Instacart orders on your own schedule.",
+    requirements: "Sign up to become a shopper through the link. Terms apply.",
+    referralUrl:
+      "https://shoppers.instacart.com/?referral=SAD4859AF&utm_medium=other&utm_source=instacart_referral&utm_campaign=supply_referral",
+  },
+  {
     slug: "paypal",
     name: "PayPal",
     category: "apps",
