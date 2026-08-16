@@ -421,6 +421,16 @@ export const offers: Offer[] = [
       "https://shoppers.instacart.com/?referral=SAD4859AF&utm_medium=other&utm_source=instacart_referral&utm_campaign=supply_referral",
   },
   {
+    slug: "instawork",
+    name: "Instawork",
+    category: "apps",
+    emoji: "🧰",
+    bonus: "Referral reward (check current terms)",
+    description: "Flexible work platform — pick up shifts at nearby businesses on your own schedule.",
+    requirements: "Sign up through the link and complete your first shift. Terms apply.",
+    referralUrl: "https://app.instawork.com/worker?ref_code=qg711vv&utm_source=refer-copy-button",
+  },
+  {
     slug: "paypal",
     name: "PayPal",
     category: "apps",
