@@ -7,7 +7,17 @@ export function OfferCard({ offer }: { offer: Offer }) {
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
       <div className="flex items-center justify-between">
-        <span className="text-2xl">{offer.emoji}</span>
+        {needsLink ? (
+          <span className="text-2xl">{offer.emoji}</span>
+        ) : (
+          <Link
+            href={`/go/${offer.slug}`}
+            aria-label={`Get the ${offer.name} offer`}
+            className="text-2xl transition-transform hover:scale-110"
+          >
+            {offer.emoji}
+          </Link>
+        )}
         <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
           {offer.bonus}
         </span>
