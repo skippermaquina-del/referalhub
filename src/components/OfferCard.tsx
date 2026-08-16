@@ -13,7 +13,7 @@ export function OfferCard({ offer }: { offer: Offer }) {
           <Link
             href={`/go/${offer.slug}`}
             aria-label={`Get the ${offer.name} offer`}
-            className="text-2xl transition-transform hover:scale-110"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-2xl ring-1 ring-neutral-200 transition-transform hover:scale-110 active:scale-95 dark:bg-neutral-800 dark:ring-neutral-700"
           >
             {offer.emoji}
           </Link>
