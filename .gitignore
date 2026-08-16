@@ -37,6 +37,15 @@ yarn-error.log*
 # generated social posts
 /scripts/output/
 
+# public/social/cielo/ has personal photos mixed in with the sky photos used
+# as spotlight-reel backgrounds — only the 19 screened sky shots referenced
+# in generate-spotlight-reel.ts's SKY_PHOTOS list get committed. These two
+# are family photos, not sky photos, and the raw video exports are unused by
+# the pipeline, so none of them should end up in git history.
+/public/social/cielo/*1.02.33 PM*
+/public/social/cielo/*1.08.18 PM*
+/public/social/cielo/*.mp4
+
 # vercel
 .vercel
 

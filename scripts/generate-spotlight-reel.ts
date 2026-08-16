@@ -14,11 +14,49 @@
 // — it's shown as plain fading-in text, not run through the dollar count-up.
 
 import { ImageResponse } from "@vercel/og";
-import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import React from "react";
 import QRCode from "qrcode";
 import { offers } from "../src/data/offers.ts";
+
+// Real sky photos the user picked, rotated across spotlight posts instead of
+// the flat gradient. Deliberately excludes two photos from the same batch
+// that turned out to be close-up portraits of a person (not sky shots) —
+// screened by hand, not filtered automatically.
+const SKY_PHOTOS = [
+  "WhatsApp Image 2026-08-16 at 12.56.27 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 12.58.08 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 12.58.25 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 12.59.43 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.00.20 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.01.47 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.02.59 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.03.19 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.03.35 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.04.07 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.04.18 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.04.32 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.05.54 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.06.27 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.06.41 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.06.51 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.07.21 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.09.10 PM.jpeg",
+  "WhatsApp Image 2026-08-16 at 1.09.27 PM.jpeg",
+];
+
+function hashString(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+// Deterministic per offer (so regenerating the same offer keeps its photo)
+// but varied across the series.
+function pickSkyPhoto(seed: string): string {
+  return SKY_PHOTOS[hashString(seed) % SKY_PHOTOS.length];
+}
 
 const h = React.createElement;
 
@@ -79,6 +117,31 @@ function parseBonusAmount(bonus: string): number | null {
   return Math.max(...amounts);
 }
 
+// The real sky photo, full-bleed behind the content, with a soft white
+// scrim over it so the existing text colors (which were tuned for a plain
+// white background) stay readable over a busy photo instead of fighting it.
+function photoBackground(dataUri: string) {
+  return h(
+    "div",
+    { style: { position: "absolute", top: 0, left: 0, width: "100%", height: "100%", display: "flex" } },
+    h("img", {
+      src: dataUri,
+      style: { position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" },
+    }),
+    h("div", {
+      style: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        backgroundColor: "rgba(255,255,255,0.62)",
+      },
+    })
+  );
+}
+
 function brandMark() {
   return h(
     "div",
@@ -123,6 +186,11 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
     color: { dark: "#171717", light: "#ffffff" },
   });
 
+  const skyPhotoFile = pickSkyPhoto(offer.slug);
+  const skyPhotoBuffer = await readFile(`public/social/cielo/${skyPhotoFile}`);
+  const skyPhotoDataUri = `data:image/jpeg;base64,${skyPhotoBuffer.toString("base64")}`;
+  console.log(`Using sky photo: ${skyPhotoFile}`);
+
   function renderFrame(time: number) {
     const brandP = progress(BRAND_START, BRAND_DUR, time);
     const numberP = progress(NUMBER_START, NUMBER_DUR, time);
@@ -150,19 +218,31 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
       "div",
       {
         style: {
+          position: "relative",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
           width: "100%",
           height: "100%",
-          backgroundColor: "white",
-          padding: "0 80px",
+          backgroundColor: "#dff3fc",
           fontFamily: "sans-serif",
-          textAlign: "center",
         },
       },
-      h("div", { style: { display: "flex", opacity: brandP } }, brandMark()),
+      photoBackground(skyPhotoDataUri),
+      h(
+        "div",
+        {
+          style: {
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            padding: "0 80px",
+            textAlign: "center",
+          },
+        },
+        h("div", { style: { display: "flex", opacity: brandP } }, brandMark()),
       h(
         "div",
         {
@@ -277,6 +357,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
           h("span", { style: { fontWeight: 700, color: "#171717" } }, "Scan to get started"),
           h("span", { style: { marginTop: 10 } }, "or tap the link in bio")
         )
+      )
       )
     );
   }
