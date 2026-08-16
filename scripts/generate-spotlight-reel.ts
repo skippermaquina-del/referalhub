@@ -76,7 +76,12 @@ const DURATION_S = 6;
 const TOTAL_FRAMES = Math.round(RENDER_FPS * DURATION_S);
 
 // Timeline (seconds)
-const BRAND_START = 0.0;
+// BRAND_START is negative so the brand mark is already most of the way
+// faded in at t=0 — Instagram's auto-selected Reel cover doesn't reliably
+// honor the thumb_offset we pass when publishing (tested: it still grabbed
+// a near-frame-0 shot with zero text visible), so frame 0 itself needs to
+// carry at least the "ReferralHub" watermark rather than being blank.
+const BRAND_START = -0.3;
 const BRAND_DUR = 0.4;
 const NUMBER_START = 0.3;
 const NUMBER_DUR = 1.7;
