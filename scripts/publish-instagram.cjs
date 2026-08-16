@@ -10,8 +10,11 @@
 //   Carousel post (2-10 images):
 //     npm run publish:instagram -- --carousel "<caption>" <image_url_1> <image_url_2> ...
 //
-//   Reel (video must be a publicly reachable mp4 url, e.g. deployed to Vercel):
-//     npm run publish:instagram -- --reel "<caption>" <video_url>
+//   Reel (video must be a publicly reachable mp4 url, e.g. deployed to Vercel).
+//   Defaults the cover frame to 4.5s in (our reels fade in from blank, so an
+//   unset thumb_offset gives a blank grid thumbnail) — pass a different
+//   offset in ms as the optional 4th arg if a video's timing differs:
+//     npm run publish:instagram -- --reel "<caption>" <video_url> [thumb_offset_ms]
 //
 // IG_ACCESS_TOKEN: an "IGAA..." token generated via the app's
 //   Customize use case > API setup with Instagram login > Generate access tokens.
@@ -110,10 +113,17 @@ async function waitForVideoReady(token, containerId, { attempts = 30, delayMs = 
   process.exit(1);
 }
 
-async function publishReel(caption, videoUrl) {
+// Our generated reels all fade in from a blank frame (opacity 0 at t=0), and
+// Instagram's auto cover picks an early frame by default — so every reel
+// posted without this ended up with a blank white grid thumbnail. 4500ms
+// lands after every element has fully faded in for both the 6s spotlight
+// format and the 5.5s bundle format, well before the video loops.
+const DEFAULT_THUMB_OFFSET_MS = 4500;
+
+async function publishReel(caption, videoUrl, thumbOffsetMs = DEFAULT_THUMB_OFFSET_MS) {
   const { token, base } = getAuth();
   if (!videoUrl) {
-    console.error('Usage: node scripts/publish-instagram.cjs --reel "<caption>" <video_url>');
+    console.error('Usage: node scripts/publish-instagram.cjs --reel "<caption>" <video_url> [thumb_offset_ms]');
     process.exit(1);
   }
 
@@ -122,8 +132,9 @@ async function publishReel(caption, videoUrl) {
     video_url: videoUrl,
     caption: caption || '',
     share_to_feed: true,
+    thumb_offset: thumbOffsetMs,
   });
-  console.log('Reel container created:', containerId);
+  console.log('Reel container created:', containerId, `(thumb_offset=${thumbOffsetMs}ms)`);
 
   await waitForVideoReady(token, containerId);
 
@@ -180,8 +191,8 @@ if (args[0] === '--carousel') {
   const [, caption, ...imageUrls] = args;
   publishCarousel(caption, imageUrls);
 } else if (args[0] === '--reel') {
-  const [, caption, videoUrl] = args;
-  publishReel(caption, videoUrl);
+  const [, caption, videoUrl, thumbOffsetMs] = args;
+  publishReel(caption, videoUrl, thumbOffsetMs ? Number(thumbOffsetMs) : undefined);
 } else {
   const [imageUrl, caption] = args;
   publishSingle(imageUrl, caption);
