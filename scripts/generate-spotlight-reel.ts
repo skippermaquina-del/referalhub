@@ -62,6 +62,10 @@ const h = React.createElement;
 
 const EMERALD = "#10b981";
 const AMBER = "#d97706";
+// Text sits directly on the sky photo (no covering panel) — a strong dark
+// drop shadow is what keeps it legible across wildly different photos
+// (bright sky vs. night skyline) without hiding the image itself.
+const TEXT_SHADOW = "0 2px 10px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.9)";
 const WIDTH = 1080;
 const HEIGHT = 1920; // 9:16, Reels-native
 const SITE_URL = "https://referalhub.vercel.app";
@@ -105,9 +109,9 @@ function progress(start: number, dur: number, time: number): number {
 // fixed size — scale the hero font down as the text gets longer so it still
 // reads as a punchy headline instead of a wall of green text.
 function heroFontSize(text: string): number {
-  if (text.length <= 12) return 148;
-  if (text.length <= 20) return 92;
-  return 72;
+  if (text.length <= 12) return 176;
+  if (text.length <= 20) return 112;
+  return 88;
 }
 
 function parseBonusAmount(bonus: string): number | null {
@@ -117,9 +121,10 @@ function parseBonusAmount(bonus: string): number | null {
   return Math.max(...amounts);
 }
 
-// The real sky photo, full-bleed behind the content, with a soft white
-// scrim over it so the existing text colors (which were tuned for a plain
-// white background) stay readable over a busy photo instead of fighting it.
+// The real sky photo, full-bleed behind the content. Text now sits on its
+// own solid white card (see run()) instead of directly on the photo, so
+// this only needs a light scrim to keep the photo from looking too dark or
+// oversaturated around the card's edges — not to carry legibility itself.
 function photoBackground(dataUri: string) {
   return h(
     "div",
@@ -136,7 +141,7 @@ function photoBackground(dataUri: string) {
         width: "100%",
         height: "100%",
         display: "flex",
-        backgroundColor: "rgba(255,255,255,0.62)",
+        backgroundColor: "rgba(255,255,255,0.22)",
       },
     })
   );
@@ -145,7 +150,7 @@ function photoBackground(dataUri: string) {
 function brandMark() {
   return h(
     "div",
-    { style: { display: "flex", fontSize: 40, fontWeight: 700, color: "#171717" } },
+    { style: { display: "flex", fontSize: 48, fontWeight: 700, color: "white", textShadow: TEXT_SHADOW } },
     h("span", null, "Referral"),
     h("span", { style: { color: EMERALD } }, "Hub")
   );
@@ -238,7 +243,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
             alignItems: "center",
             width: "100%",
             height: "100%",
-            padding: "0 80px",
+            padding: "0 70px",
             textAlign: "center",
           },
         },
@@ -252,6 +257,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
             lineHeight: 1.1,
             fontWeight: 800,
             color: EMERALD,
+            textShadow: TEXT_SHADOW,
             marginTop: 56,
             opacity: bonusOpacity,
             transform: `scale(${0.9 + 0.1 * numberP})`,
@@ -265,9 +271,10 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
             {
               style: {
                 display: "flex",
-                fontSize: 30,
+                fontSize: 38,
                 fontWeight: 700,
-                color: "#525252",
+                color: "white",
+                textShadow: TEXT_SHADOW,
                 marginTop: 12,
                 opacity: nameP,
               },
@@ -281,16 +288,17 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
           style: {
             display: "flex",
             alignItems: "center",
-            gap: 16,
-            fontSize: 46,
+            gap: 18,
+            fontSize: 54,
             fontWeight: 700,
-            color: "#171717",
+            color: "white",
+            textShadow: TEXT_SHADOW,
             marginTop: 24,
             opacity: nameP,
             transform: `translateY(${(1 - nameP) * 24}px)`,
           },
         },
-        h("span", { style: { display: "flex", fontSize: 46 } }, offer.emoji),
+        h("span", { style: { display: "flex", fontSize: 54 } }, offer.emoji),
         h("span", null, `to try ${offer.name}`)
       ),
       h(
@@ -298,10 +306,12 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
         {
           style: {
             display: "flex",
-            fontSize: 30,
-            color: "#525252",
+            fontSize: 38,
+            fontWeight: 600,
+            color: "white",
+            textShadow: TEXT_SHADOW,
             marginTop: 28,
-            maxWidth: 820,
+            maxWidth: 860,
             opacity: descP,
             transform: `translateY(${(1 - descP) * 20}px)`,
           },
@@ -313,11 +323,12 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
         {
           style: {
             display: "flex",
-            fontSize: 26,
+            fontSize: 34,
             color: AMBER,
+            textShadow: TEXT_SHADOW,
             fontWeight: 700,
             marginTop: 24,
-            maxWidth: 780,
+            maxWidth: 820,
             opacity: reqP,
             transform: `translateY(${(1 - reqP) * 20}px)`,
           },
@@ -329,8 +340,10 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
         {
           style: {
             display: "flex",
-            fontSize: 24,
-            color: "#a3a3a3",
+            fontSize: 30,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            textShadow: TEXT_SHADOW,
             marginTop: 20,
             opacity: trustP,
           },
@@ -350,11 +363,22 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
             transform: `translateY(${(1 - ctaP) * 30}px)`,
           },
         },
-        h("img", { src: qrCodeDataUrl, width: 200, height: 200 }),
+        h("img", { src: qrCodeDataUrl, width: 220, height: 220 }),
         h(
           "div",
-          { style: { display: "flex", flexDirection: "column", fontSize: 30, color: "#525252", maxWidth: 380, textAlign: "left" } },
-          h("span", { style: { fontWeight: 700, color: "#171717" } }, "Scan to get started"),
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              fontSize: 38,
+              fontWeight: 600,
+              color: "white",
+              textShadow: TEXT_SHADOW,
+              maxWidth: 380,
+              textAlign: "left",
+            },
+          },
+          h("span", { style: { fontWeight: 700 } }, "Scan to get started"),
           h("span", { style: { marginTop: 10 } }, "or tap the link in bio")
         )
       )
