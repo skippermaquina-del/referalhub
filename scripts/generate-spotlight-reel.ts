@@ -164,7 +164,9 @@ function brandMark() {
 function main() {
   const slug = process.argv[2];
   if (!slug) {
-    console.error("Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero \"text\"]");
+    console.error(
+      'Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"] [--story]'
+    );
     process.exit(1);
   }
   const offer = offers.find((o) => o.slug === slug);
@@ -174,12 +176,21 @@ function main() {
   }
   const heroFlagIndex = process.argv.indexOf("--hero");
   const heroOverride = heroFlagIndex !== -1 ? process.argv[heroFlagIndex + 1] : undefined;
-  run(offer, heroOverride);
+  // --story skips the video pipeline entirely and just exports one static
+  // frame (the fully-revealed hold state) sized for Instagram Stories.
+  // Stories are the one native surface where Instagram lets an account
+  // attach a real clickable link (the Link sticker) — but only if it's
+  // added by hand in-app, the Graph API can't place it — so this leaves
+  // open sky around the text for wherever that sticker ends up.
+  const isStory = process.argv.includes("--story");
+  run(offer, heroOverride, isStory);
 }
 
-async function run(offer: (typeof offers)[number], heroOverride?: string) {
+async function run(offer: (typeof offers)[number], heroOverride?: string, isStory = false) {
   const FRAMES_DIR = `scripts/output/spotlight-frames-${offer.slug}`;
-  const OUT_FILE = `public/social/spotlight-${offer.slug}.mp4`;
+  const OUT_FILE = isStory
+    ? `public/social/story-${offer.slug}.png`
+    : `public/social/spotlight-${offer.slug}.mp4`;
   // --hero skips the dollar count-up path entirely: it's shown as plain
   // fading-in text, since a forced override is usually there precisely
   // because the real bonus field isn't a number worth animating.
@@ -389,6 +400,20 @@ async function run(offer: (typeof offers)[number], heroOverride?: string) {
       )
       )
     );
+  }
+
+  if (isStory) {
+    // CTA_START + CTA_DUR is when the last element (QR/CTA) finishes
+    // fading in — freeze there so the exported still shows everything.
+    const holdTime = CTA_START + CTA_DUR;
+    const response = new ImageResponse(renderFrame(holdTime) as React.ReactElement, {
+      width: WIDTH,
+      height: HEIGHT,
+    });
+    const buffer = Buffer.from(await response.arrayBuffer());
+    await writeFile(OUT_FILE, buffer);
+    console.log(`Done. Wrote story image to ${OUT_FILE}`);
+    return;
   }
 
   for (let i = 0; i < TOTAL_FRAMES; i++) {
