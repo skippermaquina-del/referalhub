@@ -54,3 +54,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# scratch files written by scripts/render-handyman-card.mjs
+/design/handyman-card/.tmp-*.html

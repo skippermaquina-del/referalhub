@@ -1,0 +1,235 @@
+<!doctype html>
+<!--
+  SUPERHMAN — business card, 3.5 x 2 in (US standard), front + back.
+  Print-ready: 3 mm bleed on every side, 4 mm safe margin.
+
+  HOW TO EDIT: everything you need to change lives in the block marked
+  "==== EDIT ME ====" below (phone, name, services, QR target).
+  After editing the QR target, re-run:  node scripts/render-handyman-card.mjs
+-->
+<html lang="en" data-qr="https://wa.me/15550123456?text=Hi%20SUPERHMAN%2C%20I%20need%20a%20hand%20with...">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — business card</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+
+  /* ==== EDIT ME: brand tokens ==== */
+  :root{
+    --ink:#0E1116;        /* near-black, the card body            */
+    --paper:#F6F3EE;      /* warm off-white, the back             */
+    --hero:#FF5C1A;       /* the one accent. hi-vis trade orange  */
+    --muted:#8B8F96;      /* small grey type                      */
+
+    --trim-w:88.9mm;      /* 3.5 in */
+    --trim-h:50.8mm;      /* 2 in   */
+    --bleed:3mm;
+    --safe:4.2mm;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  @page{ size:94.9mm 56.8mm; margin:0 }
+
+  html{ font-family:'Archivo',system-ui,sans-serif; }
+
+  body{
+    background:#22252b;
+    display:flex; flex-direction:column; align-items:center; gap:14mm;
+    padding:16mm 8mm;
+  }
+
+  .card{
+    width:calc(var(--trim-w) + 2*var(--bleed));
+    height:calc(var(--trim-h) + 2*var(--bleed));
+    position:relative; overflow:hidden;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .card__inner{
+    position:absolute;
+    inset:calc(var(--bleed) + var(--safe));
+    display:flex;
+  }
+
+  /* trim + safe guides, screen only, toggled by .guides on <html> */
+  .guide{position:absolute;pointer-events:none;display:none}
+  .guides .guide{display:block}
+  .guide--trim{inset:var(--bleed);outline:.2mm dashed rgba(255,92,26,.85)}
+  .guide--safe{inset:calc(var(--bleed) + var(--safe));outline:.2mm dashed rgba(0,153,255,.6)}
+
+  /* ---------------- FRONT ---------------- */
+  .front{background:var(--ink)}
+  .front .card__inner{
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:0;
+  }
+  .mark{width:12.6mm;height:12.6mm;color:var(--hero);display:block}
+  .wordmark{
+    margin-top:4.4mm;
+    font-size:25pt; font-weight:800; font-stretch:105%;
+    letter-spacing:.055em; line-height:1;
+    color:#fff; text-indent:.055em; /* balance the trailing letter-space */
+  }
+  .wordmark b{color:var(--hero);font-weight:800}
+  .rule{
+    width:11mm;height:.6mm;background:var(--hero);
+    margin:3.1mm 0 2.6mm; border-radius:1mm;
+  }
+  .tagline{
+    font-size:6pt; font-weight:700; letter-spacing:.3em;
+    color:#C9CCD2; text-indent:.3em; text-transform:uppercase;
+  }
+
+  /* ---------------- BACK ---------------- */
+  .back{background:var(--paper);color:var(--ink)}
+  .back .card__inner{flex-direction:column;justify-content:space-between}
+
+  .back__top{display:flex;align-items:center;gap:1.6mm}
+  .back__top .mark{width:5.2mm;height:5.2mm;color:var(--ink)}
+  .back__top .name{
+    font-size:8pt;font-weight:800;font-stretch:105%;letter-spacing:.08em;
+  }
+  .back__top .name b{color:var(--hero)}
+  .back__top .role{
+    margin-left:auto;font-size:5.5pt;font-weight:600;letter-spacing:.16em;
+    color:var(--muted);text-transform:uppercase;
+  }
+
+  .back__mid{display:flex;align-items:flex-end;gap:4mm}
+  .contact{flex:1;min-width:0}
+  .label{
+    font-size:5.5pt;font-weight:800;letter-spacing:.24em;
+    color:var(--hero);text-transform:uppercase;margin-bottom:.8mm;
+  }
+  .phone{
+    font-size:18pt;font-weight:800;letter-spacing:-.01em;line-height:1;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .person{
+    margin-top:1.5mm;font-size:7pt;font-weight:600;letter-spacing:.01em;
+  }
+  .person span{color:var(--muted);font-weight:500}
+
+  .qr{width:18mm;text-align:center;flex:none}
+  .qr img{width:18mm;height:18mm;display:block}
+  .qr figcaption{
+    margin-top:1.4mm;font-size:4.6pt;font-weight:700;letter-spacing:.14em;
+    color:var(--muted);text-transform:uppercase;
+  }
+
+  .back__bottom{border-top:.25mm solid rgba(14,17,22,.18);padding-top:1.6mm}
+  .services{
+    font-size:6pt;font-weight:600;letter-spacing:.02em;color:var(--ink);
+  }
+  .services i{color:var(--hero);font-style:normal;font-weight:700}
+  .trust{
+    margin-top:.9mm;font-size:5.5pt;font-weight:500;letter-spacing:.04em;
+    color:var(--muted);
+  }
+
+  /* Optional "keep me" detail: a working inch ruler along the bottom trim
+     edge. Off by default (minimal wins); turn on with <html class="rulers">.
+     1/8 in = 3.175 mm ticks, taller mark every 1/2 in. */
+  .ruler{
+    position:absolute; bottom:var(--bleed);
+    left:var(--bleed); right:var(--bleed);
+    height:2.4mm; display:none;
+  }
+  .rulers .ruler{display:block}
+  .ruler i{position:absolute;bottom:0;left:0;right:0;display:block}
+  .ruler .t8{
+    height:1.1mm;
+    background:repeating-linear-gradient(to right,
+      rgba(14,17,22,.55) 0 .18mm, transparent .18mm 3.175mm);
+  }
+  .ruler .t2{
+    height:2.2mm;
+    background:repeating-linear-gradient(to right,
+      rgba(14,17,22,.75) 0 .22mm, transparent .22mm 12.7mm);
+  }
+
+  @media print{
+    body{background:none;padding:0;gap:0;display:block}
+    .card{page-break-after:always;break-after:page}
+    .card:last-child{page-break-after:auto;break-after:auto}
+    .guide{display:none !important}
+  }
+</style>
+</head>
+<body>
+
+<!-- The mark: an H whose crossbar carries a hex nut. Used on both sides. -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <symbol id="hmark" viewBox="0 0 100 100">
+    <g fill="currentColor">
+      <!-- a bold H with a hex-bolt hole punched through the crossbar -->
+      <path fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z
+               M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- ============================ FRONT ============================ -->
+<section class="card front">
+  <div class="card__inner">
+    <svg class="mark" viewBox="0 0 100 100" aria-label="SUPERHMAN"><use href="#hmark"/></svg>
+
+    <!-- ==== EDIT ME: the name ==== -->
+    <div class="wordmark">SUPER<b>H</b>MAN</div>
+
+    <div class="rule"></div>
+
+    <!-- ==== EDIT ME: the consigna ==== -->
+    <div class="tagline">Every home needs a hero</div>
+  </div>
+  <div class="guide guide--trim"></div><div class="guide guide--safe"></div>
+</section>
+
+<!-- ============================ BACK ============================= -->
+<section class="card back">
+  <div class="card__inner">
+
+    <header class="back__top">
+      <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#hmark"/></svg>
+      <div class="name">SUPER<b>H</b>MAN</div>
+      <!-- ==== EDIT ME: service area ==== -->
+      <div class="role">Handyman &middot; Miami, FL</div>
+    </header>
+
+    <div class="back__mid">
+      <div class="contact">
+        <div class="label">Hero hotline</div>
+        <!-- ==== EDIT ME: phone ==== -->
+        <div class="phone">(555) 012-3456</div>
+        <!-- ==== EDIT ME: your name ==== -->
+        <div class="person">Your Name <span>&middot; Owner</span></div>
+      </div>
+
+      <figure class="qr">
+        <img src="./assets/qr.svg" alt="Scan to text SUPERHMAN on WhatsApp">
+        <figcaption>Scan &rarr; text me</figcaption>
+      </figure>
+    </div>
+
+    <footer class="back__bottom">
+      <!-- ==== EDIT ME: services ==== -->
+      <div class="services">
+        Plumbing <i>&middot;</i> Electrical <i>&middot;</i> Carpentry <i>&middot;</i>
+        Drywall <i>&middot;</i> Mounting <i>&middot;</i> Assembly <i>&middot;</i> Odd jobs
+      </div>
+      <!-- ==== EDIT ME: only claim what is true ==== -->
+      <div class="trust">Licensed &amp; insured &middot; Free estimates &middot; Same-week appointments</div>
+    </footer>
+  </div>
+
+  <div class="ruler" aria-hidden="true"><i class="t8"></i><i class="t2"></i></div>
+  <div class="guide guide--trim"></div><div class="guide guide--safe"></div>
+</section>
+
+</body>
+</html>
