@@ -60,12 +60,16 @@ function pickSkyPhoto(seed: string): string {
 
 const h = React.createElement;
 
-const EMERALD = "#10b981";
-const AMBER = "#d97706";
+// Punchier, more saturated than the original brand colors — more "pop"
+// against a busy photo than the softer originals.
+const EMERALD = "#00e096";
+const AMBER = "#ffa726";
 // Text sits directly on the sky photo (no covering panel) — a strong dark
 // drop shadow is what keeps it legible across wildly different photos
-// (bright sky vs. night skyline) without hiding the image itself.
-const TEXT_SHADOW = "0 2px 10px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.9)";
+// (bright sky vs. night skyline) without hiding the image itself. Layered
+// tighter + wider passes reads like a soft outline for extra contrast.
+const TEXT_SHADOW =
+  "0 0 3px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.95), 0 4px 18px rgba(0,0,0,0.85)";
 const WIDTH = 1080;
 const HEIGHT = 1920; // 9:16, Reels-native
 const SITE_URL = "https://referalhub.vercel.app";
@@ -114,9 +118,9 @@ function progress(start: number, dur: number, time: number): number {
 // fixed size — scale the hero font down as the text gets longer so it still
 // reads as a punchy headline instead of a wall of green text.
 function heroFontSize(text: string): number {
-  if (text.length <= 12) return 176;
-  if (text.length <= 20) return 112;
-  return 88;
+  if (text.length <= 12) return 204;
+  if (text.length <= 20) return 130;
+  return 100;
 }
 
 function parseBonusAmount(bonus: string): number | null {
@@ -155,7 +159,7 @@ function photoBackground(dataUri: string) {
 function brandMark() {
   return h(
     "div",
-    { style: { display: "flex", fontSize: 48, fontWeight: 700, color: "white", textShadow: TEXT_SHADOW } },
+    { style: { display: "flex", fontSize: 54, fontWeight: 700, color: "white", textShadow: TEXT_SHADOW } },
     h("span", null, "Referral"),
     h("span", { style: { color: EMERALD } }, "Hub")
   );
@@ -287,7 +291,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
             {
               style: {
                 display: "flex",
-                fontSize: 38,
+                fontSize: 44,
                 fontWeight: 700,
                 color: "white",
                 textShadow: TEXT_SHADOW,
@@ -304,8 +308,8 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
           style: {
             display: "flex",
             alignItems: "center",
-            gap: 18,
-            fontSize: 54,
+            gap: 20,
+            fontSize: 62,
             fontWeight: 700,
             color: "white",
             textShadow: TEXT_SHADOW,
@@ -314,7 +318,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
             transform: `translateY(${(1 - nameP) * 24}px)`,
           },
         },
-        h("span", { style: { display: "flex", fontSize: 54 } }, offer.emoji),
+        h("span", { style: { display: "flex", fontSize: 62 } }, offer.emoji),
         h("span", null, `to try ${offer.name}`)
       ),
       h(
@@ -322,12 +326,12 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
         {
           style: {
             display: "flex",
-            fontSize: 38,
+            fontSize: 44,
             fontWeight: 600,
             color: "white",
             textShadow: TEXT_SHADOW,
             marginTop: 28,
-            maxWidth: 860,
+            maxWidth: 920,
             opacity: descP,
             transform: `translateY(${(1 - descP) * 20}px)`,
           },
@@ -339,12 +343,12 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
         {
           style: {
             display: "flex",
-            fontSize: 34,
+            fontSize: 40,
             color: AMBER,
             textShadow: TEXT_SHADOW,
             fontWeight: 700,
             marginTop: 24,
-            maxWidth: 820,
+            maxWidth: 880,
             opacity: reqP,
             transform: `translateY(${(1 - reqP) * 20}px)`,
           },
@@ -356,7 +360,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
         {
           style: {
             display: "flex",
-            fontSize: 30,
+            fontSize: 34,
             fontWeight: 600,
             color: "rgba(255,255,255,0.9)",
             textShadow: TEXT_SHADOW,
@@ -379,18 +383,18 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
             transform: `translateY(${(1 - ctaP) * 30}px)`,
           },
         },
-        h("img", { src: qrCodeDataUrl, width: 220, height: 220 }),
+        h("img", { src: qrCodeDataUrl, width: 240, height: 240 }),
         h(
           "div",
           {
             style: {
               display: "flex",
               flexDirection: "column",
-              fontSize: 38,
+              fontSize: 44,
               fontWeight: 600,
               color: "white",
               textShadow: TEXT_SHADOW,
-              maxWidth: 380,
+              maxWidth: 440,
               textAlign: "left",
             },
           },
