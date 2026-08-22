@@ -58,17 +58,38 @@ npm run design:card
 
 ## QR target
 
-The default is a WhatsApp click‑to‑chat link with a pre‑filled message, which
-opens straight into a conversation instead of a website nobody reads:
+The card carries **one** QR and it points at Instagram:
+
+```
+https://instagram.com/handysuperm
+```
+
+That is a deliberate call. The phone number is already the biggest thing on the
+card, so a WhatsApp QR would encode information the reader can see two inches to
+the left — it duplicates. Instagram does not duplicate: it is the proof that the
+work is real, which is exactly the doubt a stranger has while holding the card.
+So the card offers two different things — a number to call, and a code to see the
+work — instead of the same thing twice.
+
+The Instagram nametag graphic is deliberately *not* used. Its pink-orange
+gradient belongs to Instagram's brand, not this one, and dropping it on the card
+would break the two-colour palette. The code here is generated fresh in the
+card's own ink, which scans identically.
+
+The handle is printed as text under the code (`@handysuperm`) so it also works
+for anyone who would rather type it than scan.
+
+To switch the QR to WhatsApp instead, change `data-qr` on the `<html>` tag to a
+click-to-chat link with a pre-filled message and update the caption:
 
 ```
 https://wa.me/1XXXXXXXXXX?text=Hi%20SUPERHMAN%2C%20I%20need%20a%20hand%20with...
 ```
 
-Replace the number (country code, no `+`, no spaces). Other good targets, in
-order of usefulness: a Google Business Profile review link, a one‑page site, a
-`tel:` link. Avoid a link shortener you don't control — if it dies, every card
-already printed dies with it.
+Country code, no `+`, no spaces. Keep the URL short either way — a shorter URL
+means fewer, chunkier modules and a code that scans from further away. Avoid a
+link shortener you don't control: if it dies, every card already printed dies
+with it.
 
 Scan the rendered code with a real phone before ordering. Always.
 
