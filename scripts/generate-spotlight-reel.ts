@@ -5,13 +5,22 @@
 // becomes an mp4 loop). Reusable for any offer in src/data/offers.ts so we
 // don't need one throwaway script per spotlight post.
 //
-// Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"]
+// Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"] [--photo <n or match>]
 //   e.g. node scripts/generate-spotlight-reel.ts uber-driver
 //   e.g. node scripts/generate-spotlight-reel.ts mercury --hero "$0 monthly fees"
+//   e.g. node scripts/generate-spotlight-reel.ts current --photo 7
+//   e.g. node scripts/generate-spotlight-reel.ts current --photo 1.02.59
 //
 // --hero overrides what the big headline says, for offers whose bonus field
 // isn't real marketing copy (e.g. "Referral reward (check current terms)")
 // — it's shown as plain fading-in text, not run through the dollar count-up.
+//
+// --photo picks a specific sky background instead of the automatic
+// per-offer rotation — a number is a 1-based index into SKY_PHOTOS below
+// (run --list-photos to see them numbered), otherwise it's matched as a
+// substring against the filenames. Useful for choosing on purpose which
+// tone (warm sunset vs. cool blue sky) lands next to what's already at the
+// top of the Instagram grid, instead of leaving it to the hash rotation.
 
 import { ImageResponse } from "@vercel/og";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
@@ -166,10 +175,15 @@ function brandMark() {
 }
 
 function main() {
+  if (process.argv.includes("--list-photos")) {
+    SKY_PHOTOS.forEach((f, i) => console.log(`${i + 1}. ${f}`));
+    return;
+  }
+
   const slug = process.argv[2];
   if (!slug) {
     console.error(
-      'Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"] [--story]'
+      'Usage: node scripts/generate-spotlight-reel.ts <offer-slug> [--hero "text"] [--photo <n or match>] [--story]'
     );
     process.exit(1);
   }
@@ -180,6 +194,24 @@ function main() {
   }
   const heroFlagIndex = process.argv.indexOf("--hero");
   const heroOverride = heroFlagIndex !== -1 ? process.argv[heroFlagIndex + 1] : undefined;
+
+  const photoFlagIndex = process.argv.indexOf("--photo");
+  const photoArg = photoFlagIndex !== -1 ? process.argv[photoFlagIndex + 1] : undefined;
+  let photoOverride: string | undefined;
+  if (photoArg) {
+    const asIndex = Number(photoArg);
+    if (Number.isInteger(asIndex) && asIndex >= 1 && asIndex <= SKY_PHOTOS.length) {
+      photoOverride = SKY_PHOTOS[asIndex - 1];
+    } else {
+      const match = SKY_PHOTOS.find((f) => f.toLowerCase().includes(photoArg.toLowerCase()));
+      if (!match) {
+        console.error(`--photo "${photoArg}" didn't match any file. Run --list-photos to see options.`);
+        process.exit(1);
+      }
+      photoOverride = match;
+    }
+  }
+
   // --story skips the video pipeline entirely and just exports one static
   // frame (the fully-revealed hold state) sized for Instagram Stories.
   // Stories are the one native surface where Instagram lets an account
@@ -187,10 +219,15 @@ function main() {
   // added by hand in-app, the Graph API can't place it — so this leaves
   // open sky around the text for wherever that sticker ends up.
   const isStory = process.argv.includes("--story");
-  run(offer, heroOverride, isStory);
+  run(offer, heroOverride, isStory, photoOverride);
 }
 
-async function run(offer: (typeof offers)[number], heroOverride?: string, isStory = false) {
+async function run(
+  offer: (typeof offers)[number],
+  heroOverride?: string,
+  isStory = false,
+  photoOverride?: string
+) {
   const FRAMES_DIR = `scripts/output/spotlight-frames-${offer.slug}`;
   const OUT_FILE = isStory
     ? `public/social/story-${offer.slug}.png`
@@ -211,7 +248,7 @@ async function run(offer: (typeof offers)[number], heroOverride?: string, isStor
     color: { dark: "#171717", light: "#ffffff" },
   });
 
-  const skyPhotoFile = pickSkyPhoto(offer.slug);
+  const skyPhotoFile = photoOverride ?? pickSkyPhoto(offer.slug);
   const skyPhotoBuffer = await readFile(`public/social/cielo/${skyPhotoFile}`);
   const skyPhotoDataUri = `data:image/jpeg;base64,${skyPhotoBuffer.toString("base64")}`;
   console.log(`Using sky photo: ${skyPhotoFile}`);
