@@ -157,6 +157,24 @@ Everything visual is a CSS variable on the root. Redefine them to change flats:
 }
 ```
 
+## Building one on request
+
+1. **Find the content.** If the request names an existing page or route, read it
+   and reuse its real content. If it names a subject, draft the sections and say
+   what you assumed — only ask when you cannot reasonably infer them.
+
+2. **Draw the plan before the markup.** The sequence of rooms, which ones turn,
+   how deep each is. Say it in a line or two so it can be corrected cheaply.
+
+3. **Wire the engine.** Copy `roomwalk.js` and `roomwalk.css` from `assets/`
+   into wherever the host project keeps static files, and import them its way.
+   Do not modify the engine.
+
+4. **Write the sections.** Real content, in reading order, each direct child a
+   panel on a named wall — and still readable as a plain stack with JS off.
+
+5. **Look at it.** Serve the page and screenshot it before calling it done.
+
 ## Always check it in a browser
 
 A floor plan that reads fine in source can put the reader inside a wall. Load the

@@ -10,7 +10,9 @@
       "displayName": "Roomwalk",
       "description": "Build web pages you walk through: scrolling moves a camera from room to room, like walking through an apartment.",
       "version": "0.1.0",
-      "author": "skippermaquina-del",
+      "author": {
+        "name": "skippermaquina-del"
+      },
       "source": "./plugins/roomwalk",
       "keywords": ["scroll", "3d", "css", "spatial", "narrative", "landing-page"]
     }

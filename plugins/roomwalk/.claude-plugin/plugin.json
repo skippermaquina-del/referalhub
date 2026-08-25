@@ -8,7 +8,13 @@
   },
   "repository": "https://github.com/skippermaquina-del/referalhub",
   "license": "MIT",
-  "keywords": ["scroll", "3d", "css", "spatial", "narrative", "landing-page"],
-  "skills": "./skills/",
-  "commands": ["./commands/"]
+  "keywords": [
+    "scroll",
+    "3d",
+    "css",
+    "spatial",
+    "narrative",
+    "landing-page"
+  ],
+  "skills": "./skills/"
 }
