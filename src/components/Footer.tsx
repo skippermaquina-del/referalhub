@@ -11,7 +11,12 @@ export function Footer() {
           </Link>{" "}
           for details.
         </p>
-        <p className="mt-2">© {new Date().getFullYear()} ReferralHub</p>
+        <p className="mt-2 flex items-center gap-4">
+          <span>© {new Date().getFullYear()} ReferralHub</span>
+          <Link href="/privacy" className="underline hover:text-emerald-500">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </footer>
   );
