@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Roomwalk starter</title>
+    <link rel="stylesheet" href="roomwalk.css" />
+    <style>
+      body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+
+      .flat {
+        --rw-ambient: #0f1218;
+        --rw-wall: #3b4354;
+        --rw-wall-side: #2e3543;
+        --rw-floor: #21262f;
+        --rw-ceiling: #171b22;
+        --rw-fog: #0b0d11;
+        --rw-fog-strength: 0.55;
+        --rw-accent: #c9a45c;
+      }
+
+      .sign { width: 620px; text-align: center; }
+      .sign h1 { margin: 0; font-size: 64px; letter-spacing: -0.035em; }
+      .sign p { margin: 14px 0 0; font-size: 20px; color: var(--rw-ink-dim); }
+
+      .card {
+        width: 460px;
+        padding: 30px 34px;
+        border: 1px solid var(--rw-line);
+        background: rgba(10, 13, 18, 0.55);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+      }
+      .card h2 { margin: 0 0 10px; font-size: 32px; letter-spacing: -0.02em; }
+      .card p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--rw-ink-dim); }
+
+      /* Fuera del paseo, los "cuadros" vuelven a ser bloques de texto. */
+      .flat:not([data-rw-active]) .sign,
+      .flat:not([data-rw-active]) .card {
+        width: auto;
+        max-width: 100%;
+        text-align: left;
+        box-shadow: none;
+        margin-bottom: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flat rw" id="flat">
+      <!-- Estrecho y corto: te empuja a mirar al fondo, donde está el título. -->
+      <section data-rw-room="Entrance" data-rw-width="3.6" data-rw-depth="4.6">
+        <div class="sign" data-rw-panel="back" data-rw-at="0.5" data-rw-y="0.1">
+          <h1>Roomwalk</h1>
+          <p>Scroll to walk. The doorway ahead turns right.</p>
+        </div>
+      </section>
+
+      <section
+        data-rw-room="Main room"
+        data-rw-turn="right"
+        data-rw-width="5.6"
+        data-rw-depth="7"
+      >
+        <!-- El muro del rellano: lo miras de frente justo antes de doblar. -->
+        <div class="sign" data-rw-panel="turn" data-rw-at="0.5" data-rw-y="0.44">
+          <h1>Turn right</h1>
+          <p>This wall fills the screen at the corner. Put something on it.</p>
+        </div>
+        <article class="card" data-rw-panel="left" data-rw-at="0.3" data-rw-y="0.46">
+          <h2>On your left</h2>
+          <p>Panels hang on walls. You walk past them; they are not slides.</p>
+        </article>
+        <article class="card" data-rw-panel="right" data-rw-at="0.68" data-rw-y="0.46">
+          <h2>On your right</h2>
+          <p>Alternate sides so attention swings as the reader moves.</p>
+        </article>
+      </section>
+
+      <section data-rw-room="Corridor" data-rw-width="2.6" data-rw-depth="6">
+        <article class="card" data-rw-panel="right" data-rw-at="0.5" data-rw-y="0.44">
+          <h2>Narrow on purpose</h2>
+          <p>A tight corridor makes panels pass close and fast.</p>
+        </article>
+      </section>
+
+      <!-- Última habitación: su fondo es macizo, así que cierra el paseo. -->
+      <section data-rw-room="End" data-rw-width="4.2" data-rw-depth="4.6">
+        <div class="sign" data-rw-panel="back" data-rw-at="0.5" data-rw-y="0.42">
+          <h1>The end wall</h1>
+          <p>The last room keeps a solid back wall, so the walk stops on it.</p>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      import { createRoomWalk } from "./roomwalk.js";
+      createRoomWalk(document.getElementById("flat"));
+    </script>
+  </body>
+</html>

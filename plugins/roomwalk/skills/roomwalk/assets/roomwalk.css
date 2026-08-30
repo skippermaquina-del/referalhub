@@ -1,0 +1,285 @@
+/* roomwalk — recorrer una página como se recorre un piso.
+   Sin dependencias. El motor (roomwalk.js) sólo añade `data-rw-active`
+   al contenedor y construye el andamiaje 3D; todo lo visual vive aquí.
+
+   Convenio de ejes (el de CSS): x a la derecha, y hacia ABAJO, z hacia el
+   espectador. La cámara mira hacia -z cuando el rumbo es 0. */
+
+.rw {
+  /* Materiales. Redefínelos en tu página para cambiar de piso. */
+  --rw-ambient: #0f1218;
+  --rw-wall: #3b4354;
+  --rw-wall-side: #2e3543;
+  --rw-floor: #21262f;
+  --rw-ceiling: #171b22;
+  --rw-line: rgba(255, 255, 255, 0.1);
+  --rw-fog: #0b0d11;
+  --rw-fog-strength: 0.55;
+  --rw-ink: #e8eaf0;
+  --rw-ink-dim: rgba(232, 234, 240, 0.62);
+  --rw-accent: #c9a45c;
+
+  color: var(--rw-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Reserva: sin JS, sin WebGL, o con prefers-reduced-motion, la página es una
+   pila de secciones normales. El contenido es el mismo DOM en el mismo orden,
+   así que se lee y se tabula sin perder nada.
+   --------------------------------------------------------------------------- */
+
+.rw:not([data-rw-active]) {
+  display: flow-root;
+  background: var(--rw-ambient);
+}
+
+.rw:not([data-rw-active]) [data-rw-room] {
+  margin: 0 auto;
+  max-width: 46rem;
+  padding: clamp(3rem, 9vw, 7rem) 1.5rem;
+  border-bottom: 1px solid var(--rw-line);
+}
+
+.rw:not([data-rw-active]) [data-rw-room]:last-child {
+  border-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Modo paseo.
+   --------------------------------------------------------------------------- */
+
+.rw[data-rw-active] {
+  background: var(--rw-ambient);
+}
+
+/* La ventana fija por la que se mira. La perspectiva la fija el motor en
+   línea (depende del tamaño real del viewport, ver `applyPerspective`). */
+.rw-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--rw-ambient);
+  perspective-origin: 50% 50%;
+  /* Por debajo del contenido del sitio, pero por encima del fondo. */
+  z-index: 0;
+}
+
+/* El mundo entero se mueve en bloque: es la cámara al revés. */
+.rw-world {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* El espaciador que da altura real de scroll al documento. Es lo que hace que
+   rueda, barra, teclado, trackpad y gestos táctiles funcionen sin tocar nada:
+   el paseo va montado sobre el scroll nativo. */
+.rw-track {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+}
+
+.rw-room {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+/* Habitaciones lejanas: se dejan de pintar. El botón «salir del paseo» da la
+   vía accesible al contenido completo, así que recortar aquí no lo esconde. */
+.rw-room[data-rw-far] {
+  visibility: hidden;
+}
+
+/* --- Caras -------------------------------------------------------------- */
+
+.rw-face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  background-color: var(--rw-wall);
+  overflow: hidden;
+}
+
+.rw-face--left,
+.rw-face--right {
+  background-color: var(--rw-wall-side);
+}
+
+.rw-face--floor {
+  background-color: var(--rw-floor);
+}
+
+.rw-face--ceiling {
+  background-color: var(--rw-ceiling);
+}
+
+/* Niebla de profundidad, horneada en cada cara.
+   La dirección sale de la orientación de la cara: en la pared izquierda el eje
+   local +x apunta hacia el fondo, en la derecha hacia la entrada, en el suelo
+   el +y local cae hacia el espectador y en el techo hacia el fondo. */
+.rw-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--rw-fog));
+  opacity: var(--rw-fog-strength);
+}
+
+.rw-face--right::after {
+  background: linear-gradient(to left, transparent, var(--rw-fog));
+}
+
+.rw-face--floor::after {
+  background: linear-gradient(to top, transparent, var(--rw-fog));
+}
+
+.rw-face--ceiling::after {
+  background: linear-gradient(to bottom, transparent, var(--rw-fog));
+}
+
+/* Las paredes frontal y del fondo se ven de frente: tinte plano, no degradado. */
+.rw-face--back::after {
+  background: var(--rw-fog);
+  opacity: calc(var(--rw-fog-strength) * 0.5);
+}
+
+.rw-face--front::after {
+  background: var(--rw-fog);
+  opacity: calc(var(--rw-fog-strength) * 0.25);
+}
+
+/* Rodapié y moldura: dos líneas finas bastan para que el ojo lea la esquina. */
+.rw-face--left,
+.rw-face--right,
+.rw-face--back,
+.rw-face--front {
+  border-top: 1px solid var(--rw-line);
+  border-bottom: 2px solid var(--rw-line);
+}
+
+/* --- Contenido ---------------------------------------------------------- */
+
+.rw-panel {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%) translateZ(1px);
+  backface-visibility: hidden;
+  max-width: min(88%, 900px);
+}
+
+/* El suelo y el techo se miran muy escorzados: el texto ahí sólo funciona
+   grande y corto. */
+.rw-face--floor .rw-panel,
+.rw-face--ceiling .rw-panel {
+  text-align: center;
+}
+
+/* --- Interfaz ----------------------------------------------------------- */
+
+.rw-ui {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 2.5rem);
+  font: 500 12px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rw-ink-dim);
+  pointer-events: none;
+}
+
+.rw-ui > * {
+  pointer-events: auto;
+}
+
+.rw-where {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.rw-where::before {
+  content: "";
+  width: 1.4rem;
+  height: 1px;
+  background: var(--rw-accent);
+}
+
+.rw-exit {
+  appearance: none;
+  border: 1px solid var(--rw-line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.rw-exit:hover,
+.rw-exit:focus-visible {
+  border-color: var(--rw-accent);
+  color: var(--rw-ink);
+}
+
+/* Pista de scroll: marca lo andado. */
+.rw-progress {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--rw-progress, 0));
+  background: var(--rw-accent);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* Viñeta: cierra los bordes y disimula el borde de las paredes laterales. */
+.rw-fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 88% 88% at 50% 48%,
+    transparent 58%,
+    var(--rw-ambient) 100%
+  );
+}
+
+/* El contenido que el autor quiera dejar fuera del paseo (cabecera, aviso
+   legal) va por encima de la ventana fija. */
+.rw-above {
+  position: relative;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rw-world {
+    will-change: auto;
+  }
+}
