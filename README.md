@@ -52,6 +52,20 @@ Push to GitHub and import the repo at https://vercel.com/new — no configuratio
 If you enabled click tracking, add the same environment variables in the Vercel project
 settings.
 
+## Driving a browser from Claude Code (optional)
+
+`.mcp.json` registers [Playwright MCP](https://github.com/microsoft/playwright-mcp), which
+lets Claude Code open a real browser against your dev server — clicking through `/offers`,
+running a bonus check, reading console errors — instead of guessing from the source.
+
+One-time setup is `npx playwright install chromium`. Start `npm run dev`, then ask Claude to
+open http://localhost:3000; it will ask you to approve the server the first time it's used.
+
+The server runs headless with a throwaway profile. Drop `--headless` from `.mcp.json` to
+watch it work. In Claude Code on the web the container ships its own Chromium at a different
+build than Playwright MCP expects, so add `--executable-path /opt/pw-browsers/chromium`
+there.
+
 ## Adding a language later (es/ru)
 
 Offer data, categories, and copy currently live in English only. When you're ready to

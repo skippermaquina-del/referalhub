@@ -46,6 +46,9 @@ yarn-error.log*
 /public/social/cielo/*1.08.18 PM*
 /public/social/cielo/*.mp4
 
+# playwright mcp scratch output (snapshots, console logs, screenshots)
+/.playwright-mcp/
+
 # vercel
 .vercel
 
