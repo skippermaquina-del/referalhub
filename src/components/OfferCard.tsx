@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Offer } from "@/data/offers";
+import { OfferFreshness } from "@/components/OfferFreshness";
 
 export function OfferCard({ offer }: { offer: Offer }) {
   const needsLink = offer.referralUrl === "REPLACE_ME";
@@ -30,12 +31,15 @@ export function OfferCard({ offer }: { offer: Offer }) {
           Add your referral link in src/data/offers.ts
         </span>
       ) : (
-        <Link
-          href={`/go/${offer.slug}`}
-          className="mt-2 rounded-md bg-emerald-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-emerald-600"
-        >
-          Get this offer
-        </Link>
+        <>
+          <OfferFreshness slug={offer.slug} />
+          <Link
+            href={`/go/${offer.slug}`}
+            className="mt-2 rounded-md bg-emerald-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-emerald-600"
+          >
+            Get this offer
+          </Link>
+        </>
       )}
     </div>
   );

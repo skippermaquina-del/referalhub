@@ -30,6 +30,22 @@ By default, clicks aren't counted anywhere (the redirect still works fine). To t
    `UPSTASH_REDIS_REST_TOKEN`, and a value for `ADMIN_KEY`
 3. Visit `/admin/stats?key=<your ADMIN_KEY>` to see click counts per offer
 
+## Keeping bonuses accurate (optional)
+
+Bonus amounts and requirements in `src/data/offers.ts` go stale as providers change their
+programs. Set `PERPLEXITY_API_KEY` in `.env.local` to check them against live sources:
+
+- **On the site** — each offer card gets an "Is this bonus still current?" link that runs a
+  web search and shows the verdict plus the pages it read. Results are cached for 12 hours
+  per offer (in Upstash when configured, in memory otherwise), so a busy page costs at most
+  one search per offer per half-day.
+- **In bulk** — `npm run verify:offers` audits every offer and writes a markdown report to
+  `scripts/output/offer-audit-<date>.md`, listing which bonuses changed or ended and linking
+  the sources. Use it before a round of edits to `src/data/offers.ts`.
+
+Without the key the site behaves exactly as before; the check link just reports that it's
+switched off. Set `PERPLEXITY_MODEL` to override the default `sonar` model.
+
 ## Deploying
 
 Push to GitHub and import the repo at https://vercel.com/new — no configuration needed.
