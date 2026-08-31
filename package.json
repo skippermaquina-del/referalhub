@@ -15,6 +15,7 @@
     "generate:offers-reel": "node --env-file=.env.local scripts/generate-offers-reel.ts",
     "generate:spotlight-reel": "node --env-file=.env.local scripts/generate-spotlight-reel.ts",
     "generate:mercury-spotlight": "node --env-file=.env.local scripts/generate-mercury-spotlight.ts",
+    "export:notebooklm": "node scripts/export-notebooklm.ts",
     "publish:instagram": "node --env-file=.env.local scripts/publish-instagram.cjs"
   },
   "dependencies": {

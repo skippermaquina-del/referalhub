@@ -9,6 +9,9 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    // Lets src/lib/notebooklm.ts be imported both by Next and by the plain
+    // `node scripts/export-notebooklm.ts` run, which needs explicit extensions.
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",

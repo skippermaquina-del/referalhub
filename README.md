@@ -30,6 +30,30 @@ By default, clicks aren't counted anywhere (the redirect still works fine). To t
    `UPSTASH_REDIS_REST_TOKEN`, and a value for `ADMIN_KEY`
 3. Visit `/admin/stats?key=<your ADMIN_KEY>` to see click counts per offer
 
+## Connecting NotebookLM
+
+NotebookLM has no public API for pushing sources into a notebook, so the connection runs the
+other way around: the site publishes its whole catalog as a single clean document that
+NotebookLM can ingest.
+
+1. Open `/notebooklm` on the site for the copy-paste instructions and URLs
+2. In NotebookLM, create a notebook and pick **Add source -> Website**
+3. Paste `https://<your-site>/notebooklm.txt` (add `?category=banking|cards|investing|apps`
+   for one source per category instead of the full catalog)
+
+The document is generated from `src/data/offers.ts`, so it always matches the live site — but
+NotebookLM snapshots a website source when you add it, so refresh the source in NotebookLM
+after you edit offers and redeploy.
+
+If NotebookLM can't reach the URL (local dev, or a protected preview deployment), run:
+
+```bash
+npm run export:notebooklm
+```
+
+That writes the same documents to `public/notebooklm/` (full catalog plus one per category)
+so you can upload them as files instead.
+
 ## Deploying
 
 Push to GitHub and import the repo at https://vercel.com/new — no configuration needed.
