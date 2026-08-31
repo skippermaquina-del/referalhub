@@ -52,19 +52,49 @@ Push to GitHub and import the repo at https://vercel.com/new — no configuratio
 If you enabled click tracking, add the same environment variables in the Vercel project
 settings.
 
-## Driving a browser from Claude Code (optional)
+## MCP servers for Claude Code (optional)
 
-`.mcp.json` registers [Playwright MCP](https://github.com/microsoft/playwright-mcp), which
-lets Claude Code open a real browser against your dev server — clicking through `/offers`,
-running a bonus check, reading console errors — instead of guessing from the source.
+`.mcp.json` registers five servers. Claude Code asks you to approve each one the first time
+it's used in a session; none of them are needed to run or deploy the site.
 
-One-time setup is `npx playwright install chromium`. Start `npm run dev`, then ask Claude to
-open http://localhost:3000; it will ask you to approve the server the first time it's used.
+| Server | What it's for | Credentials |
+| --- | --- | --- |
+| `brandfetch` | Brand logos and colors for the social-post pipeline | OAuth, via `/mcp` |
+| `playwright` | Drive a browser against the dev server | none |
+| `chrome-devtools` | Same, plus Lighthouse audits, performance traces, network inspection | none |
+| `firecrawl` | Scrape and search the live web | `FIRECRAWL_API_KEY` |
+| `higgsfield` | AI image/video generation | `HF_API_KEY`, `HF_SECRET` |
 
-The server runs headless with a throwaway profile. Drop `--headless` from `.mcp.json` to
-watch it work. In Claude Code on the web the container ships its own Chromium at a different
-build than Playwright MCP expects, so add `--executable-path /opt/pw-browsers/chromium`
-there.
+Keys are read with `${VAR}` from the **environment Claude Code itself runs in**, not from
+`.env.local` — export them in your shell (or your shell profile) before starting Claude.
+Nothing secret goes in `.mcp.json`.
+
+Firecrawl is also available as a claude.ai connector, which uses OAuth instead of an API
+key; if you connect it there you can drop the `firecrawl` entry from `.mcp.json`.
+
+### Browser servers
+
+Both browser servers drive a real browser and pair well with `npm run dev` — ask Claude to
+open http://localhost:3000 and click through `/offers` rather than guessing from source.
+
+- `playwright` uses Playwright's own Chromium: run `npx playwright install chromium` once.
+- `chrome-devtools` uses your installed Google Chrome, so it needs no setup locally. It
+  reports anonymous usage statistics to Google by default; add `--usageStatistics=false` to
+  its args to opt out.
+
+Both run headless with a throwaway profile — drop `--headless` to watch them work. In Claude
+Code on the web neither browser is present in the container, so add
+`--executable-path /opt/pw-browsers/chromium` for `playwright`, and
+`--executablePath /opt/pw-browsers/chromium --chromeArg=--no-sandbox` for `chrome-devtools`.
+
+### A note on the Higgsfield server
+
+`higgsfield-mcp` is **not published by Higgsfield** — it's a third-party wrapper from the
+Storyvord org, while Higgsfield's own npm packages are published under `@higgsfield/`. The
+published source is small (two files, no dependencies beyond the MCP SDK) and only talks to
+`platform.higgsfield.ai`, but it does receive your Higgsfield credentials, so it's pinned to
+an exact version (`0.2.0`) rather than tracking `@latest`. Review the diff yourself before
+bumping it, or drop the entry if you'd rather use `@higgsfield/cli` directly.
 
 ## Adding a language later (es/ru)
 

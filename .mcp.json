@@ -7,14 +7,29 @@
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@latest",
-        "--browser",
-        "chromium",
-        "--headless",
-        "--isolated"
-      ]
+      "args": ["-y", "@playwright/mcp@latest", "--browser", "chromium", "--headless", "--isolated"]
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--headless", "--isolated"]
+    },
+    "firecrawl": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      }
+    },
+    "higgsfield": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "higgsfield-mcp@0.2.0"],
+      "env": {
+        "HF_API_KEY": "${HF_API_KEY}",
+        "HF_SECRET": "${HF_SECRET}"
+      }
     }
   }
 }
