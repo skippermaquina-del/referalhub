@@ -15,14 +15,13 @@
 // and Chrome clamps small window sizes). Override the binary with CHROME_PATH.
 
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import QRCode from "qrcode";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const designDir = join(root, "design/handyman-card");
-const cardHtml = join(designDir, "card.html");
 const outDir = join(root, "public/handyman");
 
 const CARD_W_MM = 94.9; // 3.5 in trim + 3 mm bleed each side
@@ -101,24 +100,33 @@ async function open(cdp, file) {
   await cdp.send("Runtime.evaluate", { expression: "document.fonts.ready", awaitPromise: true });
 }
 
-async function writeQr(html) {
-  const target = html.match(/<html[^>]*\sdata-qr="([^"]+)"/)?.[1];
-  if (!target) throw new Error('card.html is missing the data-qr="..." attribute');
-  const url = target.replace(/&amp;/g, "&");
-  const svg = await QRCode.toString(url, {
-    type: "svg",
-    errorCorrectionLevel: "M", // M keeps the modules chunky enough at 18 mm
-    margin: 2, // quiet zone; the caption sits just below the code
-    color: { dark: "#0E1116", light: "#0000" },
-  });
-  writeFileSync(join(designDir, "assets/qr.svg"), svg);
-  return url;
+// Each <img> that shows a QR carries its own target in data-qr and the file it
+// wants in src, so a card can have as many codes as it needs and the HTML stays
+// the single source of truth.
+async function writeQrs(html) {
+  const written = [];
+  for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
+    const target = tag.match(/\sdata-qr="([^"]+)"/)?.[1];
+    const src = tag.match(/\ssrc="\.\/assets\/([^"]+\.svg)"/)?.[1];
+    if (!target || !src) continue;
+    const url = target.replace(/&amp;/g, "&");
+    const svg = await QRCode.toString(url, {
+      type: "svg",
+      errorCorrectionLevel: "M", // M keeps the modules chunky enough at 18 mm
+      margin: 2, // quiet zone; a caption sits just below the code
+      color: { dark: "#0E1116", light: "#0000" },
+    });
+    writeFileSync(join(designDir, "assets", src), svg);
+    written.push(`${src} -> ${url}`);
+  }
+  if (!written.length) throw new Error("no <img data-qr=... src=./assets/*.svg> found");
+  return written;
 }
 
 // Chrome renders the whole page, so capture one side at a time from a
 // throwaway copy that hides the other card and strips the screen padding.
-function isolate(html, side) {
-  const tmp = join(designDir, `.tmp-${side}.html`);
+function isolate(html, stem, side) {
+  const tmp = join(designDir, `.tmp-${stem}-${side}.html`);
   writeFileSync(tmp, html.replace("</head>", `<style>
     body{background:none!important;padding:0!important;gap:0!important;display:block!important}
     .card{display:none}
@@ -128,46 +136,55 @@ function isolate(html, side) {
   return tmp;
 }
 
-const html = readFileSync(cardHtml, "utf8");
-const qrTarget = await writeQr(html);
+const cards = readdirSync(designDir)
+  .filter((f) => /^card.*\.html$/.test(f))
+  .sort();
 mkdirSync(outDir, { recursive: true });
 
 const { child, url } = await launchChrome();
 const cdp = await connect(url);
+const log = [];
 try {
   await cdp.send("Page.enable");
 
-  await open(cdp, cardHtml);
-  const { data: pdf } = await cdp.send("Page.printToPDF", {
-    paperWidth: CARD_W_MM / 25.4,
-    paperHeight: CARD_H_MM / 25.4,
-    marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
-    printBackground: true,
-    preferCSSPageSize: true,
-  });
-  writeFileSync(join(outDir, "superhman-card.pdf"), Buffer.from(pdf, "base64"));
+  for (const file of cards) {
+    const stem = file.replace(/\.html$/, "");
+    const path = join(designDir, file);
+    const html = readFileSync(path, "utf8");
+    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
 
-  for (const side of ["front", "back"]) {
-    const tmp = isolate(html, side);
-    await open(cdp, tmp);
-    const { data } = await cdp.send("Page.captureScreenshot", {
-      format: "png",
-      captureBeyondViewport: true,
-      clip: {
-        x: 0, y: 0,
-        width: CARD_W_MM * CSS_PX_PER_MM,
-        height: CARD_H_MM * CSS_PX_PER_MM,
-        scale: DPI / 96,
-      },
+    await open(cdp, path);
+    const { data: pdf } = await cdp.send("Page.printToPDF", {
+      paperWidth: CARD_W_MM / 25.4,
+      paperHeight: CARD_H_MM / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true,
+      preferCSSPageSize: true,
     });
-    writeFileSync(join(outDir, `card-${side}.png`), Buffer.from(data, "base64"));
-    rmSync(tmp);
+    writeFileSync(join(outDir, `superhman-${stem}.pdf`), Buffer.from(pdf, "base64"));
+
+    for (const side of ["front", "back"]) {
+      const tmp = isolate(html, stem, side);
+      await open(cdp, tmp);
+      const { data } = await cdp.send("Page.captureScreenshot", {
+        format: "png",
+        captureBeyondViewport: true,
+        clip: {
+          x: 0, y: 0,
+          width: CARD_W_MM * CSS_PX_PER_MM,
+          height: CARD_H_MM * CSS_PX_PER_MM,
+          scale: DPI / 96,
+        },
+      });
+      writeFileSync(join(outDir, `${stem}-${side}.png`), Buffer.from(data, "base64"));
+      rmSync(tmp);
+    }
+    log.push(`PDF superhman-${stem}.pdf + ${stem}-front.png / ${stem}-back.png`);
   }
 } finally {
   cdp.close();
   child.kill();
 }
 
-console.log(`QR  -> ${qrTarget}`);
-console.log(`PDF -> public/handyman/superhman-card.pdf  (2 pages, ${CARD_W_MM} x ${CARD_H_MM} mm with bleed)`);
-console.log(`PNG -> public/handyman/card-front.png, card-back.png  (${DPI} DPI)`);
+console.log(log.join("\n"));
+console.log(`\n${CARD_W_MM} x ${CARD_H_MM} mm with bleed, ${DPI} DPI previews -> public/handyman/`);

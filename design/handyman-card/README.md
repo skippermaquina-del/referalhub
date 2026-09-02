@@ -2,16 +2,36 @@
 
 US standard 3.5 × 2 in (88.9 × 50.8 mm), two sides, print-ready.
 
+Two variants share one front and one design system.
+
 ```
 design/handyman-card/
-  card.html          the design itself — edit this
-  assets/qr.svg      generated from the data-qr attribute on <html>
+  card.html                    LOCAL  — phone, service area, service list
+  card-universal.html          UNIVERSAL — WhatsApp + Instagram, nothing else
+  assets/qr*.svg               generated from the data-qr on each <img>
   assets/archivo.woff2
 public/handyman/
-  superhman-card.pdf 2 pages with bleed — the file you upload to the printer
-  card-front.png     300 DPI previews
-  card-back.png
+  superhman-card.pdf           2 pages with bleed — upload this to the printer
+  superhman-card-universal.pdf
+  card-front.png  card-back.png                    300 DPI previews
+  card-universal-front.png  card-universal-back.png
 ```
+
+`npm run design:card` builds every `card*.html` in the folder, so a new variant
+is a new file — no script changes.
+
+## Which variant to print
+
+| | Local (`card.html`) | Universal (`card-universal.html`) |
+|---|---|---|
+| Back carries | Phone, name, service area, 6 services | WhatsApp + Instagram, nothing else |
+| Converts | Better — says where you work and what you do | Slower — the reader has to scan to learn anything |
+| Survives a move | No. Reprint. | Yes |
+| Licence exposure | Every service named must be one you may advertise | None. It names no trade. |
+
+The local card converts better *today*; the universal one never expires. Printing
+some of each is a legitimate answer — the front is identical, so they read as one
+brand in the same pocket.
 
 ## The idea in one line
 
@@ -37,7 +57,7 @@ Open `card.html` and look for the `==== EDIT ME ====` markers:
 | Service area | `.role` in the back header |
 | Services list | `.services` |
 | Trust line | `.trust` — **only claim what is true** (licence, insurance) |
-| QR destination | `data-qr` on the `<html>` tag |
+| QR destination | `data-qr` on the `<img>` that shows the code |
 | Colours | `:root` custom properties |
 
 Then re-render:
@@ -56,9 +76,14 @@ npm run design:card
   binning it. Off by default because the brief was minimal; it is one word to
   enable.
 
-## QR target
+## QR targets
 
-The card carries **one** QR and it points at Instagram:
+The universal card carries **two** codes, weighted the same: WhatsApp (with a
+pre-filled "Hi Andy", so the customer never faces an empty message box) and
+Instagram. Between them they answer the only two questions a stranger has —
+*how do I reach him* and *is his work any good* — and neither is tied to a city.
+
+The local card carries **one**, and it points at Instagram:
 
 ```
 https://instagram.com/handysuperm

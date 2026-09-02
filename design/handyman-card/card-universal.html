@@ -1,16 +1,20 @@
 <!doctype html>
 <!--
-  SUPERHMAN — business card, 3.5 x 2 in (US standard), front + back.
+  SUPERHMAN — UNIVERSAL business card, 3.5 x 2 in, front + back.
   Print-ready: 3 mm bleed on every side, 4 mm safe margin.
 
-  HOW TO EDIT: everything you need to change lives in the block marked
-  "==== EDIT ME ====" below (phone, name, services, QR target).
+  Same front as card.html. The back carries two things and nothing else:
+  WhatsApp and Instagram. No service area, no service list, no promises —
+  so the card survives a move to another city and never advertises a trade
+  that would need a state licence.
+
+  HOW TO EDIT: the "==== EDIT ME ====" markers below.
   After editing a QR target, re-run:  npm run design:card
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>SUPERHMAN — business card</title>
+<title>SUPERHMAN — universal business card</title>
 <style>
   @font-face{
     font-family:'Archivo';
@@ -94,47 +98,25 @@
     font-size:8pt;font-weight:800;font-stretch:105%;letter-spacing:.08em;
   }
   .back__top .name b{color:var(--hero)}
-  .back__top .role{
-    margin-left:auto;font-size:5.5pt;font-weight:600;letter-spacing:.12em;
+  .back__top .who{
+    margin-left:auto;font-size:5.5pt;font-weight:600;letter-spacing:.14em;
     color:var(--muted);text-transform:uppercase;
   }
+  .back__top .who b{color:var(--ink);font-weight:700}
 
-  .back__mid{display:flex;align-items:flex-end;gap:4mm}
-  .contact{flex:1;min-width:0}
-  .label{
-    font-size:5.5pt;font-weight:800;letter-spacing:.24em;
-    color:var(--hero);text-transform:uppercase;margin-bottom:.8mm;
+  /* the whole back: two ways to reach Andy, weighted the same */
+  .pair{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:11mm;
   }
-  .phone{
-    font-size:18pt;font-weight:800;letter-spacing:-.01em;line-height:1;
-    font-variant-numeric:tabular-nums;white-space:nowrap;
+  .pair figure{margin:0;width:29mm;text-align:center}
+  .pair img{width:19mm;height:19mm;display:block;margin:0 auto}
+  .pair .label{
+    margin-top:1.6mm;font-size:5pt;font-weight:800;letter-spacing:.22em;
+    color:var(--hero);text-transform:uppercase;
   }
-  .person{
-    margin-top:1.5mm;font-size:7pt;font-weight:600;letter-spacing:.01em;
-  }
-  .person span{color:var(--muted);font-weight:500}
-
-  .qr{width:18mm;text-align:center;flex:none}
-  .qr img{width:18mm;height:18mm;display:block}
-  .qr figcaption{
-    margin-top:1.4mm;display:flex;flex-direction:column;gap:.5mm;
-    text-transform:uppercase;
-  }
-  .qr figcaption b{
-    font-size:4.9pt;font-weight:800;letter-spacing:.02em;color:var(--ink);
-  }
-  .qr figcaption span{
-    font-size:4.4pt;font-weight:700;letter-spacing:.1em;color:var(--muted);
-  }
-
-  .back__bottom{border-top:.25mm solid rgba(14,17,22,.18);padding-top:1.6mm}
-  .services{
-    font-size:6pt;font-weight:600;letter-spacing:.02em;color:var(--ink);
-  }
-  .services i{color:var(--hero);font-style:normal;font-weight:700}
-  .trust{
-    margin-top:.9mm;font-size:5.5pt;font-weight:500;letter-spacing:.04em;
-    color:var(--muted);
+  .pair .value{
+    margin-top:.7mm;font-size:7.5pt;font-weight:700;letter-spacing:.01em;
+    color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;
   }
 
   /* Optional "keep me" detail: a working inch ruler along the bottom trim
@@ -203,39 +185,27 @@
     <header class="back__top">
       <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#hmark"/></svg>
       <div class="name">SUPER<b>H</b>MAN</div>
-      <!-- ==== EDIT ME: service area ==== -->
-      <div class="role">Broward &middot; Dade &middot; Boca Raton</div>
+      <!-- ==== EDIT ME: who you are ==== -->
+      <div class="who"><b>Andy</b> &middot; Handyman</div>
     </header>
 
-    <div class="back__mid">
-      <div class="contact">
-        <div class="label">Hero hotline</div>
-        <!-- ==== EDIT ME: phone ==== -->
-        <div class="phone">(645) 221-9200</div>
-        <!-- ==== EDIT ME: your name ==== -->
-        <div class="person">Andy <span>&middot; Owner</span></div>
-      </div>
+    <div class="pair">
+      <!-- ==== EDIT ME: WhatsApp number — country code, no +, no spaces ==== -->
+      <figure>
+        <img data-qr="https://wa.me/16452219200?text=Hi%20Andy"
+             src="./assets/qr-whatsapp.svg" alt="Scan to message Andy on WhatsApp">
+        <div class="label">WhatsApp</div>
+        <div class="value">+1 645 221 9200</div>
+      </figure>
 
-      <!-- ==== EDIT ME: Instagram handle (must match the data-qr above) ==== -->
-      <figure class="qr">
+      <!-- ==== EDIT ME: Instagram handle ==== -->
+      <figure>
         <img data-qr="https://instagram.com/handysuperm"
-             src="./assets/qr.svg" alt="Scan to see SUPERHMAN's work on Instagram">
-        <figcaption>
-          <b>&#64;handysuperm</b>
-          <span>Scan &rarr; my work</span>
-        </figcaption>
+             src="./assets/qr-instagram.svg" alt="Scan to see Andy's work on Instagram">
+        <div class="label">Instagram</div>
+        <div class="value">@handysuperm</div>
       </figure>
     </div>
-
-    <footer class="back__bottom">
-      <!-- ==== EDIT ME: services ==== -->
-      <div class="services">
-        Carpentry <i>&middot;</i> Drywall <i>&middot;</i> Painting <i>&middot;</i>
-        Mounting <i>&middot;</i> Assembly <i>&middot;</i> Odd jobs
-      </div>
-      <!-- ==== EDIT ME: only claim what is true ==== -->
-      <div class="trust">Insured &middot; Free estimates &middot; Same-week appointments</div>
-    </footer>
   </div>
 
   <div class="ruler" aria-hidden="true"><i class="t8"></i><i class="t2"></i></div>
