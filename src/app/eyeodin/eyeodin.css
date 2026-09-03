@@ -1,0 +1,332 @@
+/* Estilos de la landing de eyeOdin.
+   Todo va acotado bajo `.eyeodin` para no tocar el resto del sitio.
+
+   Paleta propuesta (no hay identidad previa): el azul de profundidad de una
+   sonda, el cian frío de una pantalla de instrumento y un latón cálido que
+   pone el registro de lujo. Cámbialos aquí y cambia la marca entera. */
+
+.eyeodin {
+  --eo-abyss: #05121b;
+  --eo-deep: #08202f;
+  --eo-hull: #0e3145;
+  --eo-line: rgba(120, 190, 205, 0.16);
+  --eo-line-strong: rgba(120, 190, 205, 0.3);
+  --eo-sonar: #58dbd2;
+  --eo-sonar-dim: #2ea9a3;
+  --eo-brass: #c9a877;
+  --eo-foam: #eaf3f4;
+  --eo-foam-dim: rgba(234, 243, 244, 0.66);
+  --eo-foam-faint: rgba(234, 243, 244, 0.42);
+  --eo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  background: var(--eo-abyss);
+  color: var(--eo-foam);
+  font-family: var(--font-eo-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.eyeodin ::selection {
+  background: var(--eo-sonar);
+  color: var(--eo-abyss);
+}
+
+/* Las anclas del menú no deben quedar debajo de la barra fija. */
+.eyeodin [id] {
+  scroll-margin-top: 5rem;
+}
+
+/* El fondo del documento también, para que el rebote del scroll no destelle. */
+html:has(.eyeodin),
+body:has(.eyeodin) {
+  background: #05121b;
+}
+
+html:has(.eyeodin) {
+  scroll-behavior: smooth;
+}
+
+/* ---------- Tipografía ---------- */
+
+.eyeodin .eo-display {
+  font-family: var(--font-eo-serif), Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.06;
+}
+
+.eyeodin .eo-wordmark {
+  font-family: var(--font-eo-serif), Georgia, serif;
+}
+
+/* Etiqueta en versalitas: lectura de instrumento, no de prosa. */
+.eyeodin .eo-label {
+  font-family: var(--font-eo-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--eo-sonar);
+}
+
+.eyeodin .eo-figure {
+  font-family: var(--font-eo-mono), ui-monospace, monospace;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Barra de navegación ---------- */
+
+.eyeodin .eo-nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.5s var(--eo-ease), border-color 0.5s var(--eo-ease);
+}
+
+.eyeodin .eo-nav-solid {
+  background: rgba(5, 18, 27, 0.82);
+  border-bottom-color: var(--eo-line);
+  backdrop-filter: saturate(160%) blur(18px);
+}
+
+.eyeodin .eo-navlink {
+  font-size: 13.5px;
+  color: var(--eo-foam-dim);
+  transition: color 0.25s var(--eo-ease);
+}
+
+.eyeodin .eo-navlink:hover {
+  color: var(--eo-foam);
+}
+
+.eyeodin .eo-nav-mobile {
+  border-top: 1px solid var(--eo-line);
+  background: rgba(5, 18, 27, 0.97);
+  padding: 0.5rem 1.25rem 1.5rem;
+}
+
+.eyeodin .eo-nav-mobile a {
+  display: block;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--eo-line);
+  font-size: 16px;
+  color: var(--eo-foam);
+}
+
+.eyeodin .eo-langswitch {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--eo-line-strong);
+  border-radius: 999px;
+}
+
+.eyeodin .eo-langswitch-btn {
+  font-family: var(--font-eo-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.6rem;
+  color: var(--eo-foam-faint);
+  transition: background-color 0.25s var(--eo-ease), color 0.25s var(--eo-ease);
+  cursor: pointer;
+}
+
+.eyeodin .eo-langswitch-btn[aria-pressed="true"] {
+  background: var(--eo-sonar);
+  color: var(--eo-abyss);
+}
+
+.eyeodin .eo-burger {
+  display: grid;
+  gap: 5px;
+  padding: 6px 2px;
+  cursor: pointer;
+}
+
+.eyeodin .eo-burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--eo-foam);
+  transition: transform 0.3s var(--eo-ease);
+}
+
+.eyeodin .eo-burger span[data-open]:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+
+.eyeodin .eo-burger span[data-open]:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+/* ---------- Botones ---------- */
+
+.eyeodin .eo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.85rem 1.7rem;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  background: var(--eo-sonar);
+  color: var(--eo-abyss);
+  transition: opacity 0.25s var(--eo-ease);
+}
+
+.eyeodin .eo-btn:hover {
+  opacity: 0.85;
+}
+
+.eyeodin .eo-btn-ghost {
+  background: transparent;
+  color: var(--eo-foam);
+  border: 1px solid var(--eo-line-strong);
+}
+
+.eyeodin .eo-btn-ghost:hover {
+  border-color: var(--eo-sonar);
+  opacity: 1;
+}
+
+/* Dato real todavía sin definir: se ve que falta, no se disimula. */
+.eyeodin .eo-pending {
+  display: inline-block;
+  border: 1px dashed var(--eo-line-strong);
+  border-radius: 4px;
+  padding: 0.1em 0.5em;
+  font-family: var(--font-eo-mono), monospace;
+  font-size: 0.78em;
+  letter-spacing: 0.06em;
+  color: var(--eo-foam-faint);
+}
+
+/* ---------- Secciones ---------- */
+
+.eyeodin .eo-hairline {
+  border-top: 1px solid var(--eo-line);
+}
+
+.eyeodin .eo-card {
+  border: 1px solid var(--eo-line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(14, 49, 69, 0.4), rgba(8, 32, 47, 0.15));
+  padding: 1.6rem;
+  transition: border-color 0.35s var(--eo-ease), transform 0.35s var(--eo-ease);
+}
+
+.eyeodin .eo-card:hover {
+  border-color: var(--eo-line-strong);
+  transform: translateY(-2px);
+}
+
+/* Numeración del proceso, en el mismo registro de instrumento. */
+.eyeodin .eo-step-num {
+  font-family: var(--font-eo-mono), monospace;
+  font-size: 12px;
+  color: var(--eo-brass);
+  letter-spacing: 0.12em;
+}
+
+/* ---------- Portada y sonar ---------- */
+
+.eyeodin .eo-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 78% 12%, rgba(20, 78, 96, 0.5), transparent 62%),
+    radial-gradient(90% 70% at 8% 100%, rgba(14, 49, 69, 0.55), transparent 60%),
+    var(--eo-abyss);
+}
+
+.eyeodin .eo-scope {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+
+.eyeodin .eo-scope-grid {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.eyeodin .eo-scope-eye {
+  position: relative;
+  width: 42%;
+  height: auto;
+  color: var(--eo-foam);
+}
+
+.eyeodin .eo-sweep {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: eo-sweep 5.5s linear infinite;
+}
+
+@keyframes eo-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.eyeodin .eo-blip {
+  animation: eo-blip 5.5s ease-out infinite;
+  opacity: 0;
+}
+
+@keyframes eo-blip {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Aparición al hacer scroll ---------- */
+
+.eyeodin .eo-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.8s var(--eo-ease), transform 0.8s var(--eo-ease);
+}
+
+.eyeodin .eo-reveal[data-visible] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.eyeodin) {
+    scroll-behavior: auto;
+  }
+
+  .eyeodin .eo-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .eyeodin .eo-sweep,
+  .eyeodin .eo-blip {
+    animation: none;
+  }
+
+  .eyeodin .eo-blip {
+    opacity: 1;
+  }
+}
