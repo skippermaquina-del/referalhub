@@ -386,7 +386,7 @@ export const offers: Offer[] = [
     emoji: "🍋",
     bonus: "Free Bitcoin",
     description: "Crypto app where you can buy, sell, and earn Bitcoin — both you and the person you refer earn a reward.",
-    requirements: "Download the app and complete the sign-up steps using code \"andsams17\". Valid until 08/03/2026.",
+    requirements: "Download the app and complete the sign-up steps using code \"andsams17\". Valid until September 15, 2026.",
     referralUrl: "https://lemon.go.link/9TbV8",
   },
   {
