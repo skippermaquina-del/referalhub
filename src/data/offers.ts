@@ -51,7 +51,6 @@ export const offers: Offer[] = [
       "No-fee mobile banking with early direct deposit and an optional secured credit builder card.",
     requirements: "Set up direct deposit within the first weeks of opening the account.",
     referralUrl: "REPLACE_ME",
-    featured: true,
   },
   {
     slug: "sofi-checking",
@@ -63,7 +62,6 @@ export const offers: Offer[] = [
       "Combined checking + savings with a competitive APY on savings and no monthly fees.",
     requirements: "Bonus tiers depend on the amount of direct deposit set up.",
     referralUrl: "REPLACE_ME",
-    featured: true,
   },
   {
     slug: "current",
@@ -140,7 +138,6 @@ export const offers: Offer[] = [
     description: "Travel rewards card with strong points earning on dining and travel.",
     requirements: "Meet the minimum spend requirement within the first 3 months.",
     referralUrl: "REPLACE_ME",
-    featured: true,
   },
   {
     slug: "discover-it",
