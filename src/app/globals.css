@@ -24,3 +24,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Winged dollar that trails the cursor (src/components/FlyingDollar.tsx). */
+.flying-dollar-wing {
+  transform-box: fill-box;
+  animation: flying-dollar-flap 0.32s ease-in-out infinite alternate;
+}
+.flying-dollar-wing-left {
+  transform-origin: right center;
+}
+.flying-dollar-wing-right {
+  transform-origin: left center;
+  animation-name: flying-dollar-flap-right;
+}
+.flying-dollar svg {
+  transition: scale 0.2s ease;
+}
+.flying-dollar[data-excited="true"] svg {
+  scale: 1.25;
+}
+.flying-dollar[data-excited="true"] .flying-dollar-wing {
+  animation-duration: 0.12s;
+}
+@keyframes flying-dollar-flap {
+  from { transform: rotate(18deg) scaleY(0.7); }
+  to { transform: rotate(-14deg) scaleY(1); }
+}
+@keyframes flying-dollar-flap-right {
+  from { transform: rotate(-18deg) scaleY(0.7); }
+  to { transform: rotate(14deg) scaleY(1); }
+}

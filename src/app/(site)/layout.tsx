@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Assistant } from "@/components/Assistant";
+import { FlyingDollar } from "@/components/FlyingDollar";
 
 export default function SiteLayout({
   children,
@@ -13,6 +14,7 @@ export default function SiteLayout({
       {children}
       <Footer />
       <Assistant />
+      <FlyingDollar />
     </div>
   );
 }
