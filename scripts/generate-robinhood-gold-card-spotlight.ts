@@ -6,7 +6,13 @@
 // the pill points viewers to the link in bio / the QR code, which goes
 // through /go/robinhood-gold-card so clicks are still counted.
 //
-// Usage: node scripts/generate-robinhood-gold-card-spotlight.ts
+// Usage: node scripts/generate-robinhood-gold-card-spotlight.ts [--story]
+//
+// --story exports one static PNG for Instagram Stories instead of the Reel.
+// Stories are the only place Instagram allows a clickable link (the Link
+// sticker, added by hand in-app), so the story version drops the QR code,
+// says "Tap the link below", and leaves empty space at the bottom for the
+// sticker.
 
 import { ImageResponse } from "@vercel/og";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -177,8 +183,11 @@ async function run() {
     process.exit(1);
   }
 
+  const isStory = process.argv.includes("--story");
   const FRAMES_DIR = "scripts/output/spotlight-frames-robinhood-gold-card";
-  const OUT_FILE = "public/social/spotlight-robinhood-gold-card.mp4";
+  const OUT_FILE = isStory
+    ? "public/social/story-robinhood-gold-card.png"
+    : "public/social/spotlight-robinhood-gold-card.mp4";
   const HERO_TEXT = offer.bonus;
 
   await rm(FRAMES_DIR, { recursive: true, force: true });
@@ -244,7 +253,7 @@ async function run() {
             alignItems: "center",
             width: "100%",
             height: "100%",
-            padding: "0 70px",
+            padding: isStory ? "150px 70px 240px" : "0 70px",
             textAlign: "center",
           },
         },
@@ -366,7 +375,8 @@ async function run() {
               transform: `translateY(${(1 - ctaP) * 30}px)`,
             },
           },
-          h(
+          !isStory &&
+            h(
             "div",
             {
               style: {
@@ -385,7 +395,7 @@ async function run() {
               style: {
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
+                alignItems: isStory ? "center" : "flex-start",
                 fontSize: 36,
                 fontWeight: 600,
                 color: "rgba(255,255,255,0.75)",
@@ -408,11 +418,22 @@ async function run() {
               },
               "Get the Gold Card"
             ),
-            h("span", { style: { marginTop: 18 } }, "Link in bio · or scan the code")
+            h("span", { style: { marginTop: 18 } }, isStory ? "Tap the link below" : "Link in bio · or scan the code")
           )
         )
       )
     );
+  }
+
+  if (isStory) {
+    // Freeze once the CTA has fully faded in so everything is visible.
+    const response = new ImageResponse(renderFrame(CTA_START + CTA_DUR) as React.ReactElement, {
+      width: WIDTH,
+      height: HEIGHT,
+    });
+    await writeFile(OUT_FILE, Buffer.from(await response.arrayBuffer()));
+    console.log(`Done. Wrote story image to ${OUT_FILE}`);
+    return;
   }
 
   for (let i = 0; i < TOTAL_FRAMES; i++) {
