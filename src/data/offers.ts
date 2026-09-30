@@ -160,6 +160,17 @@ export const offers: Offer[] = [
     referralUrl: "https://i.capitalone.com/Jn3CIL3YT",
   },
   {
+    slug: "robinhood-gold-card",
+    name: "Robinhood Gold Card",
+    category: "cards",
+    emoji: "💳",
+    bonus: "3% cash back",
+    description:
+      "Stainless steel Visa Signature card earning 3% cash back on every purchase for Robinhood Gold members.",
+    requirements: "Requires a Robinhood Gold subscription; apply and get approved using the link below.",
+    referralUrl: "https://join.robinhood.com/andriys-b7e824",
+  },
+  {
     slug: "robinhood",
     name: "Robinhood",
     category: "investing",
