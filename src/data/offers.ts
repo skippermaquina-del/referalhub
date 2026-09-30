@@ -5,14 +5,12 @@ export interface Offer {
   name: string;
   category: Category;
   emoji: string;
+  /** Brand's website domain, used to pull its official logo from Brandfetch. */
+  domain: string;
   bonus: string;
   description: string;
   requirements: string;
-  /**
-   * Replace this with your real referral link once you sign up for the program.
-   * Anything still set to "REPLACE_ME" is flagged on the site so you know
-   * which offers still need your link.
-   */
+  /** Your referral link. Only add offers here once you have one. */
   referralUrl: string;
   featured?: boolean;
 }
@@ -42,32 +40,11 @@ export const categories: { id: Category; label: string; blurb: string }[] = [
 
 export const offers: Offer[] = [
   {
-    slug: "chime",
-    name: "Chime",
-    category: "banking",
-    emoji: "🏦",
-    bonus: "Up to $100",
-    description:
-      "No-fee mobile banking with early direct deposit and an optional secured credit builder card.",
-    requirements: "Set up direct deposit within the first weeks of opening the account.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
-    slug: "sofi-checking",
-    name: "SoFi Checking & Savings",
-    category: "banking",
-    emoji: "🏦",
-    bonus: "Up to $300",
-    description:
-      "Combined checking + savings with a competitive APY on savings and no monthly fees.",
-    requirements: "Bonus tiers depend on the amount of direct deposit set up.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
     slug: "current",
     name: "Current",
     category: "banking",
     emoji: "🏦",
+    domain: "current.com",
     bonus: "$100",
     description: "Mobile bank account built for fast direct deposit and fee-free overdraft.",
     requirements: "Receive a qualifying direct deposit after signing up. Terms apply.",
@@ -78,6 +55,7 @@ export const offers: Offer[] = [
     name: "SoFi Personal Loan",
     category: "banking",
     emoji: "💵",
+    domain: "sofi.com",
     bonus: "$300",
     description: "Fixed-rate personal loans with no fees, used for debt consolidation or big expenses.",
     requirements: "Bonus paid out after your loan funds.",
@@ -89,6 +67,7 @@ export const offers: Offer[] = [
     name: "SoFi Student Loan Refinance",
     category: "banking",
     emoji: "🎓",
+    domain: "sofi.com",
     bonus: "$300",
     description: "Refinance student loans for a lower rate, with no origination or prepayment fees.",
     requirements: "Welcome bonus paid out after your refinanced loan funds.",
@@ -100,6 +79,7 @@ export const offers: Offer[] = [
     name: "SoFi Medical Student Loan Refinance",
     category: "banking",
     emoji: "🩺",
+    domain: "sofi.com",
     bonus: "$1,000",
     description: "Special low rates on student loan refinancing for doctors and dentists.",
     requirements: "For medical/dental professionals only. Bonus paid out after your refinanced loan funds.",
@@ -111,6 +91,7 @@ export const offers: Offer[] = [
     name: "SoFi Private Student Loan",
     category: "banking",
     emoji: "📚",
+    domain: "sofi.com",
     bonus: "$300",
     description: "Private student loans with competitive rates and flexible repayment options.",
     requirements: "Bonus paid out after your loan funds.",
@@ -122,6 +103,7 @@ export const offers: Offer[] = [
     name: "Mercury",
     category: "banking",
     emoji: "🏢",
+    domain: "mercury.com",
     bonus: "Referral reward (check current terms)",
     description:
       "Business banking for startups and LLCs — no monthly fees, free ACH/wire transfers, and virtual cards.",
@@ -130,30 +112,11 @@ export const offers: Offer[] = [
     featured: true,
   },
   {
-    slug: "chase-sapphire-preferred",
-    name: "Chase Sapphire Preferred",
-    category: "cards",
-    emoji: "💳",
-    bonus: "60,000+ points",
-    description: "Travel rewards card with strong points earning on dining and travel.",
-    requirements: "Meet the minimum spend requirement within the first 3 months.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
-    slug: "discover-it",
-    name: "Discover it Cash Back",
-    category: "cards",
-    emoji: "💳",
-    bonus: "Cashback match (1st year)",
-    description: "No annual fee card that matches all cash back earned in your first year.",
-    requirements: "Approval and normal card usage; no minimum spend for the match.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
     slug: "capital-one-quicksilver",
     name: "Capital One Quicksilver",
     category: "cards",
     emoji: "💳",
+    domain: "capitalone.com",
     bonus: "$200",
     description: "Flat 1.5% cash back on every purchase, no annual fee.",
     requirements: "Meet the minimum spend requirement within the first 3 months.",
@@ -164,6 +127,7 @@ export const offers: Offer[] = [
     name: "Robinhood Gold Card",
     category: "cards",
     emoji: "💳",
+    domain: "robinhood.com",
     bonus: "3% cash back",
     description:
       "Stainless steel Visa Signature card earning 3% cash back on every purchase for Robinhood Gold members.",
@@ -175,6 +139,7 @@ export const offers: Offer[] = [
     name: "Robinhood",
     category: "investing",
     emoji: "📈",
+    domain: "robinhood.com",
     bonus: "Free stock",
     description: "Commission-free stock, ETF, options and crypto trading.",
     requirements: "Open and fund an account to claim the free stock.",
@@ -186,6 +151,7 @@ export const offers: Offer[] = [
     name: "Coinbase",
     category: "investing",
     emoji: "🪙",
+    domain: "coinbase.com",
     bonus: "Up to $10 in crypto",
     description: "Popular crypto exchange, easiest on-ramp for first-time crypto buyers.",
     requirements: "Complete identity verification and trade or hold a qualifying amount.",
@@ -197,6 +163,7 @@ export const offers: Offer[] = [
     name: "Coinbase Advanced",
     category: "investing",
     emoji: "📊",
+    domain: "coinbase.com",
     bonus: "Lower trading fees",
     description: "Coinbase's advanced trading interface — order types and lower fees for active traders.",
     requirements: "Complete identity verification to start trading.",
@@ -207,6 +174,7 @@ export const offers: Offer[] = [
     name: "Webull",
     category: "investing",
     emoji: "📈",
+    domain: "webull.com",
     bonus: "Free stocks",
     description: "Commission-free trading platform with free stock promos for new accounts.",
     requirements: "Open an account and make a qualifying deposit.",
@@ -217,6 +185,7 @@ export const offers: Offer[] = [
     name: "Rakuten",
     category: "apps",
     emoji: "🛍️",
+    domain: "rakuten.com",
     bonus: "$50",
     description: "Cash back on purchases at thousands of online stores, paid out quarterly.",
     requirements: "Spend $50 within 90 days of signing up to get the $50 bonus.",
@@ -228,6 +197,7 @@ export const offers: Offer[] = [
     name: "Ibotta",
     category: "apps",
     emoji: "🛒",
+    domain: "ibotta.com",
     bonus: "$10-$20",
     description: "Cash back on groceries and everyday shopping, in-store and online.",
     requirements: "Redeem a qualifying offer after signing up.",
@@ -238,6 +208,7 @@ export const offers: Offer[] = [
     name: "Upside",
     category: "apps",
     emoji: "⛽",
+    domain: "upside.com",
     bonus: "Extra cents/gallon",
     description: "Cash back on gas, groceries, and restaurants near you.",
     requirements: "Claim and complete a qualifying offer.",
@@ -248,6 +219,7 @@ export const offers: Offer[] = [
     name: "Airtable",
     category: "apps",
     emoji: "🗂️",
+    domain: "airtable.com",
     bonus: "Account credit",
     description:
       "Flexible spreadsheet-database hybrid for organizing projects, content calendars, and workflows.",
@@ -259,6 +231,7 @@ export const offers: Offer[] = [
     name: "Capital One Shopping",
     category: "apps",
     emoji: "🛍️",
+    domain: "capitaloneshopping.com",
     bonus: "Automatic price comparison + rewards",
     description:
       "Free browser extension that auto-applies coupon codes and compares prices while you shop online.",
@@ -271,6 +244,7 @@ export const offers: Offer[] = [
     name: "Replit",
     category: "apps",
     emoji: "💻",
+    domain: "replit.com",
     bonus: "Account credit",
     description: "Cloud-based coding platform for building, deploying, and hosting apps from the browser.",
     requirements: "Sign up using the referral link to trigger the credit.",
@@ -281,6 +255,7 @@ export const offers: Offer[] = [
     name: "Marathon ARCO Rewards",
     category: "apps",
     emoji: "⛽",
+    domain: "marathonarcorewards.com",
     bonus: "Rewards on gas purchases",
     description: "Loyalty rewards program for Marathon and ARCO gas stations — earn points on fuel purchases.",
     requirements: "Sign up with the referral link or code DLU0KAV5 to start earning.",
@@ -291,66 +266,40 @@ export const offers: Offer[] = [
     name: "Claude",
     category: "apps",
     emoji: "🤖",
+    domain: "claude.ai",
     bonus: "Account credit",
     description: "AI assistant from Anthropic for writing, coding, research, and more.",
     requirements: "Sign up using the referral link to trigger the credit.",
     referralUrl: "https://claude.ai/referral/u655IQCi2w?s=ios",
   },
   {
-    slug: "chase",
-    name: "Chase",
-    category: "banking",
-    emoji: "🏦",
-    bonus: "$50 (referrer) / up to $400 (referred)",
-    description: "Major bank with checking and savings accounts and a well-known referral program.",
-    requirements: "Referred friend must complete qualifying activities (e.g. direct deposit) to trigger the bonus.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
     slug: "axos-bank",
     name: "Axos Bank",
     category: "banking",
     emoji: "🏦",
+    domain: "axosbank.com",
     bonus: "Referral reward (uncapped)",
     description: "Online bank with checking, savings, and no monthly fees. One of the few referral programs with no limit on referrals.",
     requirements: "Referred friend must open and fund an account.",
     referralUrl: "https://share.axosbank.com/andriy!2ff1a65fbc!a",
   },
   {
-    slug: "acorns",
-    name: "Acorns",
-    category: "investing",
-    emoji: "🌰",
-    bonus: "Up to $1,200 (tiered by referrals)",
-    description: "Micro-investing app that rounds up purchases and invests the spare change.",
-    requirements: "Bonus tiers scale with number of friends referred (e.g. $300 for 2, up to $1,200 for 4).",
-    referralUrl: "REPLACE_ME",
-  },
-  {
     slug: "fetch-rewards",
     name: "Fetch Rewards",
     category: "apps",
     emoji: "🧾",
+    domain: "fetch.com",
     bonus: "Points redeemable for gift cards",
     description: "Cash back by scanning grocery and shopping receipts — one of the easiest apps to get started with.",
     requirements: "Scan your first receipt after signing up with the referral link.",
     referralUrl: "https://referral.fetch.com/vvv3/referralqr?code=8FFMQG",
   },
   {
-    slug: "shopkick",
-    name: "Shopkick",
-    category: "apps",
-    emoji: "🛍️",
-    bonus: "Points redeemable for gift cards",
-    description: "Earn rewards for walking into stores, scanning items, and shopping online.",
-    requirements: "Complete a qualifying in-app action after signing up with the referral link.",
-    referralUrl: "REPLACE_ME",
-  },
-  {
     slug: "uber-driver",
     name: "Uber (Drive/Deliver)",
     category: "apps",
     emoji: "🚗",
+    domain: "uber.com",
     bonus: "$1,750",
     description: "Earn money driving passengers or delivering with Uber, on your own schedule.",
     requirements: "Complete your first 153 passenger trips within 30 days of signing up.",
@@ -362,6 +311,7 @@ export const offers: Offer[] = [
     name: "Capital One Savor Student",
     category: "cards",
     emoji: "🍽️",
+    domain: "capitalone.com",
     bonus: "No sign-up bonus",
     description: "3% cash back on dining, entertainment, popular streaming services, and grocery stores, with no annual fee — built for students building credit.",
     requirements: "Apply and get approved for the card using the link below.",
@@ -372,6 +322,7 @@ export const offers: Offer[] = [
     name: "KashKick",
     category: "apps",
     emoji: "💰",
+    domain: "kashkick.com",
     bonus: "Cash payouts",
     description: "Get-paid-to site — earn cash for surveys, offers, and playing games, paid via PayPal.",
     requirements: "Sign up and complete a qualifying survey or offer.",
@@ -382,6 +333,7 @@ export const offers: Offer[] = [
     name: "Libertex",
     category: "investing",
     emoji: "📈",
+    domain: "libertex.com",
     bonus: "Free stock up to $200",
     description: "Online trading platform for stocks, crypto, and CFDs — gift a free share to new users you refer.",
     requirements: "Sign up and complete your first investment of any amount using promo code \"GIFT\".",
@@ -392,6 +344,7 @@ export const offers: Offer[] = [
     name: "Lemon",
     category: "investing",
     emoji: "🍋",
+    domain: "lemon.me",
     bonus: "Free Bitcoin",
     description: "Crypto app where you can buy, sell, and earn Bitcoin — both you and the person you refer earn a reward.",
     requirements: "Download the app and complete the sign-up steps using code \"andsams17\". Valid until September 15, 2026.",
@@ -402,6 +355,7 @@ export const offers: Offer[] = [
     name: "Bitso",
     category: "investing",
     emoji: "🪙",
+    domain: "bitso.com",
     bonus: "Weekly yield rewards",
     description: "Invest in crypto or 5,000+ global stocks from one app, with weekly yield on your holdings.",
     requirements: "Download the app and make your first purchase within 7 days using code \"erwlx\".",
@@ -412,6 +366,7 @@ export const offers: Offer[] = [
     name: "Instacart",
     category: "apps",
     emoji: "🛒",
+    domain: "instacart.com",
     bonus: "$10 off",
     description: "Grocery delivery app — get your order from local stores brought to your door.",
     requirements: "Use code \"G909CC6\" at checkout or sign up through the link. Terms apply.",
@@ -422,6 +377,7 @@ export const offers: Offer[] = [
     name: "Instacart Shopper",
     category: "apps",
     emoji: "🛍️",
+    domain: "instacart.com",
     bonus: "Referral reward (check current terms)",
     description: "Earn money shopping and delivering Instacart orders on your own schedule.",
     requirements: "Sign up to become a shopper through the link. Terms apply.",
@@ -433,6 +389,7 @@ export const offers: Offer[] = [
     name: "Instawork",
     category: "apps",
     emoji: "🧰",
+    domain: "instawork.com",
     bonus: "Referral reward (check current terms)",
     description: "Flexible work platform — pick up shifts at nearby businesses on your own schedule.",
     requirements: "Sign up through the link and complete your first shift. Terms apply.",
@@ -443,12 +400,22 @@ export const offers: Offer[] = [
     name: "PayPal",
     category: "apps",
     emoji: "💸",
+    domain: "paypal.com",
     bonus: "$10 per friend (up to $100/year)",
     description: "Widely-used payment app for sending, receiving, and shopping online.",
     requirements: "Sign up with the link, link a bank or card, verify your phone, and complete a $5+ transaction within 30 days.",
     referralUrl: "https://py.pl/8KhV5fuHiz",
   },
 ];
+
+// Brandfetch Logo CDN. The `c` param is Brandfetch's public client ID for
+// browser embeds (hotlinking is their intended use; server-side fetches are
+// blocked), so these load straight in the visitor's browser via <img>.
+const BRANDFETCH_CLIENT_ID = "1idCSZcCK3yPBuFDVWi";
+
+export function getOfferLogoUrl(offer: Offer, size = 128): string {
+  return `https://cdn.brandfetch.io/domain/${offer.domain}/w/${size}/h/${size}/fallback/lettermark?c=${BRANDFETCH_CLIENT_ID}`;
+}
 
 export function getOffersByCategory(category: Category): Offer[] {
   return offers.filter((offer) => offer.category === category);
