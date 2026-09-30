@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { categories, getFeaturedOffers } from "@/data/offers";
+import { categories, getFeaturedOffers, offers } from "@/data/offers";
 import { OfferCard } from "@/components/OfferCard";
+import { ScratchCard } from "@/components/ScratchCard";
 
 export default function Home() {
   const featured = getFeaturedOffers();
@@ -22,6 +23,14 @@ export default function Home() {
         >
           Browse all offers
         </Link>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-16 text-center">
+        <h2 className="text-xl font-semibold">Feeling lucky?</h2>
+        <p className="mt-1 text-sm text-neutral-500">Scratch the card to reveal a random offer.</p>
+        <div className="mt-6">
+          <ScratchCard offers={offers} />
+        </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-16">
