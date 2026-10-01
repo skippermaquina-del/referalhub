@@ -1,7 +1,8 @@
 import Image from "next/image";
 import QRCode from "qrcode";
+import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
 import { LeadForm } from "@/components/allegiant/LeadForm";
-import { brands, business, faqs, reasons, services, steps, vcard } from "@/data/allegiant";
+import { areas, brands, business, premiumBrands, faqs, reasons, services, steps, vcard } from "@/data/allegiant";
 
 const btnPrimary =
   "inline-flex items-center justify-center rounded-lg bg-[color:var(--al-orange)] px-7 py-4 text-[15px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[color:var(--al-orange-dim)]";
@@ -32,7 +33,7 @@ export default async function AllegiantPage() {
     name: business.name,
     description: business.subhead,
     telephone: business.phone,
-    areaServed: business.area,
+    areaServed: areas,
     makesOffer: services.map((s) => ({
       "@type": "Offer",
       itemOffered: { "@type": "Service", name: s.title },
@@ -118,6 +119,20 @@ export default async function AllegiantPage() {
         </div>
       </section>
 
+      {/* Premium brands */}
+      <section className="bg-[color:var(--al-black)] px-5 py-16 text-white md:py-24">
+        <div className={wrap}>
+          <Eyebrow>Luxury &amp; built-in appliances</Eyebrow>
+          <h2 className={h2}>Have a premium appliance we can help with?</h2>
+          <p className="mt-4 max-w-2xl text-[18px] text-white/70">
+            High-end kitchens deserve careful hands. Vadim services the premium brands found in Beverly Hills, Pasadena and Santa Monica homes.
+          </p>
+          <div className="mt-10">
+            <BrandCarousel brands={premiumBrands} />
+          </div>
+        </div>
+      </section>
+
       {/* Why us + steps */}
       <section id="why" className={section}>
         <div className={`${wrap} grid gap-14 md:grid-cols-2`}>
@@ -177,8 +192,13 @@ export default async function AllegiantPage() {
       <section className={section}>
         <div className={`${wrap} text-center`}>
           <Eyebrow>Service area</Eyebrow>
-          <h2 className={h2}>{business.area}</h2>
-          <p className="mx-auto mt-4 max-w-xl text-[18px] text-[color:var(--al-ink-dim)]">
+          <h2 className={h2}>Serving the Westside, Pasadena &amp; the coast.</h2>
+          <ul className="mt-8 flex flex-wrap justify-center gap-3">
+            {areas.map((a) => (
+              <li key={a} className="rounded-full border border-[color:var(--al-hairline)] bg-white px-5 py-2.5 text-[16px] font-bold">{a}</li>
+            ))}
+          </ul>
+          <p className="mx-auto mt-6 max-w-xl text-[18px] text-[color:var(--al-ink-dim)]">
             Not sure if we cover your address? Call or text and Vadim will let you know right away.
           </p>
         </div>

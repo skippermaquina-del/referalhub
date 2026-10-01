@@ -13,9 +13,9 @@ export const business = {
   phone: "+1 (323) 578-4010",
   phoneHref: "tel:+13235784010",
   smsHref: "sms:+13235784010",
-  // TODO: confirmar email y zona de servicio con Vadim.
+  // TODO: confirmar email con Vadim.
   email: "",
-  area: "Los Angeles & surrounding areas",
+  area: "Beverly Hills, Pasadena, Santa Monica & up the coast",
   headline: "Appliance repair you can count on.",
   subhead:
     "Fast, honest repairs for home and business — by a licensed & insured technician who picks up the phone.",
@@ -59,7 +59,7 @@ export const vcard = [
 // TODO: confirmar con Vadim que atiende todas estas marcas.
 export const brands = [
   "Samsung", "LG", "Whirlpool", "GE", "Bosch", "Maytag", "Frigidaire",
-  "KitchenAid", "Kenmore", "Electrolux", "Sub-Zero", "Viking",
+  "KitchenAid", "Kenmore", "Electrolux",
 ];
 
 export const faqs = [
@@ -83,4 +83,14 @@ export const faqs = [
     q: "Is it worth repairing, or should I replace it?",
     a: "Vadim will give you an honest answer after diagnosing it — if a repair doesn't make sense, he'll tell you.",
   },
+];
+
+/** Zonas que Vadim confirmó. TODO: añadir ciudades exactas "arriba por la costa". */
+export const areas = ["Beverly Hills", "Pasadena", "Santa Monica", "Malibu & the coast north"];
+
+/** Marcas premium (carrusel). TODO: confirmar con Vadim cuáles atiende. */
+export const premiumBrands = [
+  "Sub-Zero", "Wolf", "Thermador", "Viking", "Miele", "Gaggenau", "La Cornue",
+  "Lacanche", "Best", "Cove", "Dacor", "Monogram", "Jenn-Air", "Fisher & Paykel",
+  "Bertazzoni", "BlueStar", "Liebherr", "True",
 ];

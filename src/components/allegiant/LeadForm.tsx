@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { business, services } from "@/data/allegiant";
+import { business, premiumBrands, services } from "@/data/allegiant";
 
 /** Sin backend: arma un SMS prellenado para Vadim con los datos del cliente.
  * TODO: cambiar a un endpoint/email cuando haya dominio y correo propios. */
@@ -17,6 +17,7 @@ export function LeadForm() {
       `Phone: ${f.get("phone")}`,
       `Address/ZIP: ${f.get("location")}`,
       `Appliance: ${f.get("service")}`,
+      `Brand: ${f.get("brand") || "-"}`,
       `Problem: ${f.get("problem")}`,
     ].join("\n");
     window.location.href = `${business.smsHref}?&body=${encodeURIComponent(body)}`;
@@ -40,6 +41,12 @@ export function LeadForm() {
         ))}
         <option>Other</option>
       </select>
+      <input name="brand" list="brands" placeholder="Brand (Sub-Zero, Wolf, Miele…)" className={field} />
+      <datalist id="brands">
+        {premiumBrands.map((b) => (
+          <option key={b} value={b} />
+        ))}
+      </datalist>
       <textarea name="problem" required rows={3} placeholder="What's the problem? (brand, model, symptoms)" className={field} />
       <button type="submit" className="rounded-lg bg-[color:var(--al-orange)] px-7 py-4 text-[16px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[color:var(--al-orange-dim)]">
         Request Service
