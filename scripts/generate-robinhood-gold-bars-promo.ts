@@ -1,8 +1,6 @@
 // Robinhood "2,000 gold bars" sweepstakes promo (HOOD Month, ends Oct 23,
 // 2026) — a time-limited hook that funnels viewers to the regular Robinhood
-// referral offer (/go/robinhood). Same gold-on-black look as
-// generate-robinhood-gold-card-spotlight.ts, with a stack of gold bars
-// dropping in instead of the card.
+// referral offer (/go/robinhood).
 //
 // It's a sweepstakes, so the frame always carries the sponsor's required
 // framing: no deposit or Gold membership necessary, mail-in entry, US 18+,
