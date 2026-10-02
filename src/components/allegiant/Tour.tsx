@@ -114,7 +114,7 @@ export function Tour({ lang }: { lang: Lang }) {
         {kind ? (
           <div>
             <div className="al-tour-repair">{t.repair}</div>
-            <p style={{ margin: "26px 0 0", fontSize: 16, lineHeight: 1.8, color: "var(--al-text-2)" }}>{kind.copy}</p>
+            <p style={{ margin: "26px 0 0", fontSize: 19, lineHeight: 1.8, color: "var(--al-text-2)" }}>{kind.copy}</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 24 }}>
               {kind.faults.map((f) => (
                 <span key={f} className="al-fault">{f}</span>
@@ -132,13 +132,13 @@ export function Tour({ lang }: { lang: Lang }) {
             </div>
             {xrayOn && (
               <div style={{ marginTop: 28, borderLeft: "1px solid var(--al-accent)", paddingLeft: 18, maxWidth: 380 }}>
-                <div style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "var(--al-accent)" }}>{t.xrayTitle}</div>
-                <p style={{ margin: "8px 0 0", fontSize: 15, lineHeight: 1.7, color: "var(--al-text-2)" }}>{t.xrayNote}</p>
+                <div style={{ fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--al-accent)" }}>{t.xrayTitle}</div>
+                <p style={{ margin: "8px 0 0", fontSize: 17, lineHeight: 1.7, color: "var(--al-text-2)" }}>{t.xrayNote}</p>
               </div>
             )}
           </div>
         ) : (
-          <p style={{ margin: "26px 0 0", fontSize: 16, lineHeight: 1.8, color: "var(--al-text-2)", maxWidth: 380 }}>{t.hint}</p>
+          <p style={{ margin: "26px 0 0", fontSize: 19, lineHeight: 1.8, color: "var(--al-text-2)", maxWidth: 380 }}>{t.hint}</p>
         )}
       </div>
 

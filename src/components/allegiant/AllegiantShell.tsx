@@ -114,8 +114,8 @@ export function AllegiantShell({
         <div className="al-chat" role="dialog" aria-label={t.chat.title}>
           <div className="al-chat-head">
             <div>
-              <div className="al-eyebrow" style={{ letterSpacing: "0.24em" }}>{t.chat.title}</div>
-              <div style={{ marginTop: 4, fontSize: 12, color: "var(--al-muted)" }}>{t.chat.sub}</div>
+              <div className="al-eyebrow" style={{ letterSpacing: "0.12em" }}>{t.chat.title}</div>
+              <div style={{ marginTop: 4, fontSize: 14, color: "var(--al-muted)" }}>{t.chat.sub}</div>
             </div>
             <button type="button" className="al-icon-btn" aria-label={b.close} onClick={() => setChat(false)}>
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#f4efe6" strokeWidth="1.8" aria-hidden="true">
@@ -158,14 +158,14 @@ export function AllegiantShell({
               <circle cx="24" cy="24" r="21" />
               <path d="M14 25 L21 32 L34 16" />
             </svg>
-            <h3 className="al-serif" style={{ margin: "28px 0 0", fontWeight: 300, fontSize: 44 }}>{b.thanks}</h3>
-            <p role="status" style={{ margin: "16px 0 0", fontSize: 16, lineHeight: 1.7, color: "var(--al-muted)" }}>{b.thanksP}</p>
+            <h3 className="al-serif" style={{ margin: "28px 0 0", fontWeight: 400, fontSize: 44 }}>{b.thanks}</h3>
+            <p role="status" style={{ margin: "16px 0 0", fontSize: 19, lineHeight: 1.7, color: "var(--al-muted)" }}>{b.thanksP}</p>
             <button type="button" className="al-btn-line" style={{ marginTop: 36 }} onClick={closeBook}>{b.close}</button>
           </div>
         ) : (
           <form className="al-form" onSubmit={onSubmit}>
-            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: "var(--al-muted)" }}>{b.sub}</p>
-            <p style={{ margin: 0, fontSize: 13, letterSpacing: "0.04em", color: "var(--al-faint)" }}>{b.hours}</p>
+            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: "var(--al-muted)" }}>{b.sub}</p>
+            <p style={{ margin: 0, fontSize: 15, letterSpacing: "0.04em", color: "var(--al-faint)" }}>{b.hours}</p>
             <div className="al-field">
               <label htmlFor="al-name">{b.name}</label>
               <input ref={firstField} id="al-name" name="name" required maxLength={80} autoComplete="name" />
@@ -215,7 +215,7 @@ export function AllegiantShell({
             <button type="submit" className="al-submit" disabled={status === "sending"}>
               {status === "sending" ? b.sending : b.send}
             </button>
-            <div style={{ fontSize: 13, color: "var(--al-muted)", textAlign: "center" }}>
+            <div style={{ fontSize: 15, color: "var(--al-muted)", textAlign: "center" }}>
               {b.or}{" "}
               <a href={`tel:${business.phoneHref}`} style={{ borderBottom: "1px solid var(--al-line-3)" }}>
                 {business.phoneDisplay}

@@ -7,99 +7,97 @@ import { brandLogos, copy, homeBrands, luxuryBrands, type Lang } from "@/data/al
 type Card = { name: string; tag: string };
 
 /**
- * Carrusel horizontal de marcas: avanza una cada 3 segundos y vuelve al
- * inicio sin saltos (las primeras tarjetas se repiten al final). Se detiene
- * al pasar el cursor, al enfocar y con "reducir movimiento".
+ * Carrusel horizontal de marcas, en modo manual: se desplaza con el dedo
+ * (desplazamiento nativo), arrastrando con el mouse, con el teclado (flechas,
+ * cuando tiene el foco) o con los botones. No avanza solo.
  */
 export function BrandCarousel({ lang }: { lang: Lang }) {
   const t = copy[lang].brands;
 
   // Se intercalan marcas de lujo y de uso diario, para que cada cliente se vea reflejado.
-  const base: Card[] = [];
+  const cards: Card[] = [];
   luxuryBrands.forEach((name, i) => {
-    base.push({ name, tag: t.luxury });
-    base.push({ name: homeBrands[i], tag: t.home });
+    cards.push({ name, tag: t.luxury });
+    cards.push({ name: homeBrands[i], tag: t.home });
   });
-  const total = base.length;
-  const cards = [...base, ...base.slice(0, 6)];
 
-  const [index, setIndex] = useState(0);
-  const [instant, setInstant] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const scroller = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ x: number; left: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
-  useEffect(() => {
-    const pending = timers.current;
-    return () => pending.forEach(clearTimeout);
+  const updateEdges = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 2);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
   }, []);
 
-  const later = (fn: () => void, ms: number) => {
-    timers.current.push(setTimeout(fn, ms));
+  useEffect(() => {
+    updateEdges();
+    window.addEventListener("resize", updateEdges);
+    return () => window.removeEventListener("resize", updateEdges);
+  }, [updateEdges]);
+
+  const scrollByCards = (dir: 1 | -1) => {
+    const el = scroller.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>(".al-brand-card");
+    const gap = parseFloat(getComputedStyle(el.firstElementChild as Element).columnGap) || 20;
+    const step = card ? card.offsetWidth + gap : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step * 2, behavior: "smooth" });
   };
 
-  const step = useCallback(
-    (dir: 1 | -1) => {
-      if (dir === 1) {
-        setInstant(false);
-        setIndex((i) => i + 1);
-        // Al llegar a las copias del final, vuelve al inicio sin animar.
-        if (index + 1 >= total) {
-          later(() => {
-            setInstant(true);
-            setIndex(0);
-          }, 900);
-          later(() => setInstant(false), 1000);
-        }
-      } else if (index === 0) {
-        setInstant(true);
-        setIndex(total);
-        later(() => {
-          setInstant(false);
-          setIndex(total - 1);
-        }, 60);
-      } else {
-        setInstant(false);
-        setIndex((i) => i - 1);
-      }
-    },
-    [index, total],
-  );
-
-  useEffect(() => {
-    if (paused) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = setInterval(() => step(1), 3000);
-    return () => clearInterval(timer);
-  }, [paused, step]);
+  // Arrastre con mouse (en pantallas táctiles el desplazamiento ya es nativo).
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || e.button !== 0 || !scroller.current) return;
+    drag.current = { x: e.clientX, left: scroller.current.scrollLeft };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDragging(true);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || !scroller.current) return;
+    scroller.current.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
+  };
+  const endDrag = () => {
+    drag.current = null;
+    setDragging(false);
+  };
 
   return (
-    <div
-      className="al-carousel"
-      role="group"
-      aria-roledescription="carousel"
-      aria-label={t.eyebrow}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      <button type="button" className="al-carousel-btn" aria-label={t.prev} onClick={() => step(-1)}>
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f4efe6" strokeWidth="1.5" aria-hidden="true">
+    <div className="al-carousel" role="group" aria-roledescription="carousel" aria-label={t.eyebrow}>
+      <button
+        type="button"
+        className="al-carousel-btn"
+        aria-label={t.prev}
+        disabled={atStart}
+        onClick={() => scrollByCards(-1)}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
           <path d="M15 5 L8 12 L15 19" />
         </svg>
       </button>
-      <div className="al-carousel-window">
-        <div
-          className="al-carousel-track"
-          data-instant={instant ? "" : undefined}
-          style={{ ["--al-index" as string]: index }}
-        >
-          {cards.map((c, i) => {
+      <div
+        ref={scroller}
+        className="al-carousel-window"
+        data-dragging={dragging ? "" : undefined}
+        tabIndex={0}
+        role="region"
+        aria-label={t.eyebrow}
+        onScroll={updateEdges}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+      >
+        <div className="al-carousel-track">
+          {cards.map((c) => {
             const logo = brandLogos[c.name];
             return (
-              <div key={`${c.name}-${i}`} className="al-brand-card" aria-hidden={i >= total}>
+              <div key={c.name} className="al-brand-card">
                 {logo ? (
-                  <Image src={logo} alt={c.name} width={170} height={46} className="al-brand-card-logo" />
+                  <Image src={logo} alt={c.name} width={170} height={46} draggable={false} className="al-brand-card-logo" />
                 ) : (
                   <span className="al-brand-card-name">{c.name}</span>
                 )}
@@ -109,8 +107,14 @@ export function BrandCarousel({ lang }: { lang: Lang }) {
           })}
         </div>
       </div>
-      <button type="button" className="al-carousel-btn" aria-label={t.next} onClick={() => step(1)}>
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f4efe6" strokeWidth="1.5" aria-hidden="true">
+      <button
+        type="button"
+        className="al-carousel-btn"
+        aria-label={t.next}
+        disabled={atEnd}
+        onClick={() => scrollByCards(1)}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
           <path d="M9 5 L16 12 L9 19" />
         </svg>
       </button>

@@ -10,21 +10,24 @@
   --al-navy: #1c2f58;
   --al-accent: #f26f21;
   --al-text: #f4efe6;
-  --al-text-2: #cfd6e4;
-  --al-muted: #a9b3c6;
-  --al-faint: #7d8aa3;
+  --al-text-2: #e1e6f0;
+  --al-muted: #c6cfde;
+  --al-faint: #a6b1c6;
+  --al-accent-fill: #f26f21;
+  --al-logo-filter: brightness(0) invert(1);
   --al-line: #1d2c4a;
   --al-line-2: #2a3b5e;
   --al-line-3: #3a4a6e;
   --al-card: 240px;
   --al-gap: 20px;
-  --al-step: calc(var(--al-card) + var(--al-gap));
 
   background: var(--al-bg);
   color: var(--al-text);
   font-family: var(--font-al-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -71,9 +74,9 @@ html:has(.allegiant) {
 }
 
 .al-eyebrow {
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.3em;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-accent);
 }
@@ -92,9 +95,38 @@ html:has(.allegiant) {
 .al-h2 {
   margin: 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(34px, 4vw, 54px);
   line-height: 1.2;
+}
+
+
+/* ---------- Secciones claras (mejor lectura): crema + azul noche ---------- */
+
+.al-light {
+  --al-bg: #f4efe6;
+  --al-panel: #ffffff;
+  --al-band: #ebe4d6;
+  --al-text: #14213d;
+  --al-text-2: #26324f;
+  --al-muted: #44506a;
+  --al-faint: #5a6580;
+  --al-line: #d8cfbd;
+  --al-line-2: #c2b8a2;
+  --al-line-3: #a39a85;
+  --al-accent: #b8480a;
+  --al-logo-filter: brightness(0);
+  background: var(--al-bg);
+  color: var(--al-text);
+}
+.al-light.al-tone-2 {
+  background: #fbf9f4;
+}
+.al-light.al-tone-3 {
+  background: #ebe4d6;
+}
+.al-light a:hover {
+  color: var(--al-accent);
 }
 
 /* ---------- Botones ---------- */
@@ -102,37 +134,37 @@ html:has(.allegiant) {
 .al-btn {
   display: inline-block;
   border: 0;
-  background: var(--al-accent);
-  color: var(--al-bg) !important;
+  background: var(--al-accent-fill);
+  color: #08101e !important;
   padding: 19px 40px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-align: center;
   transition: opacity 0.2s ease;
 }
 .al-btn:hover {
   opacity: 0.88;
-  color: var(--al-bg) !important;
+  color: #08101e !important;
 }
 .al-btn-line {
   display: inline-block;
   background: none;
   border: 1px solid var(--al-accent);
   padding: 19px 40px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .al-link {
   display: inline-block;
   border-bottom: 1px solid var(--al-line-3);
   padding-bottom: 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -146,7 +178,7 @@ html:has(.allegiant) {
   gap: 24px;
   padding: 12px 8%;
   background: var(--al-navy);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.06em;
 }
 .al-ribbon-cta {
@@ -155,9 +187,9 @@ html:has(.allegiant) {
   border-bottom: 1px solid var(--al-accent);
   color: var(--al-accent);
   padding: 4px 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .al-ribbon-close {
@@ -206,9 +238,9 @@ html:has(.allegiant) {
   display: flex;
   align-items: center;
   gap: 32px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .al-lang {
@@ -217,8 +249,8 @@ html:has(.allegiant) {
 }
 .al-lang a {
   padding: 10px 8px;
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   color: var(--al-faint);
   border-bottom: 1px solid transparent;
 }
@@ -227,13 +259,13 @@ html:has(.allegiant) {
   border-bottom-color: var(--al-accent);
 }
 .al-nav-book {
-  background: var(--al-accent);
-  color: var(--al-bg);
+  background: var(--al-accent-fill);
+  color: #08101e;
   border: 0;
   padding: 15px 26px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -280,6 +312,7 @@ html:has(.allegiant) {
 .al-hero-img {
   object-fit: cover;
   object-position: center 60%;
+  filter: brightness(1.18) saturate(1.05);
   opacity: 0;
   transform: scale(1);
   transition: opacity 1.8s ease, transform 9s ease-out;
@@ -293,9 +326,9 @@ html:has(.allegiant) {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(8, 16, 30, 0.92) 0%,
-    rgba(8, 16, 30, 0.72) 38%,
-    rgba(8, 16, 30, 0.1) 75%
+    rgba(8, 16, 30, 0.84) 0%,
+    rgba(8, 16, 30, 0.6) 40%,
+    rgba(8, 16, 30, 0) 78%
   );
 }
 .al-hero-shade-bottom {
@@ -314,7 +347,7 @@ html:has(.allegiant) {
 .al-hero-title {
   margin: 32px 0 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(46px, 6.4vw, 88px);
   line-height: 1.04;
   letter-spacing: -0.01em;
@@ -326,7 +359,7 @@ html:has(.allegiant) {
 .al-hero-p {
   margin: 36px 0 0;
   max-width: 500px;
-  font-size: 17px;
+  font-size: 21px;
   line-height: 1.8;
   color: var(--al-text-2);
 }
@@ -352,8 +385,8 @@ html:has(.allegiant) {
   border-top: 2px solid var(--al-line-3);
   padding: 12px 0 0;
   text-align: left;
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-muted);
 }
@@ -380,14 +413,14 @@ html:has(.allegiant) {
 }
 .al-trust-big {
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 52px;
   line-height: 1;
   color: var(--al-accent);
 }
 .al-trust-small {
   margin-top: 14px;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--al-muted);
@@ -419,6 +452,7 @@ html:has(.allegiant) {
   gap: 20px;
 }
 .al-carousel-btn {
+  color: var(--al-text);
   flex: 0 0 48px;
   height: 48px;
   border-radius: 50%;
@@ -428,21 +462,36 @@ html:has(.allegiant) {
   align-items: center;
   justify-content: center;
 }
+.al-carousel-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 .al-carousel-window {
   flex: 1;
-  overflow: hidden;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.al-carousel-window::-webkit-scrollbar {
+  display: none;
+}
+.al-carousel-window[data-dragging] {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
 }
 .al-carousel-track {
   display: flex;
   gap: var(--al-gap);
-  transform: translateX(calc(var(--al-step) * var(--al-index, 0) * -1));
-  transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1);
-}
-.al-carousel-track[data-instant] {
-  transition: none;
+  width: max-content;
 }
 .al-brand-card {
   flex: 0 0 var(--al-card);
+  scroll-snap-align: start;
+  user-select: none;
   height: 132px;
   box-sizing: border-box;
   display: flex;
@@ -461,8 +510,8 @@ html:has(.allegiant) {
   text-align: center;
 }
 .al-brand-card-tag {
-  font-size: 10px;
-  letter-spacing: 0.24em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-faint);
 }
@@ -472,8 +521,8 @@ html:has(.allegiant) {
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.92;
+  filter: var(--al-logo-filter);
+  opacity: 0.95;
 }
 .al-all-brands {
   margin-top: 56px;
@@ -492,7 +541,7 @@ html:has(.allegiant) {
 .al-all-brands-text {
   font-family: var(--font-al-serif), serif;
   font-size: clamp(24px, 2.4vw, 34px);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.25;
 }
 
@@ -516,12 +565,12 @@ html:has(.allegiant) {
 .al-why-title {
   margin: 18px 0 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 38px;
 }
 .al-why-text {
   margin: 18px 0 0;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.8;
   color: var(--al-muted);
 }
@@ -543,7 +592,7 @@ html:has(.allegiant) {
 }
 .al-stars span {
   margin-left: 14px;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--al-muted);
 }
 .al-testimonials {
@@ -561,13 +610,13 @@ html:has(.allegiant) {
   margin: 22px 0 0;
   font-family: var(--font-al-serif), serif;
   font-size: 28px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.4;
 }
 .al-quote figcaption {
   margin-top: 22px;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-muted);
 }
@@ -588,13 +637,13 @@ html:has(.allegiant) {
 .al-service h3 {
   margin: 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 40px;
 }
 .al-service p {
   margin: 0;
   max-width: 520px;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.8;
   color: var(--al-muted);
 }
@@ -608,7 +657,7 @@ html:has(.allegiant) {
 .al-teaser h2 {
   margin: 28px 0 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(38px, 4.7vw, 68px);
   line-height: 1.08;
 }
@@ -634,7 +683,7 @@ html:has(.allegiant) {
   cursor: pointer;
   font-family: var(--font-al-serif), serif;
   font-size: clamp(22px, 2.2vw, 30px);
-  font-weight: 300;
+  font-weight: 400;
 }
 .al-faq summary::-webkit-details-marker {
   display: none;
@@ -660,7 +709,7 @@ html:has(.allegiant) {
 .al-faq p {
   margin: 0 0 32px;
   max-width: 640px;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.8;
   color: var(--al-muted);
 }
@@ -675,10 +724,10 @@ html:has(.allegiant) {
 .al-chip {
   border: 1px solid var(--al-line-2);
   padding: 14px 26px;
-  font-size: 13px;
-  letter-spacing: 0.16em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #e8e2d6;
+  color: var(--al-text);
 }
 
 /* ---------- Contacto ---------- */
@@ -692,7 +741,7 @@ html:has(.allegiant) {
   margin: 34px auto 0;
   max-width: 900px;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(40px, 5vw, 72px);
   line-height: 1.1;
 }
@@ -709,7 +758,7 @@ html:has(.allegiant) {
   border: 1px solid var(--al-line-3);
   padding: 21px 40px;
   font-size: 14px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
 }
 
 /* ---------- Pie ---------- */
@@ -720,8 +769,8 @@ html:has(.allegiant) {
   background: var(--al-bg-deep);
 }
 .al-footer-col-title {
-  font-size: 12px;
-  letter-spacing: 0.28em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-accent);
 }
@@ -730,7 +779,7 @@ html:has(.allegiant) {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--al-text-2);
 }
 .al-footer-bottom {
@@ -741,15 +790,15 @@ html:has(.allegiant) {
   margin-top: 72px;
   padding-top: 28px;
   border-top: 1px solid var(--al-line);
-  font-size: 12px;
-  letter-spacing: 0.16em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-faint);
 }
 .al-legal {
   margin: 36px 0 0;
   max-width: 760px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--al-faint);
 }
@@ -764,14 +813,14 @@ html:has(.allegiant) {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--al-accent);
-  color: var(--al-bg);
+  background: var(--al-accent-fill);
+  color: #08101e;
   border: 0;
   border-radius: 40px;
   padding: 18px 28px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   transition: opacity 0.3s ease;
@@ -819,9 +868,9 @@ html:has(.allegiant) {
 .al-chat-bubble {
   background: var(--al-bg);
   padding: 16px 18px;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.6;
-  color: #e8e2d6;
+  color: var(--al-text);
 }
 .al-chat-actions {
   display: flex;
@@ -833,16 +882,16 @@ html:has(.allegiant) {
 .al-chat-actions button {
   padding: 14px;
   text-align: center;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border: 1px solid var(--al-line-3);
   background: none;
 }
 .al-chat-actions .primary {
-  background: var(--al-accent);
-  color: var(--al-bg);
-  border-color: var(--al-accent);
+  background: var(--al-accent-fill);
+  color: #08101e;
+  border-color: var(--al-accent-fill);
   font-weight: 500;
 }
 
@@ -906,8 +955,8 @@ html:has(.allegiant) {
   gap: 8px;
 }
 .al-field label {
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-muted);
 }
@@ -921,7 +970,7 @@ html:has(.allegiant) {
   color: var(--al-text);
   padding: 14px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 19px;
   border-radius: 0;
 }
 .al-field-row {
@@ -942,14 +991,14 @@ html:has(.allegiant) {
   color: #ffb08a;
 }
 .al-submit {
-  background: var(--al-accent);
-  color: var(--al-bg);
+  background: var(--al-accent-fill);
+  color: #08101e;
   border: 0;
   padding: 20px;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .al-submit:disabled {
@@ -998,7 +1047,7 @@ html:has(.allegiant) {
   pointer-events: none;
 }
 .al-tour-dim[data-on] {
-  opacity: 0.5;
+  opacity: 0.42;
 }
 .al-spot {
   position: absolute;
@@ -1030,7 +1079,7 @@ html:has(.allegiant) {
   box-sizing: border-box;
 }
 .al-spot[aria-pressed="true"] .al-spot-dot {
-  background: var(--al-accent);
+  background: var(--al-accent-fill);
 }
 .al-xray {
   position: absolute;
@@ -1057,7 +1106,7 @@ html:has(.allegiant) {
   top: 0;
   bottom: 0;
   width: min(640px, 100%);
-  background: linear-gradient(90deg, rgba(8, 16, 30, 0.88), rgba(8, 16, 30, 0));
+  background: linear-gradient(90deg, rgba(8, 16, 30, 0.78), rgba(8, 16, 30, 0));
   pointer-events: none;
 }
 .al-tour-shade-b {
@@ -1090,16 +1139,21 @@ html:has(.allegiant) {
   z-index: 5;
 }
 .al-tour-panel {
+  pointer-events: none;
   position: absolute;
   left: 6%;
   top: 150px;
   width: min(430px, 88%);
   z-index: 5;
 }
+.al-tour-panel button,
+.al-tour-panel a {
+  pointer-events: auto;
+}
 .al-tour-title {
   margin: 26px 0 0;
   font-family: var(--font-al-serif), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(40px, 4.4vw, 64px);
   line-height: 1.04;
 }
@@ -1114,7 +1168,7 @@ html:has(.allegiant) {
   border: 1px solid var(--al-line-2);
   background: rgba(8, 16, 30, 0.6);
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-text-2);
@@ -1123,14 +1177,14 @@ html:has(.allegiant) {
   background: rgba(8, 16, 30, 0.6);
   border: 1px solid var(--al-accent);
   padding: 15px 28px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .al-xray-btn[aria-pressed="true"] {
-  background: var(--al-accent);
-  color: var(--al-bg);
+  background: var(--al-accent-fill);
+  color: #08101e;
 }
 .al-tour-nav {
   position: absolute;
@@ -1150,9 +1204,9 @@ html:has(.allegiant) {
   border: 0;
   border-bottom: 1px solid transparent;
   padding: 12px 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--al-muted);
 }
@@ -1252,8 +1306,8 @@ html:has(.allegiant) {
     padding: 10px 5%;
   }
   .al-brand-name {
-    font-size: 15px;
-    letter-spacing: 0.3em;
+    font-size: 17px;
+    letter-spacing: 0.12em;
   }
   .al-nav-book {
     padding: 12px 16px;
