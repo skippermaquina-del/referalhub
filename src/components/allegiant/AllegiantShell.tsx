@@ -165,6 +165,7 @@ export function AllegiantShell({
         ) : (
           <form className="al-form" onSubmit={onSubmit}>
             <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: "var(--al-muted)" }}>{b.sub}</p>
+            <p style={{ margin: 0, fontSize: 13, letterSpacing: "0.04em", color: "var(--al-faint)" }}>{b.hours}</p>
             <div className="al-field">
               <label htmlFor="al-name">{b.name}</label>
               <input ref={firstField} id="al-name" name="name" required maxLength={80} autoComplete="name" />

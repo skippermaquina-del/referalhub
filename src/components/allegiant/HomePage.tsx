@@ -242,6 +242,7 @@ export function HomePage({ lang }: { lang: Lang }) {
               <div className="al-footer-links">
                 <a href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>
                 <span>{t.footer.where}</span>
+                <span>{t.footer.hours}</span>
                 {business.registrationNumber && (
                   <span>
                     {t.trust.registration} #{business.registrationNumber}
