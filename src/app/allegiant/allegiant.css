@@ -18,7 +18,6 @@
   --al-line-3: #3a4a6e;
   --al-card: 240px;
   --al-gap: 20px;
-  --al-step: calc(var(--al-card) + var(--al-gap));
 
   background: var(--al-bg);
   color: var(--al-text);
@@ -428,21 +427,36 @@ html:has(.allegiant) {
   align-items: center;
   justify-content: center;
 }
+.al-carousel-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 .al-carousel-window {
   flex: 1;
-  overflow: hidden;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.al-carousel-window::-webkit-scrollbar {
+  display: none;
+}
+.al-carousel-window[data-dragging] {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
 }
 .al-carousel-track {
   display: flex;
   gap: var(--al-gap);
-  transform: translateX(calc(var(--al-step) * var(--al-index, 0) * -1));
-  transition: transform 0.8s cubic-bezier(0.6, 0, 0.2, 1);
-}
-.al-carousel-track[data-instant] {
-  transition: none;
+  width: max-content;
 }
 .al-brand-card {
   flex: 0 0 var(--al-card);
+  scroll-snap-align: start;
+  user-select: none;
   height: 132px;
   box-sizing: border-box;
   display: flex;
