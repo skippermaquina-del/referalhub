@@ -31,6 +31,8 @@ export const business = {
   reviewStats: null as { rating: string; count: number } | null,
   /** Reseñas reales (con permiso para publicarlas). Vacío oculta la sección. */
   testimonials: [] as { text: string; who: string }[],
+  /** Horario de atención de lunes a viernes (24 h). Los sábados son solo por solicitud especial. */
+  weekdayHours: { opens: "09:00", closes: "19:00" },
   /** Oferta de la tarjeta de visita; `false` oculta la cinta superior. */
   offerEnabled: true,
 };
@@ -230,7 +232,7 @@ export const copy = {
       blurb: "Expert repair and maintenance for fine appliances and everyday homes, across Greater Los Angeles.",
       contact: "Contact",
       where: "Serving Greater Los Angeles",
-      hours: "Monday–Friday · Saturday on request",
+      hours: "Monday–Friday, 9am–7pm · Saturday by special request",
       explore: "Explore",
       google: "View us on Google →",
       mid: "Residential & Commercial · Licensed & Insured",
@@ -239,7 +241,7 @@ export const copy = {
     booking: {
       title: "Book a visit",
       sub: "Tell us what needs repair and we will call you back shortly.",
-      hours: "We work Monday to Friday. Saturday visits are available on request.",
+      hours: "We work Monday to Friday, 9am to 7pm. Saturday visits are by special request.",
       name: "Name",
       phone: "Phone",
       appliance: "Appliance",
@@ -255,7 +257,7 @@ export const copy = {
       thanksP: "We received your request. Vadim will contact you shortly.",
       error: "Something went wrong. Please call us instead.",
       appliances: ["Refrigerator", "Wine cooler", "Ice maker", "Microwave", "Oven / range", "Dishwasher", "Washer", "Dryer", "Other"],
-      times: ["As soon as possible", "Morning", "Afternoon", "Evening", "Saturday (on request)"],
+      times: ["As soon as possible", "Morning", "Afternoon", "Evening", "Saturday (special request)"],
     },
     chat: {
       title: "Jessica · Allegiant",
@@ -372,7 +374,7 @@ export const copy = {
       blurb: "Reparación y mantenimiento expertos para electrodomésticos finos y hogares de todos los días, en todo el Gran Los Ángeles.",
       contact: "Contacto",
       where: "Servicio en el Gran Los Ángeles",
-      hours: "Lunes a viernes · Sábado a pedido",
+      hours: "Lunes a viernes, 9 a. m.–7 p. m. · Sábado por solicitud especial",
       explore: "Explorar",
       google: "Vernos en Google →",
       mid: "Residencial y comercial · Con licencia y seguro",
@@ -381,7 +383,7 @@ export const copy = {
     booking: {
       title: "Reservar una visita",
       sub: "Cuéntanos qué necesita reparación y te llamamos enseguida.",
-      hours: "Atendemos de lunes a viernes. Los sábados, a pedido.",
+      hours: "Atendemos de lunes a viernes, de 9 a. m. a 7 p. m. Los sábados, por solicitud especial.",
       name: "Nombre",
       phone: "Teléfono",
       appliance: "Aparato",
@@ -397,7 +399,7 @@ export const copy = {
       thanksP: "Recibimos tu solicitud. Vadim te contactará en breve.",
       error: "Algo salió mal. Por favor llámanos.",
       appliances: ["Refrigerador", "Vinoteca", "Máquina de hielo", "Microondas", "Horno / estufa", "Lavavajillas", "Lavadora", "Secadora", "Otro"],
-      times: ["Lo antes posible", "Mañana", "Tarde", "Noche", "Sábado (a pedido)"],
+      times: ["Lo antes posible", "Mañana", "Tarde", "Noche", "Sábado (solicitud especial)"],
     },
     chat: {
       title: "Jessica · Allegiant",

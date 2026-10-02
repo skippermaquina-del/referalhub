@@ -24,6 +24,12 @@ function structuredData(lang: Lang) {
     telephone: business.phoneDisplay,
     areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
     knowsLanguage: ["en", "es"],
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: business.weekdayHours.opens,
+      closes: business.weekdayHours.closes,
+    },
     ...(business.reviewStats
       ? {
           aggregateRating: {
