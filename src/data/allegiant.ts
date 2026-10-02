@@ -34,7 +34,7 @@ export const business = {
   /** Horario de atención de lunes a viernes (24 h). Los sábados son solo por solicitud especial. */
   weekdayHours: { opens: "09:00", closes: "19:00" },
   /** Oferta de la tarjeta de visita; `false` oculta la cinta superior. */
-  offerEnabled: true,
+  offerEnabled: false,
 };
 
 /** Rutas públicas de cada idioma. */
