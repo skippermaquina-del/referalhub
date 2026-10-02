@@ -1,0 +1,30 @@
+/* Landing de Allegiant Appliances. Acotado bajo `.allegiant`.
+   Paleta del logo: negro, navy, naranja y crema de la tarjeta. */
+.allegiant {
+  --al-orange: #f26b21;
+  --al-orange-dim: #d95a14;
+  --al-navy: #1b2f57;
+  --al-black: #0a0a0a;
+  --al-cream: #f4efe6;
+  --al-ink: #1b2f57;
+  --al-ink-dim: rgba(27, 47, 87, 0.7);
+  --al-hairline: rgba(27, 47, 87, 0.14);
+
+  background: var(--al-cream);
+  color: var(--al-ink);
+  font-family: var(--font-allegiant-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.allegiant ::selection {
+  background: var(--al-orange);
+  color: #fff;
+}
+
+html:has(.allegiant) {
+  scroll-behavior: smooth;
+}
+
+.allegiant [id] {
+  scroll-margin-top: 4.5rem;
+}
