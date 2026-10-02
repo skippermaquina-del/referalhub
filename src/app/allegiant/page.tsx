@@ -1,5 +1,6 @@
 import Image from "next/image";
 import QRCode from "qrcode";
+import { HouseTour } from "@/components/allegiant/HouseTour";
 import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
 import { LeadForm } from "@/components/allegiant/LeadForm";
 import { areas, brands, business, premiumBrands, faqs, reasons, services, steps, vcard } from "@/data/allegiant";
@@ -91,6 +92,8 @@ export default async function AllegiantPage() {
           </div>
         </div>
       </section>
+
+      <HouseTour />
 
       {/* Services */}
       <section id="services" className={section}>
