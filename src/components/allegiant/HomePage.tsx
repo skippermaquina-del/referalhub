@@ -78,7 +78,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             ))}
           </section>
 
-          <section id="marques" className="al-section al-section-line">
+          <section id="marques" className="al-section al-section-line al-light">
             <div className="al-grid12 al-section-head">
               <div className="al-eyebrow">{t.brands.eyebrow}</div>
               <h2 className="al-h2">{t.brands.h2}</h2>
@@ -90,7 +90,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             </div>
           </section>
 
-          <section className="al-section" style={{ paddingBottom: 40 }}>
+          <section className="al-section al-light al-tone-2" style={{ paddingBottom: 100 }}>
             <div className="al-grid12 al-section-head">
               <div className="al-eyebrow">{t.why.eyebrow}</div>
               <h2 className="al-h2">{t.why.h2}</h2>
@@ -106,7 +106,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             </div>
           </section>
 
-          <section id="savoir" className="al-section">
+          <section id="savoir" className="al-section al-light">
             <div className="al-services">
               {t.services.items.map((item) => (
                 <div key={item.n} className="al-service">
@@ -126,14 +126,14 @@ export function HomePage({ lang }: { lang: Lang }) {
               </h2>
             </div>
             <div style={{ gridColumn: "8 / span 5" }}>
-              <p style={{ margin: "0 0 40px", fontSize: 17, lineHeight: 1.8, color: "var(--al-muted)" }}>
+              <p style={{ margin: "0 0 40px", fontSize: 20, lineHeight: 1.8, color: "var(--al-muted)" }}>
                 {t.tourTeaser.p}
               </p>
               <a className="al-btn-line" href={p.tour}>{t.tourTeaser.cta}</a>
             </div>
           </section>
 
-          <section id="reviews" className="al-section al-grid12 al-reviews">
+          <section id="reviews" className="al-section al-grid12 al-reviews al-light al-tone-3">
             <div style={{ gridColumn: "1 / span 6" }}>
               <div className="al-eyebrow" style={{ marginBottom: 28 }}>{t.reviews.eyebrow}</div>
               <h2 className="al-h2">{t.reviews.h2}</h2>
@@ -149,7 +149,7 @@ export function HomePage({ lang }: { lang: Lang }) {
                   </span>
                 </div>
               )}
-              <p style={{ margin: "28px 0 40px", fontSize: 17, lineHeight: 1.8, color: "var(--al-muted)" }}>
+              <p style={{ margin: "28px 0 40px", fontSize: 20, lineHeight: 1.8, color: "var(--al-muted)" }}>
                 {t.reviews.p}
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 32, alignItems: "center" }}>
@@ -164,7 +164,7 @@ export function HomePage({ lang }: { lang: Lang }) {
           </section>
 
           {business.testimonials.length > 0 && (
-            <section className="al-section" style={{ paddingBottom: 40 }}>
+            <section className="al-section al-light" style={{ paddingBottom: 100 }}>
               <h2 className="al-h2" style={{ marginBottom: 56 }}>{t.reviews.testimonials}</h2>
               <div className="al-testimonials">
                 {business.testimonials.map((q) => (
@@ -182,7 +182,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             </section>
           )}
 
-          <section id="faq" className="al-section al-faq">
+          <section id="faq" className="al-section al-faq al-light">
             <div className="al-grid12">
               <div className="al-eyebrow" style={{ gridColumn: "1 / span 4", paddingTop: 12 }}>{t.faq.eyebrow}</div>
               <div style={{ gridColumn: "5 / span 8" }}>
@@ -205,7 +205,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             </div>
           </section>
 
-          <section className="al-section al-section-line">
+          <section className="al-section al-section-line al-light al-tone-2">
             <div className="al-grid12 al-section-head" style={{ marginBottom: 56 }}>
               <div className="al-eyebrow">{t.areas.eyebrow}</div>
               <h2 className="al-h2">{t.areas.h2}</h2>
@@ -239,7 +239,7 @@ export function HomePage({ lang }: { lang: Lang }) {
                 </svg>
                 <span className="al-brand-name" style={{ fontSize: 18 }}>Allegiant</span>
               </div>
-              <p style={{ margin: "26px 0 0", maxWidth: 380, fontSize: 15, lineHeight: 1.8, color: "var(--al-muted)" }}>
+              <p style={{ margin: "26px 0 0", maxWidth: 380, fontSize: 17, lineHeight: 1.8, color: "var(--al-muted)" }}>
                 {t.footer.blurb}
               </p>
             </div>

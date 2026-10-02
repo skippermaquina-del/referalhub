@@ -74,7 +74,7 @@ export function BrandCarousel({ lang }: { lang: Lang }) {
         disabled={atStart}
         onClick={() => scrollByCards(-1)}
       >
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f4efe6" strokeWidth="1.5" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
           <path d="M15 5 L8 12 L15 19" />
         </svg>
       </button>
@@ -114,7 +114,7 @@ export function BrandCarousel({ lang }: { lang: Lang }) {
         disabled={atEnd}
         onClick={() => scrollByCards(1)}
       >
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f4efe6" strokeWidth="1.5" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
           <path d="M9 5 L16 12 L9 19" />
         </svg>
       </button>
