@@ -1,13 +1,24 @@
 /**
  * Recibe las solicitudes de visita del formulario de Allegiant.
  *
- * Entrega: si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, cada solicitud se
- * reenvía allí (compatible con webhooks de Slack, Make, Zapier, etc.: manda un
- * campo `text` legible y el objeto `lead`). Sin esa variable, la solicitud solo
- * queda en el log del servidor, así que hay que configurarla antes de publicar.
+ * Entrega:
+ * 1. Guarda la solicitud en Supabase (siempre, sin excepciones).
+ * 2. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
+ *    (compatible con Slack, Make, Zapier, etc. para notificar a Vadim).
+ * 3. Devuelve {ok: true, saved: true} si se guardó en la BD.
  */
 
+import { createClient } from "@supabase/supabase-js";
+
 const WEBHOOK_URL = process.env.ALLEGIANT_LEADS_WEBHOOK_URL;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  throw new Error("Missing Supabase config");
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const limits = {
   name: 80,
@@ -50,6 +61,30 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "invalid_fields" }, { status: 400 });
   }
 
+  // Guarda en Supabase primero
+  try {
+    const { error: dbError } = await supabase.from("leads").insert({
+      name: lead.name,
+      phone: lead.phone,
+      appliance: lead.appliance || null,
+      brand: lead.brand || null,
+      zip: lead.zip || null,
+      time: lead.time || null,
+      message: lead.message || null,
+      lang,
+      status: "pending_approval",
+    });
+
+    if (dbError) {
+      console.error("[allegiant] database insert failed", dbError);
+      return Response.json({ ok: false, error: "database_error" }, { status: 500 });
+    }
+  } catch (error) {
+    console.error("[allegiant] unexpected database error", error);
+    return Response.json({ ok: false, error: "database_error" }, { status: 500 });
+  }
+
+  // Notifica por webhook si está configurado
   const text = [
     `New Allegiant visit request (${lang.toUpperCase()})`,
     `Name: ${lead.name}`,
@@ -62,22 +97,19 @@ export async function POST(request: Request) {
     .filter(Boolean)
     .join("\n");
 
-  if (!WEBHOOK_URL) {
-    console.warn("[allegiant] ALLEGIANT_LEADS_WEBHOOK_URL is not set; lead was not delivered:\n" + text);
-    return Response.json({ ok: true, delivered: false });
+  if (WEBHOOK_URL) {
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, lead: { ...lead, lang, receivedAt: new Date().toISOString() } }),
+        cache: "no-store",
+      });
+      if (!res.ok) console.warn(`[allegiant] webhook returned ${res.status}`);
+    } catch (error) {
+      console.warn("[allegiant] webhook delivery failed (lead saved anyway)", error);
+    }
   }
 
-  try {
-    const res = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, lead: { ...lead, lang, receivedAt: new Date().toISOString() } }),
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`webhook ${res.status}`);
-    return Response.json({ ok: true, delivered: true });
-  } catch (error) {
-    console.error("[allegiant] lead delivery failed", error);
-    return Response.json({ ok: false, error: "delivery_failed" }, { status: 502 });
-  }
+  return Response.json({ ok: true, saved: true });
 }
