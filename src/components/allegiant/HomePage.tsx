@@ -1,6 +1,5 @@
 import { business, copy, paths, serviceAreas, type Lang } from "@/data/allegiant";
 import { AllegiantShell } from "./AllegiantShell";
-import { BookButton } from "./BookButton";
 import { BrandCarousel } from "./BrandCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
@@ -221,7 +220,6 @@ export function HomePage({ lang }: { lang: Lang }) {
             <div className="al-eyebrow">{t.contact.eyebrow}</div>
             <h2>{t.contact.h2}</h2>
             <div className="al-contact-actions">
-              <BookButton>{t.nav.book}</BookButton>
               <a className="al-phone-btn" href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>
             </div>
           </section>
