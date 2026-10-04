@@ -44,8 +44,10 @@ export function paths(lang: Lang) {
     home: base,
     tour: `${base}/tour`,
     blog: `${base}/blog`,
+    about: `${base}/about`,
     other: lang === "es" ? "/allegiant" : "/allegiant/es",
     otherTour: lang === "es" ? "/allegiant/tour" : "/allegiant/es/tour",
+    otherAbout: lang === "es" ? "/allegiant/about" : "/allegiant/es/about",
   };
 }
 
