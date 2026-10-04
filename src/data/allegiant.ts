@@ -43,6 +43,7 @@ export function paths(lang: Lang) {
   return {
     home: base,
     tour: `${base}/tour`,
+    blog: `${base}/blog`,
     other: lang === "es" ? "/allegiant" : "/allegiant/es",
     otherTour: lang === "es" ? "/allegiant/tour" : "/allegiant/es/tour",
   };
@@ -84,6 +85,267 @@ export const homeBrands = [
  * nombre en tipografía.
  */
 export const brandLogos: Record<string, string> = {};
+
+/**
+ * Información detallada de marcas de electrodomésticos.
+ * Cada marca incluye su historia, características y datos para mejorar SEO.
+ */
+export type BrandInfo = {
+  name: string;
+  category: "luxury" | "home" | "professional" | "compact";
+  country: string;
+  founded: number;
+  description: string;
+  specialties: string[];
+  commonIssues: string[];
+  priceRange: "budget" | "mid" | "premium" | "luxury";
+};
+
+export const brandDatabase: Record<string, BrandInfo> = {
+  // Marcas de lujo
+  "Sub-Zero": {
+    name: "Sub-Zero",
+    category: "luxury",
+    country: "USA",
+    founded: 1945,
+    description: "El estándar de oro en refrigeración premium. Famosa por sus cámaras de congelación integradas y sistemas de enfriamiento de precisión.",
+    specialties: ["Refrigeración built-in", "Cámaras de congelación", "Wine storage", "Control de humedad"],
+    commonIssues: ["No enfría", "Compresor ruidoso", "Variaciones de temperatura"],
+    priceRange: "luxury",
+  },
+  Wolf: {
+    name: "Wolf",
+    category: "luxury",
+    country: "USA",
+    founded: 1952,
+    description: "Cocinas y hornos de calidad profesional con perillas rojas distintivo. Conocida por su potencia de quemadores y precisión de horneado.",
+    specialties: ["Cocinas profesionales", "Hornos de convección", "Quemadores de alta potencia", "Tops gourmet"],
+    commonIssues: ["Quemadores no encienden", "Encendido defectuoso", "Problemas de horno"],
+    priceRange: "luxury",
+  },
+  Miele: {
+    name: "Miele",
+    category: "luxury",
+    country: "Alemania",
+    founded: 1899,
+    description: "Ingeniería alemana de precisión. Líder en lavavajillas ultra silenciosos, lavadoras de carga frontal y sistemas de café integrados.",
+    specialties: ["Lavavajillas silenciosos", "Lavadoras premium", "Sistemas de café", "Hornos de vapor"],
+    commonIssues: ["Lavavajillas no drena", "Problemas de bomba", "Errores de control"],
+    priceRange: "luxury",
+  },
+  Gaggenau: {
+    name: "Gaggenau",
+    category: "luxury",
+    country: "Alemania",
+    founded: 1683,
+    description: "Ultra lujo minimalista de diseño europeo. Integración perfecta en cocinas arquitectónicas de alto nivel.",
+    specialties: ["Hornos de precisión", "Integración arquitectónica", "Diseño minimalista", "Controles digitales"],
+    commonIssues: ["Problemas electrónicos", "Errores de sensor", "Control defectuoso"],
+    priceRange: "luxury",
+  },
+  Thermador: {
+    name: "Thermador",
+    category: "luxury",
+    country: "USA",
+    founded: 1916,
+    description: "Línea de lujo con quemadores de estrella exclusivos y columnas de frío integradas. Diseño innovador para cocinas gourmet.",
+    specialties: ["Quemadores de estrella", "Columnas de frío", "Hornos de convección", "Tops innovadores"],
+    commonIssues: ["Quemadores mal funcionan", "Problemas de encendido", "Fallos de horno"],
+    priceRange: "luxury",
+  },
+  Viking: {
+    name: "Viking",
+    category: "luxury",
+    country: "USA",
+    founded: 1987,
+    description: "Cocinas de estilo profesional de gran robustez. Potencia extrema de quemadores y resistencia de uso intenso.",
+    specialties: ["Cocinas profesionales", "Quemadores ultra potentes", "Hornos comerciales", "Durabilidad extrema"],
+    commonIssues: ["Problemas de ignición", "Quemadores débiles", "Termostato defectuoso"],
+    priceRange: "luxury",
+  },
+  "La Cornue": {
+    name: "La Cornue",
+    category: "luxury",
+    country: "Francia",
+    founded: 1908,
+    description: "Cocinas de lujo francesas hechas a mano. Cada modelo es personalizado y es una pieza de arte funcional.",
+    specialties: ["Cocinas personalizadas", "Manufactura artesanal", "Diseño clásico", "Horno de hierro fundido"],
+    commonIssues: ["Problemas de horno", "Ignición defectuosa", "Regulación de temperatura"],
+    priceRange: "luxury",
+  },
+  "Fisher & Paykel": {
+    name: "Fisher & Paykel",
+    category: "luxury",
+    country: "Nueva Zelanda",
+    founded: 1934,
+    description: "Innovadores neozelandeses en cajones lavavajillas y frigoríficos con estilo francés. Diseño inteligente y funcional.",
+    specialties: ["Cajones lavavajillas", "Refrigeración francesa", "Diseño innovador", "Facilidad de uso"],
+    commonIssues: ["Cajón no abre", "Problemas de drenaje", "Compresor ruidoso"],
+    priceRange: "premium",
+  },
+  Liebherr: {
+    name: "Liebherr",
+    category: "luxury",
+    country: "Alemania",
+    founded: 1949,
+    description: "Fabricante alemán de refrigeración premium. Expertos en frigoríficos de columna y sistemas de conservación de precisión.",
+    specialties: ["Frigoríficos de columna", "Sistemas de precisión", "Wine coolers", "Tecnología alemana"],
+    commonIssues: ["No enfría", "Problemas de compresor", "Variación de temperatura"],
+    priceRange: "luxury",
+  },
+  Dacor: {
+    name: "Dacor",
+    category: "luxury",
+    country: "USA",
+    founded: 1965,
+    description: "Línea de lujo de diseño contemporáneo. Propiedad de Samsung, combina estética moderna con tecnología inteligente.",
+    specialties: ["Cocinas modernas", "Hornos inteligentes", "Diseño contemporáneo", "Control remoto"],
+    commonIssues: ["Errores de aplicación", "Problemas WiFi", "Fallos de sensor"],
+    priceRange: "luxury",
+  },
+  Monogram: {
+    name: "Monogram",
+    category: "luxury",
+    country: "USA",
+    founded: 1990,
+    description: "Línea premium de GE con integración perfecta. Modular y personalizable para cocinas arquitectónicas.",
+    specialties: ["Integración modular", "Diseño personalizable", "Electrodomésticos built-in", "Acabados premium"],
+    commonIssues: ["Problemas de control", "Fallos de sensor", "Errores electrónicos"],
+    priceRange: "premium",
+  },
+  Smeg: {
+    name: "Smeg",
+    category: "luxury",
+    country: "Italia",
+    founded: 1948,
+    description: "Diseño italiano retro-moderno. Frigoríficos vintage con funcionalidad moderna y acabados coloridos únicos.",
+    specialties: ["Frigoríficos diseño", "Acabados vintage", "Electrodomésticos de color", "Estética italiana"],
+    commonIssues: ["Problemas cosméticos", "Fallos de compresor", "No enfría adecuadamente"],
+    priceRange: "premium",
+  },
+
+  // Marcas home residenciales
+  Samsung: {
+    name: "Samsung",
+    category: "home",
+    country: "Corea del Sur",
+    founded: 1938,
+    description: "Líder en conectividad inteligente y pantallas integradas. Frigoríficos de familia moderna con WiFi y cámaras interiores.",
+    specialties: ["Frigoríficos inteligentes", "Pantallas LED", "Conectividad WiFi", "Control remoto"],
+    commonIssues: ["Pantalla muerta", "Compresor ruidoso", "Problemas WiFi", "Error de control"],
+    priceRange: "mid",
+  },
+  LG: {
+    name: "LG",
+    category: "home",
+    country: "Corea del Sur",
+    founded: 1947,
+    description: "Reconocida por innovación en motores de lavado y refrigeración. Lavadoras con tecnología de carga frontal y frigoríficos inverter.",
+    specialties: ["Lavadoras inverter", "Frigoríficos lineales", "Tecnología directdrive", "Eficiencia energética"],
+    commonIssues: ["Problemas de motor", "No enfría", "Ciclos largos", "Fugas de agua"],
+    priceRange: "mid",
+  },
+  Whirlpool: {
+    name: "Whirlpool",
+    category: "home",
+    country: "USA",
+    founded: 1911,
+    description: "Marca tradicional de consumo masivo. Frigoríficos, lavadoras y secadoras confiables para la familia estadounidense.",
+    specialties: ["Frigoríficos duraderos", "Lavadoras resistentes", "Secadoras económicas", "Confiabilidad"],
+    commonIssues: ["No enfría", "Fugas", "Problemas de lavado", "Motor defectuoso"],
+    priceRange: "mid",
+  },
+  GE: {
+    name: "GE",
+    category: "home",
+    country: "USA",
+    founded: 1892,
+    description: "General Electric - La marca icónica de consumo general. Frigoríficos, estufas y electrodomésticos desde 1892.",
+    specialties: ["Frigoríficos robustos", "Estufas eléctricas", "Lavavajillas", "Electrodomésticos generales"],
+    commonIssues: ["No enfría", "Quemadores débiles", "Drenaje defectuoso", "Motor débil"],
+    priceRange: "mid",
+  },
+  Maytag: {
+    name: "Maytag",
+    category: "home",
+    country: "USA",
+    founded: 1908,
+    description: "Enfocada en durabilidad y potencia. Lavadoras y secadoras famosas por su resistencia y capacidad de carga pesada.",
+    specialties: ["Lavadoras potentes", "Secadoras duraderas", "Resistencia extrema", "Capacidad grande"],
+    commonIssues: ["Problemas de transmisión", "No centrifuga", "Problemas de secado", "Fugas"],
+    priceRange: "mid",
+  },
+  Frigidaire: {
+    name: "Frigidaire",
+    category: "home",
+    country: "USA",
+    founded: 1916,
+    description: "Una de las marcas más vendidas de consumo masivo. Frigoríficos y electrodomésticos asequibles y confiables.",
+    specialties: ["Frigoríficos económicos", "Electrodomésticos básicos", "Buena relación precio-rendimiento", "Disponibilidad"],
+    commonIssues: ["No enfría", "Ruido de compresor", "Problemas de hielo", "Control defectuoso"],
+    priceRange: "budget",
+  },
+  KitchenAid: {
+    name: "KitchenAid",
+    category: "home",
+    country: "USA",
+    founded: 1919,
+    description: "Gama media-alta famosa por sus batidoras y cocinas. Electrodomésticos de calidad para cocinas funcionales.",
+    specialties: ["Cocinas de calidad", "Batidoras legendarias", "Frigoríficos built-in", "Diseño funcional"],
+    commonIssues: ["Quemador no enciende", "Problemas de horno", "Control defectuoso", "Motor débil"],
+    priceRange: "mid",
+  },
+  Bosch: {
+    name: "Bosch",
+    category: "home",
+    country: "Alemania",
+    founded: 1921,
+    description: "Fabricante alemán famosa por lavavajillas ultra silenciosos y diseño europeo. Ingeniería de precisión.",
+    specialties: ["Lavavajillas silenciosos", "Ingeniería alemana", "Eficiencia energética", "Integración europea"],
+    commonIssues: ["No drena bien", "Bomba débil", "Brazo rociador atascado", "Errores de sensor"],
+    priceRange: "mid",
+  },
+  Electrolux: {
+    name: "Electrolux",
+    category: "home",
+    country: "Suecia",
+    founded: 1919,
+    description: "Gama media-alta sueca, fuerte en lavandería premium. Lavadoras con tecnología escandinava y frigoríficos eficientes.",
+    specialties: ["Lavadoras premium", "Frigoríficos eficientes", "Tecnología escandinava", "Lavavajillas avanzados"],
+    commonIssues: ["Problemas de motor", "No centrifuga bien", "Fugas de agua", "Errores de control"],
+    priceRange: "mid",
+  },
+  Kenmore: {
+    name: "Kenmore",
+    category: "home",
+    country: "USA",
+    founded: 1927,
+    description: "Marca tradicional de Sears, ahora fabricada bajo licencia. Frigoríficos, lavadoras y electrodomésticos generales.",
+    specialties: ["Frigoríficos confiables", "Lavadoras robustas", "Electrodomésticos generales", "Disponibilidad"],
+    commonIssues: ["No enfría", "Problemas de motor", "Fugas", "Control defectuoso"],
+    priceRange: "mid",
+  },
+  Amana: {
+    name: "Amana",
+    category: "home",
+    country: "USA",
+    founded: 1934,
+    description: "Línea económica y de primera necesidad del grupo Whirlpool. Electrodomésticos básicos a precio accesible.",
+    specialties: ["Electrodomésticos económicos", "Confiabilidad básica", "Fácil reparación", "Disponibilidad"],
+    commonIssues: ["No enfría", "Problemas generales", "Desgaste de componentes", "Falla de control"],
+    priceRange: "budget",
+  },
+  Hotpoint: {
+    name: "Hotpoint",
+    category: "home",
+    country: "USA",
+    founded: 1912,
+    description: "Modelos básicos operada por Whirlpool en EE. UU. Electrodomésticos entry-level de bajo costo.",
+    specialties: ["Modelos económicos", "Electrodomésticos básicos", "Fácil mantenimiento", "Bajo costo"],
+    commonIssues: ["No enfría", "Quemadores débiles", "Desgaste rápido", "Falla de componentes"],
+    priceRange: "budget",
+  },
+};
 
 export const serviceAreas = [
   "West Hollywood",
@@ -155,7 +417,7 @@ type Kind = { name: string; copy: string; faults: string[] };
 export const copy = {
   en: {
     ribbon: { text: "Save your contact and get 20% off labor or maintenance.", cta: "Book now" },
-    nav: { brands: "Brands", reviews: "Reviews", tour: "Home tour", faq: "FAQ", book: "Book a visit" },
+    nav: { brands: "Brands", reviews: "Reviews", tour: "Home tour", blog: "Blog", faq: "FAQ", book: "Book a visit" },
     hero: {
       eyebrow: "Greater Los Angeles",
       h1a: "Every appliance,",
@@ -297,7 +559,7 @@ export const copy = {
   },
   es: {
     ribbon: { text: "Guarda nuestro contacto y obtén 20 % de descuento en mano de obra o mantenimiento.", cta: "Reservar" },
-    nav: { brands: "Marcas", reviews: "Reseñas", tour: "Recorrido", faq: "Preguntas", book: "Reservar visita" },
+    nav: { brands: "Marcas", reviews: "Reseñas", tour: "Recorrido", blog: "Blog", faq: "Preguntas", book: "Reservar visita" },
     hero: {
       eyebrow: "Gran Los Ángeles",
       h1a: "Cada electrodoméstico,",
