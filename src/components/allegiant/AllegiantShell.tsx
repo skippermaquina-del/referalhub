@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { business, copy, type Lang } from "@/data/allegiant";
+import { business, brandDatabase, copy, type Lang } from "@/data/allegiant";
 
 type BookingContextValue = { openBook: () => void };
 
@@ -184,7 +184,12 @@ export function AllegiantShell({
             </div>
             <div className="al-field">
               <label htmlFor="al-brand">{b.brand}</label>
-              <input id="al-brand" name="brand" maxLength={60} />
+              <input id="al-brand" name="brand" maxLength={60} list="al-brands" />
+              <datalist id="al-brands">
+                {Object.keys(brandDatabase).map((brandName) => (
+                  <option key={brandName} value={brandName} />
+                ))}
+              </datalist>
             </div>
             <div className="al-field-row">
               <div className="al-field">
