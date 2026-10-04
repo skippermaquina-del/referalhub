@@ -45,7 +45,6 @@ export function Hero({ lang }: { lang: Lang }) {
         </h1>
         <p className="al-hero-p">{t.p}</p>
         <div className="al-hero-actions">
-          <button type="button" className="al-btn" onClick={openBook}>{t.cta}</button>
           <a className="al-link" href={paths(lang).tour}>{t.tour}</a>
         </div>
       </div>
