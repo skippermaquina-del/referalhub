@@ -64,44 +64,48 @@ export function AdminPanel() {
   };
 
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
+    const lead = leads.find((l) => l.id === leadId) ?? selectedLead;
     try {
-      // Si se aprueba, enviar SMS primero
-      if (newStatus === "confirmed" && selectedLead) {
-        setSendingSms(true);
-        const smsResponse = await fetch("/api/allegiant/sms", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            leadName: selectedLead.name,
-            leadPhone: selectedLead.phone,
-            appliance: selectedLead.appliance,
-            brand: selectedLead.brand,
-            message: selectedLead.message,
-          }),
-        });
-
-        if (!smsResponse.ok) {
-          const errorData = await smsResponse.json();
-          console.error("SMS Error:", errorData);
-          alert("Error al enviar SMS: " + errorData.error);
-          setSendingSms(false);
-          return;
-        }
-        setSendingSms(false);
-      }
-
-      // Actualizar status en BD
+      // Primero se guarda el estado: un fallo del SMS no debe bloquear la aprobación.
       const { error } = await supabase
         .from("leads")
         .update({ status: newStatus })
         .eq("id", leadId);
 
       if (error) throw error;
-      setLeads(leads.filter((l) => l.id !== leadId));
+      setLeads((prev) => prev.filter((l) => l.id !== leadId));
       if (selectedLead?.id === leadId) setSelectedLead(null);
     } catch (err) {
       console.error("Error updating lead:", err);
       alert("Error al actualizar");
+      return;
+    }
+
+    if (newStatus !== "confirmed" || !lead) return;
+
+    setSendingSms(true);
+    try {
+      const smsResponse = await fetch("/api/allegiant/sms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          leadName: lead.name,
+          leadPhone: lead.phone,
+          appliance: lead.appliance,
+          brand: lead.brand,
+          message: lead.message,
+        }),
+      });
+
+      if (!smsResponse.ok) {
+        const errorData = await smsResponse.json().catch(() => ({}));
+        console.error("SMS Error:", errorData);
+        alert(`Lead aprobado, pero no se pudo enviar el SMS (${errorData.error ?? smsResponse.status}). Llama a ${lead.name} al ${lead.phone}.`);
+      }
+    } catch (err) {
+      console.error("SMS Error:", err);
+      alert(`Lead aprobado, pero no se pudo enviar el SMS. Llama a ${lead.name} al ${lead.phone}.`);
+    } finally {
       setSendingSms(false);
     }
   };
