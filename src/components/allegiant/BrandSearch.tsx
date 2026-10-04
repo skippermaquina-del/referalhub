@@ -1,11 +1,55 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { brandDatabase, type Lang } from "@/data/allegiant";
 
 export function BrandSearch({ lang }: { lang: Lang }) {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Initialize Web Speech API
+  useEffect(() => {
+    const SpeechRecognition = typeof window !== "undefined" && (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setVoiceSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = lang === "es" ? "es-ES" : "en-US";
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+
+      recognition.onresult = (event: any) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setSearch(transcript.trim());
+          setSelected(null);
+        }
+      };
+
+      recognition.onerror = () => setIsListening(false);
+      recognitionRef.current = recognition;
+    }
+  }, [lang]);
+
+  const toggleVoiceSearch = () => {
+    if (!recognitionRef.current) return;
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      setSearch("");
+      setSelected(null);
+      recognitionRef.current.start();
+    }
+  };
 
   const filteredBrands = useMemo(() => {
     if (!search) return [];
@@ -65,8 +109,8 @@ export function BrandSearch({ lang }: { lang: Lang }) {
           {t.title}
         </h2>
 
-        {/* Search input */}
-        <div style={{ gridColumn: "1 / span 12", marginBottom: 40 }}>
+        {/* Search input with voice button */}
+        <div style={{ gridColumn: "1 / span 12", marginBottom: 40, display: "flex", gap: 12, alignItems: "stretch" }}>
           <input
             type="text"
             placeholder={t.placeholder}
@@ -76,7 +120,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
               setSelected(null);
             }}
             style={{
-              width: "100%",
+              flex: 1,
               padding: "16px 20px",
               fontSize: 18,
               border: "2px solid var(--al-line-3)",
@@ -87,6 +131,49 @@ export function BrandSearch({ lang }: { lang: Lang }) {
             }}
             aria-label={t.placeholder}
           />
+          {voiceSupported && (
+            <button
+              type="button"
+              onClick={toggleVoiceSearch}
+              style={{
+                padding: "0 20px",
+                borderRadius: 8,
+                border: "2px solid var(--al-line-3)",
+                backgroundColor: isListening ? "var(--al-accent)" : "var(--al-bg)",
+                color: isListening ? "var(--al-bg)" : "var(--al-text)",
+                cursor: "pointer",
+                fontSize: 20,
+                transition: "all 0.2s",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: 56,
+              }}
+              title={isListening ? "Escuchando..." : "Buscar por voz"}
+              aria-label="Voice search"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                {isListening ? (
+                  <>
+                    <path d="M12 2c-3.3 0-6 2.7-6 6v7c0 3.3 2.7 6 6 6s6-2.7 6-6V8c0-3.3-2.7-6-6-6z" />
+                    <path d="M4 10h16" />
+                    <circle cx="12" cy="21" r="1" fill="currentColor" />
+                    <path d="M12 18v3" />
+                  </>
+                ) : (
+                  <path d="M12 2c-3.3 0-6 2.7-6 6v7c0 3.3 2.7 6 6 6s6-2.7 6-6V8c0-3.3-2.7-6-6-6zm0 16c-2.2 0-4-1.8-4-4v-7c0-2.2 1.8-4 4-4s4 1.8 4 4v7c0 2.2-1.8 4-4 4z" />
+                )}
+              </svg>
+            </button>
+          )}
         </div>
 
         {/* Results list or detail view */}
