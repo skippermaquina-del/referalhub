@@ -230,7 +230,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
                   </h3>
 
                   <p style={{ margin: "0 0 24px", fontSize: 16, lineHeight: 1.6, color: "var(--al-muted)" }}>
-                    {selectedBrand.description}
+                    {typeof selectedBrand.description === "string" ? selectedBrand.description : selectedBrand.description[lang]}
                   </p>
 
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
@@ -273,7 +273,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
                       {t.specialties}
                     </h4>
                     <ul style={{ margin: 0, paddingLeft: 20 }}>
-                      {selectedBrand.specialties.map((spec) => (
+                      {(typeof selectedBrand.specialties === "string" ? [] : Array.isArray(selectedBrand.specialties) ? selectedBrand.specialties : selectedBrand.specialties[lang]).map((spec) => (
                         <li key={spec} style={{ fontSize: 14, lineHeight: 1.6 }}>
                           {spec}
                         </li>
@@ -286,7 +286,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
                       {t.commonIssues}
                     </h4>
                     <ul style={{ margin: 0, paddingLeft: 20 }}>
-                      {selectedBrand.commonIssues.map((issue) => (
+                      {(typeof selectedBrand.commonIssues === "string" ? [] : Array.isArray(selectedBrand.commonIssues) ? selectedBrand.commonIssues : selectedBrand.commonIssues[lang]).map((issue) => (
                         <li key={issue} style={{ fontSize: 14, lineHeight: 1.6 }}>
                           {issue}
                         </li>
