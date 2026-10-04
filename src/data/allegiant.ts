@@ -635,7 +635,7 @@ type Kind = { name: string; copy: string; faults: string[] };
 export const copy = {
   en: {
     ribbon: { text: "Save your contact and get 20% off labor or maintenance.", cta: "Book now" },
-    nav: { brands: "Brands", reviews: "Reviews", tour: "Home tour", blog: "Blog", faq: "FAQ", book: "Book a visit" },
+    nav: { brands: "Brands", reviews: "Reviews", tour: "Home tour", about: "About us", blog: "Blog", faq: "FAQ", book: "Book a visit" },
     hero: {
       eyebrow: "Greater Los Angeles",
       h1a: "Every appliance,",
@@ -777,7 +777,7 @@ export const copy = {
   },
   es: {
     ribbon: { text: "Guarda nuestro contacto y obtén 20 % de descuento en mano de obra o mantenimiento.", cta: "Reservar" },
-    nav: { brands: "Marcas", reviews: "Reseñas", tour: "Recorrido", blog: "Blog", faq: "Preguntas", book: "Reservar visita" },
+    nav: { brands: "Marcas", reviews: "Reseñas", tour: "Recorrido", about: "Nosotros", blog: "Blog", faq: "Preguntas", book: "Reservar visita" },
     hero: {
       eyebrow: "Gran Los Ángeles",
       h1a: "Cada electrodoméstico,",
