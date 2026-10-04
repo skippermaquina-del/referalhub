@@ -95,7 +95,7 @@ export default function AboutPage() {
                     src="/images/about/vadim-kitchen.jpg"
                     alt="Trabajo de reparación de electrodomésticos"
                     fill
-                    style={{ objectFit: "cover", borderRadius: 8 }}
+                    style={{ objectFit: "cover", objectPosition: "center 12%", borderRadius: 8 }}
                   />
                 </div>
 
@@ -105,7 +105,7 @@ export default function AboutPage() {
                     src="/images/about/vadim-laundry.jpg"
                     alt="Reparación de electrodomésticos de lavandería"
                     fill
-                    style={{ objectFit: "cover", borderRadius: 8 }}
+                    style={{ objectFit: "cover", objectPosition: "center 12%", borderRadius: 8 }}
                   />
                 </div>
                 <div style={{ gridColumn: "8 / span 5", display: "flex", flexDirection: "column", justifyContent: "center" }}>
