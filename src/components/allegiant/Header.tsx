@@ -28,6 +28,7 @@ export function Header({ lang }: { lang: Lang }) {
         <a className="al-nav-text" href="#reviews">{t.nav.reviews}</a>
         <a className="al-nav-text" href="#faq">{t.nav.faq}</a>
         <a className="al-nav-text" href={p.tour}>{t.nav.tour}</a>
+        <a className="al-nav-text" href={p.about}>{t.nav.about}</a>
         <div className="al-lang">
           <a href={paths("en").home} hrefLang="en" aria-current={lang === "en"} aria-label="English">EN</a>
           <a href={paths("es").home} hrefLang="es" aria-current={lang === "es"} aria-label="Español">ES</a>
