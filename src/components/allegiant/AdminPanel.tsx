@@ -29,6 +29,7 @@ export function AdminPanel() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [sendingSms, setSendingSms] = useState(false);
 
   // Admin code (hardcoded for MVP, should be env var)
   const ADMIN_CODE = "1234";
@@ -64,6 +65,32 @@ export function AdminPanel() {
 
   const updateLeadStatus = async (leadId: string, newStatus: string) => {
     try {
+      // Si se aprueba, enviar SMS primero
+      if (newStatus === "confirmed" && selectedLead) {
+        setSendingSms(true);
+        const smsResponse = await fetch("/api/allegiant/sms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            leadName: selectedLead.name,
+            leadPhone: selectedLead.phone,
+            appliance: selectedLead.appliance,
+            brand: selectedLead.brand,
+            message: selectedLead.message,
+          }),
+        });
+
+        if (!smsResponse.ok) {
+          const errorData = await smsResponse.json();
+          console.error("SMS Error:", errorData);
+          alert("Error al enviar SMS: " + errorData.error);
+          setSendingSms(false);
+          return;
+        }
+        setSendingSms(false);
+      }
+
+      // Actualizar status en BD
       const { error } = await supabase
         .from("leads")
         .update({ status: newStatus })
@@ -75,6 +102,7 @@ export function AdminPanel() {
     } catch (err) {
       console.error("Error updating lead:", err);
       alert("Error al actualizar");
+      setSendingSms(false);
     }
   };
 
@@ -203,20 +231,23 @@ export function AdminPanel() {
               <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
                 <button
                   onClick={() => updateLeadStatus(selectedLead.id, "confirmed")}
+                  disabled={sendingSms}
                   style={{
                     flex: 1,
                     padding: "10px",
-                    backgroundColor: "#22c55e",
+                    backgroundColor: sendingSms ? "#999" : "#22c55e",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
-                    cursor: "pointer",
+                    cursor: sendingSms ? "not-allowed" : "pointer",
+                    opacity: sendingSms ? 0.6 : 1,
                   }}
                 >
-                  Aprobar
+                  {sendingSms ? "Enviando SMS..." : "Aprobar"}
                 </button>
                 <button
                   onClick={() => updateLeadStatus(selectedLead.id, "declined")}
+                  disabled={sendingSms}
                   style={{
                     flex: 1,
                     padding: "10px",
@@ -224,7 +255,8 @@ export function AdminPanel() {
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
-                    cursor: "pointer",
+                    cursor: sendingSms ? "not-allowed" : "pointer",
+                    opacity: sendingSms ? 0.6 : 1,
                   }}
                 >
                   Declinar
