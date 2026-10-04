@@ -53,9 +53,9 @@ export function BrandSearch({ lang }: { lang: Lang }) {
 
   const filteredBrands = useMemo(() => {
     if (!search) return [];
-    const query = search.toLowerCase();
+    const query = search.toLowerCase().replace(/\s+/g, "").replace(/-/g, "");
     return Object.values(brandDatabase)
-      .filter((b) => b.name.toLowerCase().includes(query))
+      .filter((b) => b.name.toLowerCase().replace(/\s+/g, "").replace(/-/g, "").includes(query))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [search]);
 
