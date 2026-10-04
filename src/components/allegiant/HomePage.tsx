@@ -1,5 +1,6 @@
 import { business, copy, paths, serviceAreas, type Lang } from "@/data/allegiant";
 import { AllegiantShell } from "./AllegiantShell";
+import { BrandSearch } from "./BrandSearch";
 import { ContinuousCarousel } from "./ContinuousCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
@@ -79,6 +80,10 @@ export function HomePage({ lang }: { lang: Lang }) {
 
           <section id="marques" className="al-section al-light">
             <ContinuousCarousel lang={lang} />
+          </section>
+
+          <section className="al-section al-light" style={{ backgroundColor: "var(--al-bg-2)" }}>
+            <BrandSearch lang={lang} />
           </section>
 
           <section className="al-section al-light al-tone-2" style={{ paddingBottom: 100 }}>
@@ -253,6 +258,7 @@ export function HomePage({ lang }: { lang: Lang }) {
                 <a href="#reviews">{t.nav.reviews}</a>
                 <a href="#faq">{t.nav.faq}</a>
                 <a href={p.tour}>{t.nav.tour}</a>
+                <a href={p.blog}>{t.nav.blog}</a>
                 <a href={business.reviewsUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--al-accent)" }}>
                   {t.footer.google}
                 </a>
