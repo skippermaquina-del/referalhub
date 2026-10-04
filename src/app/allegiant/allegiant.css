@@ -1435,3 +1435,14 @@ html:has(.allegiant) {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* ---------- Buscador de Marcas ---------- */
+
+.al-brand-search {
+  background: var(--al-bg);
+}
+
+.al-brand-search .al-h2 {
+  color: var(--al-text);
+  text-align: left;
+}
