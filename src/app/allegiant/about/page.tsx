@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { copy, paths } from "@/data/allegiant";
-import { HomePage } from "@/components/allegiant/HomePage";
+import { business, copy, paths } from "@/data/allegiant";
+import { AllegiantShell } from "@/components/allegiant/AllegiantShell";
+import { Header } from "@/components/allegiant/Header";
 
 export const metadata = {
   title: "About Allegiant Appliances | Expert Repairs in LA",
@@ -13,11 +14,10 @@ export default function AboutPage() {
 
   return (
     <div lang="en" className="allegiant">
-      <HomePage
-        lang="en"
-        sections={
-          <>
-            {/* Hero */}
+      <AllegiantShell lang="en">
+        <Header lang="en" />
+        <main>
+          {/* Hero */}
             <section className="al-section al-light al-tone-2" style={{ paddingBottom: 120 }}>
               <div className="al-grid12">
                 <div style={{ gridColumn: "1 / span 12", textAlign: "center", marginBottom: 80 }}>
@@ -173,9 +173,8 @@ export default function AboutPage() {
                 </div>
               </div>
             </section>
-          </>
-        }
-      />
+        </main>
+      </AllegiantShell>
     </div>
   );
 }
