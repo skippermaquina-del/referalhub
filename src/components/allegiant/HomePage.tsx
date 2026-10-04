@@ -1,6 +1,6 @@
 import { business, copy, paths, serviceAreas, type Lang } from "@/data/allegiant";
 import { AllegiantShell } from "./AllegiantShell";
-import { BrandCarousel } from "./BrandCarousel";
+import { ContinuousCarousel } from "./ContinuousCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
 import { Ribbon } from "./Ribbon";
@@ -77,16 +77,8 @@ export function HomePage({ lang }: { lang: Lang }) {
             ))}
           </section>
 
-          <section id="marques" className="al-section al-section-line al-light">
-            <div className="al-grid12 al-section-head">
-              <div className="al-eyebrow">{t.brands.eyebrow}</div>
-              <h2 className="al-h2">{t.brands.h2}</h2>
-            </div>
-            <BrandCarousel lang={lang} />
-            <div className="al-all-brands">
-              <span className="al-all-brands-plus" aria-hidden="true">+</span>
-              <span className="al-all-brands-text">{t.brands.all}</span>
-            </div>
+          <section id="marques" className="al-section al-light">
+            <ContinuousCarousel lang={lang} />
           </section>
 
           <section className="al-section al-light al-tone-2" style={{ paddingBottom: 100 }}>
