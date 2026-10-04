@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
+import { GoogleAds } from "@/components/allegiant/GoogleAds";
 import "./allegiant.css";
 
 const serif = Cormorant_Garamond({
@@ -28,5 +29,10 @@ export default function AllegiantLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className={`${serif.variable} ${sans.variable} allegiant`}>{children}</div>;
+  return (
+    <div className={`${serif.variable} ${sans.variable} allegiant`}>
+      <GoogleAds />
+      {children}
+    </div>
+  );
 }
