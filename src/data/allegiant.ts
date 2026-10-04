@@ -95,9 +95,9 @@ export type BrandInfo = {
   category: "luxury" | "home" | "professional" | "compact";
   country: string;
   founded: number;
-  description: string;
-  specialties: string[];
-  commonIssues: string[];
+  description: { en: string; es: string };
+  specialties: { en: string[]; es: string[] };
+  commonIssues: { en: string[]; es: string[] };
   priceRange: "budget" | "mid" | "premium" | "luxury";
 };
 
@@ -108,9 +108,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1945,
-    description: "El estándar de oro en refrigeración premium. Famosa por sus cámaras de congelación integradas y sistemas de enfriamiento de precisión.",
-    specialties: ["Refrigeración built-in", "Cámaras de congelación", "Wine storage", "Control de humedad"],
-    commonIssues: ["No enfría", "Compresor ruidoso", "Variaciones de temperatura"],
+    description: {
+      en: "The gold standard in premium refrigeration. Famous for integrated freezer compartments and precision cooling systems.",
+      es: "El estándar de oro en refrigeración premium. Famosa por sus cámaras de congelación integradas y sistemas de enfriamiento de precisión.",
+    },
+    specialties: {
+      en: ["Built-in refrigeration", "Freezer compartments", "Wine storage", "Humidity control"],
+      es: ["Refrigeración built-in", "Cámaras de congelación", "Wine storage", "Control de humedad"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Noisy compressor", "Temperature fluctuations"],
+      es: ["No enfría", "Compresor ruidoso", "Variaciones de temperatura"],
+    },
     priceRange: "luxury",
   },
   Wolf: {
@@ -118,9 +127,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1952,
-    description: "Cocinas y hornos de calidad profesional con perillas rojas distintivo. Conocida por su potencia de quemadores y precisión de horneado.",
-    specialties: ["Cocinas profesionales", "Hornos de convección", "Quemadores de alta potencia", "Tops gourmet"],
-    commonIssues: ["Quemadores no encienden", "Encendido defectuoso", "Problemas de horno"],
+    description: {
+      en: "Professional-quality cooktops and ovens with distinctive red knobs. Known for powerful burners and precise baking.",
+      es: "Cocinas y hornos de calidad profesional con perillas rojas distintivo. Conocida por su potencia de quemadores y precisión de horneado.",
+    },
+    specialties: {
+      en: ["Professional cooktops", "Convection ovens", "High-power burners", "Gourmet tops"],
+      es: ["Cocinas profesionales", "Hornos de convección", "Quemadores de alta potencia", "Tops gourmet"],
+    },
+    commonIssues: {
+      en: ["Burners won't ignite", "Ignition failure", "Oven problems"],
+      es: ["Quemadores no encienden", "Encendido defectuoso", "Problemas de horno"],
+    },
     priceRange: "luxury",
   },
   Miele: {
@@ -128,9 +146,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Alemania",
     founded: 1899,
-    description: "Ingeniería alemana de precisión. Líder en lavavajillas ultra silenciosos, lavadoras de carga frontal y sistemas de café integrados.",
-    specialties: ["Lavavajillas silenciosos", "Lavadoras premium", "Sistemas de café", "Hornos de vapor"],
-    commonIssues: ["Lavavajillas no drena", "Problemas de bomba", "Errores de control"],
+    description: {
+      en: "German precision engineering. Leader in ultra-silent dishwashers, front-load washers, and integrated coffee systems.",
+      es: "Ingeniería alemana de precisión. Líder en lavavajillas ultra silenciosos, lavadoras de carga frontal y sistemas de café integrados.",
+    },
+    specialties: {
+      en: ["Ultra-silent dishwashers", "Premium washers", "Coffee systems", "Steam ovens"],
+      es: ["Lavavajillas silenciosos", "Lavadoras premium", "Sistemas de café", "Hornos de vapor"],
+    },
+    commonIssues: {
+      en: ["Dishwasher not draining", "Pump problems", "Control errors"],
+      es: ["Lavavajillas no drena", "Problemas de bomba", "Errores de control"],
+    },
     priceRange: "luxury",
   },
   Gaggenau: {
@@ -138,9 +165,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Alemania",
     founded: 1683,
-    description: "Ultra lujo minimalista de diseño europeo. Integración perfecta en cocinas arquitectónicas de alto nivel.",
-    specialties: ["Hornos de precisión", "Integración arquitectónica", "Diseño minimalista", "Controles digitales"],
-    commonIssues: ["Problemas electrónicos", "Errores de sensor", "Control defectuoso"],
+    description: {
+      en: "Ultra-luxury minimalist European design. Perfect integration in high-end architectural kitchens.",
+      es: "Ultra lujo minimalista de diseño europeo. Integración perfecta en cocinas arquitectónicas de alto nivel.",
+    },
+    specialties: {
+      en: ["Precision ovens", "Architectural integration", "Minimalist design", "Digital controls"],
+      es: ["Hornos de precisión", "Integración arquitectónica", "Diseño minimalista", "Controles digitales"],
+    },
+    commonIssues: {
+      en: ["Electronic problems", "Sensor errors", "Faulty controls"],
+      es: ["Problemas electrónicos", "Errores de sensor", "Control defectuoso"],
+    },
     priceRange: "luxury",
   },
   Thermador: {
@@ -148,9 +184,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1916,
-    description: "Línea de lujo con quemadores de estrella exclusivos y columnas de frío integradas. Diseño innovador para cocinas gourmet.",
-    specialties: ["Quemadores de estrella", "Columnas de frío", "Hornos de convección", "Tops innovadores"],
-    commonIssues: ["Quemadores mal funcionan", "Problemas de encendido", "Fallos de horno"],
+    description: {
+      en: "Luxury line with exclusive star burners and integrated refrigerated columns. Innovative design for gourmet kitchens.",
+      es: "Línea de lujo con quemadores de estrella exclusivos y columnas de frío integradas. Diseño innovador para cocinas gourmet.",
+    },
+    specialties: {
+      en: ["Star burners", "Refrigerated columns", "Convection ovens", "Innovative cooktops"],
+      es: ["Quemadores de estrella", "Columnas de frío", "Hornos de convección", "Tops innovadores"],
+    },
+    commonIssues: {
+      en: ["Burners malfunctioning", "Ignition problems", "Oven failures"],
+      es: ["Quemadores mal funcionan", "Problemas de encendido", "Fallos de horno"],
+    },
     priceRange: "luxury",
   },
   Viking: {
@@ -158,9 +203,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1987,
-    description: "Cocinas de estilo profesional de gran robustez. Potencia extrema de quemadores y resistencia de uso intenso.",
-    specialties: ["Cocinas profesionales", "Quemadores ultra potentes", "Hornos comerciales", "Durabilidad extrema"],
-    commonIssues: ["Problemas de ignición", "Quemadores débiles", "Termostato defectuoso"],
+    description: {
+      en: "Professional-style ranges with exceptional durability. Extreme burner power and heavy-duty performance.",
+      es: "Cocinas de estilo profesional de gran robustez. Potencia extrema de quemadores y resistencia de uso intenso.",
+    },
+    specialties: {
+      en: ["Professional ranges", "Ultra-powerful burners", "Commercial ovens", "Extreme durability"],
+      es: ["Cocinas profesionales", "Quemadores ultra potentes", "Hornos comerciales", "Durabilidad extrema"],
+    },
+    commonIssues: {
+      en: ["Ignition problems", "Weak burners", "Faulty thermostat"],
+      es: ["Problemas de ignición", "Quemadores débiles", "Termostato defectuoso"],
+    },
     priceRange: "luxury",
   },
   "La Cornue": {
@@ -168,9 +222,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Francia",
     founded: 1908,
-    description: "Cocinas de lujo francesas hechas a mano. Cada modelo es personalizado y es una pieza de arte funcional.",
-    specialties: ["Cocinas personalizadas", "Manufactura artesanal", "Diseño clásico", "Horno de hierro fundido"],
-    commonIssues: ["Problemas de horno", "Ignición defectuosa", "Regulación de temperatura"],
+    description: {
+      en: "Hand-crafted French luxury ranges. Each model is custom-made and a functional work of art.",
+      es: "Cocinas de lujo francesas hechas a mano. Cada modelo es personalizado y es una pieza de arte funcional.",
+    },
+    specialties: {
+      en: ["Custom ranges", "Artisanal craftsmanship", "Classic design", "Cast-iron oven"],
+      es: ["Cocinas personalizadas", "Manufactura artesanal", "Diseño clásico", "Horno de hierro fundido"],
+    },
+    commonIssues: {
+      en: ["Oven problems", "Faulty ignition", "Temperature regulation"],
+      es: ["Problemas de horno", "Ignición defectuosa", "Regulación de temperatura"],
+    },
     priceRange: "luxury",
   },
   "Fisher & Paykel": {
@@ -178,9 +241,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Nueva Zelanda",
     founded: 1934,
-    description: "Innovadores neozelandeses en cajones lavavajillas y frigoríficos con estilo francés. Diseño inteligente y funcional.",
-    specialties: ["Cajones lavavajillas", "Refrigeración francesa", "Diseño innovador", "Facilidad de uso"],
-    commonIssues: ["Cajón no abre", "Problemas de drenaje", "Compresor ruidoso"],
+    description: {
+      en: "New Zealand innovators in dishwasher drawers and French-style refrigeration. Smart and functional design.",
+      es: "Innovadores neozelandeses en cajones lavavajillas y frigoríficos con estilo francés. Diseño inteligente y funcional.",
+    },
+    specialties: {
+      en: ["Dishwasher drawers", "French-style refrigeration", "Innovative design", "Ease of use"],
+      es: ["Cajones lavavajillas", "Refrigeración francesa", "Diseño innovador", "Facilidad de uso"],
+    },
+    commonIssues: {
+      en: ["Drawer won't open", "Drainage problems", "Noisy compressor"],
+      es: ["Cajón no abre", "Problemas de drenaje", "Compresor ruidoso"],
+    },
     priceRange: "premium",
   },
   Liebherr: {
@@ -188,9 +260,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Alemania",
     founded: 1949,
-    description: "Fabricante alemán de refrigeración premium. Expertos en frigoríficos de columna y sistemas de conservación de precisión.",
-    specialties: ["Frigoríficos de columna", "Sistemas de precisión", "Wine coolers", "Tecnología alemana"],
-    commonIssues: ["No enfría", "Problemas de compresor", "Variación de temperatura"],
+    description: {
+      en: "German premium refrigeration manufacturer. Experts in column refrigerators and precision preservation systems.",
+      es: "Fabricante alemán de refrigeración premium. Expertos en frigoríficos de columna y sistemas de conservación de precisión.",
+    },
+    specialties: {
+      en: ["Column refrigerators", "Precision systems", "Wine coolers", "German technology"],
+      es: ["Frigoríficos de columna", "Sistemas de precisión", "Wine coolers", "Tecnología alemana"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Compressor problems", "Temperature fluctuation"],
+      es: ["No enfría", "Problemas de compresor", "Variación de temperatura"],
+    },
     priceRange: "luxury",
   },
   Dacor: {
@@ -198,9 +279,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1965,
-    description: "Línea de lujo de diseño contemporáneo. Propiedad de Samsung, combina estética moderna con tecnología inteligente.",
-    specialties: ["Cocinas modernas", "Hornos inteligentes", "Diseño contemporáneo", "Control remoto"],
-    commonIssues: ["Errores de aplicación", "Problemas WiFi", "Fallos de sensor"],
+    description: {
+      en: "Luxury line with contemporary design. Samsung-owned, combines modern aesthetics with smart technology.",
+      es: "Línea de lujo de diseño contemporáneo. Propiedad de Samsung, combina estética moderna con tecnología inteligente.",
+    },
+    specialties: {
+      en: ["Modern ranges", "Smart ovens", "Contemporary design", "Remote control"],
+      es: ["Cocinas modernas", "Hornos inteligentes", "Diseño contemporáneo", "Control remoto"],
+    },
+    commonIssues: {
+      en: ["App errors", "WiFi problems", "Sensor failures"],
+      es: ["Errores de aplicación", "Problemas WiFi", "Fallos de sensor"],
+    },
     priceRange: "luxury",
   },
   Monogram: {
@@ -208,9 +298,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "USA",
     founded: 1990,
-    description: "Línea premium de GE con integración perfecta. Modular y personalizable para cocinas arquitectónicas.",
-    specialties: ["Integración modular", "Diseño personalizable", "Electrodomésticos built-in", "Acabados premium"],
-    commonIssues: ["Problemas de control", "Fallos de sensor", "Errores electrónicos"],
+    description: {
+      en: "Premium GE line with seamless integration. Modular and customizable for architectural kitchens.",
+      es: "Línea premium de GE con integración perfecta. Modular y personalizable para cocinas arquitectónicas.",
+    },
+    specialties: {
+      en: ["Modular integration", "Customizable design", "Built-in appliances", "Premium finishes"],
+      es: ["Integración modular", "Diseño personalizable", "Electrodomésticos built-in", "Acabados premium"],
+    },
+    commonIssues: {
+      en: ["Control problems", "Sensor failures", "Electronic errors"],
+      es: ["Problemas de control", "Fallos de sensor", "Errores electrónicos"],
+    },
     priceRange: "premium",
   },
   Smeg: {
@@ -218,9 +317,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "luxury",
     country: "Italia",
     founded: 1948,
-    description: "Diseño italiano retro-moderno. Frigoríficos vintage con funcionalidad moderna y acabados coloridos únicos.",
-    specialties: ["Frigoríficos diseño", "Acabados vintage", "Electrodomésticos de color", "Estética italiana"],
-    commonIssues: ["Problemas cosméticos", "Fallos de compresor", "No enfría adecuadamente"],
+    description: {
+      en: "Retro-modern Italian design. Vintage-style refrigerators with modern functionality and unique colorful finishes.",
+      es: "Diseño italiano retro-moderno. Frigoríficos vintage con funcionalidad moderna y acabados coloridos únicos.",
+    },
+    specialties: {
+      en: ["Design refrigerators", "Vintage finishes", "Colored appliances", "Italian aesthetics"],
+      es: ["Frigoríficos diseño", "Acabados vintage", "Electrodomésticos de color", "Estética italiana"],
+    },
+    commonIssues: {
+      en: ["Cosmetic problems", "Compressor failures", "Poor cooling"],
+      es: ["Problemas cosméticos", "Fallos de compresor", "No enfría adecuadamente"],
+    },
     priceRange: "premium",
   },
 
@@ -230,9 +338,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "Corea del Sur",
     founded: 1938,
-    description: "Líder en conectividad inteligente y pantallas integradas. Frigoríficos de familia moderna con WiFi y cámaras interiores.",
-    specialties: ["Frigoríficos inteligentes", "Pantallas LED", "Conectividad WiFi", "Control remoto"],
-    commonIssues: ["Pantalla muerta", "Compresor ruidoso", "Problemas WiFi", "Error de control"],
+    description: {
+      en: "Leader in smart connectivity and integrated displays. Modern family refrigerators with WiFi and interior cameras.",
+      es: "Líder en conectividad inteligente y pantallas integradas. Frigoríficos de familia moderna con WiFi y cámaras interiores.",
+    },
+    specialties: {
+      en: ["Smart refrigerators", "LED displays", "WiFi connectivity", "Remote control"],
+      es: ["Frigoríficos inteligentes", "Pantallas LED", "Conectividad WiFi", "Control remoto"],
+    },
+    commonIssues: {
+      en: ["Dead display", "Noisy compressor", "WiFi problems", "Control error"],
+      es: ["Pantalla muerta", "Compresor ruidoso", "Problemas WiFi", "Error de control"],
+    },
     priceRange: "mid",
   },
   LG: {
@@ -240,9 +357,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "Corea del Sur",
     founded: 1947,
-    description: "Reconocida por innovación en motores de lavado y refrigeración. Lavadoras con tecnología de carga frontal y frigoríficos inverter.",
-    specialties: ["Lavadoras inverter", "Frigoríficos lineales", "Tecnología directdrive", "Eficiencia energética"],
-    commonIssues: ["Problemas de motor", "No enfría", "Ciclos largos", "Fugas de agua"],
+    description: {
+      en: "Recognized for innovation in washing motor and refrigeration technology. Front-load washers and inverter refrigerators.",
+      es: "Reconocida por innovación en motores de lavado y refrigeración. Lavadoras con tecnología de carga frontal y frigoríficos inverter.",
+    },
+    specialties: {
+      en: ["Inverter washers", "Linear refrigerators", "Direct drive technology", "Energy efficiency"],
+      es: ["Lavadoras inverter", "Frigoríficos lineales", "Tecnología directdrive", "Eficiencia energética"],
+    },
+    commonIssues: {
+      en: ["Motor problems", "Not cooling", "Long cycles", "Water leaks"],
+      es: ["Problemas de motor", "No enfría", "Ciclos largos", "Fugas de agua"],
+    },
     priceRange: "mid",
   },
   Whirlpool: {
@@ -250,9 +376,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1911,
-    description: "Marca tradicional de consumo masivo. Frigoríficos, lavadoras y secadoras confiables para la familia estadounidense.",
-    specialties: ["Frigoríficos duraderos", "Lavadoras resistentes", "Secadoras económicas", "Confiabilidad"],
-    commonIssues: ["No enfría", "Fugas", "Problemas de lavado", "Motor defectuoso"],
+    description: {
+      en: "Traditional mass-market brand. Reliable refrigerators, washers and dryers for the American family.",
+      es: "Marca tradicional de consumo masivo. Frigoríficos, lavadoras y secadoras confiables para la familia estadounidense.",
+    },
+    specialties: {
+      en: ["Durable refrigerators", "Resistant washers", "Economical dryers", "Reliability"],
+      es: ["Frigoríficos duraderos", "Lavadoras resistentes", "Secadoras económicas", "Confiabilidad"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Leaks", "Washing problems", "Faulty motor"],
+      es: ["No enfría", "Fugas", "Problemas de lavado", "Motor defectuoso"],
+    },
     priceRange: "mid",
   },
   GE: {
@@ -260,9 +395,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1892,
-    description: "General Electric - La marca icónica de consumo general. Frigoríficos, estufas y electrodomésticos desde 1892.",
-    specialties: ["Frigoríficos robustos", "Estufas eléctricas", "Lavavajillas", "Electrodomésticos generales"],
-    commonIssues: ["No enfría", "Quemadores débiles", "Drenaje defectuoso", "Motor débil"],
+    description: {
+      en: "General Electric - The iconic mass-market brand. Refrigerators, ranges and appliances since 1892.",
+      es: "General Electric - La marca icónica de consumo general. Frigoríficos, estufas y electrodomésticos desde 1892.",
+    },
+    specialties: {
+      en: ["Robust refrigerators", "Electric ranges", "Dishwashers", "General appliances"],
+      es: ["Frigoríficos robustos", "Estufas eléctricas", "Lavavajillas", "Electrodomésticos generales"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Weak burners", "Faulty drainage", "Weak motor"],
+      es: ["No enfría", "Quemadores débiles", "Drenaje defectuoso", "Motor débil"],
+    },
     priceRange: "mid",
   },
   Maytag: {
@@ -270,9 +414,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1908,
-    description: "Enfocada en durabilidad y potencia. Lavadoras y secadoras famosas por su resistencia y capacidad de carga pesada.",
-    specialties: ["Lavadoras potentes", "Secadoras duraderas", "Resistencia extrema", "Capacidad grande"],
-    commonIssues: ["Problemas de transmisión", "No centrifuga", "Problemas de secado", "Fugas"],
+    description: {
+      en: "Focused on durability and power. Washers and dryers famous for their resistance and heavy-load capacity.",
+      es: "Enfocada en durabilidad y potencia. Lavadoras y secadoras famosas por su resistencia y capacidad de carga pesada.",
+    },
+    specialties: {
+      en: ["Powerful washers", "Durable dryers", "Extreme resistance", "Large capacity"],
+      es: ["Lavadoras potentes", "Secadoras duraderas", "Resistencia extrema", "Capacidad grande"],
+    },
+    commonIssues: {
+      en: ["Transmission problems", "Won't spin", "Drying problems", "Leaks"],
+      es: ["Problemas de transmisión", "No centrifuga", "Problemas de secado", "Fugas"],
+    },
     priceRange: "mid",
   },
   Frigidaire: {
@@ -280,9 +433,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1916,
-    description: "Una de las marcas más vendidas de consumo masivo. Frigoríficos y electrodomésticos asequibles y confiables.",
-    specialties: ["Frigoríficos económicos", "Electrodomésticos básicos", "Buena relación precio-rendimiento", "Disponibilidad"],
-    commonIssues: ["No enfría", "Ruido de compresor", "Problemas de hielo", "Control defectuoso"],
+    description: {
+      en: "One of the best-selling mass-market brands. Affordable and reliable refrigerators and appliances.",
+      es: "Una de las marcas más vendidas de consumo masivo. Frigoríficos y electrodomésticos asequibles y confiables.",
+    },
+    specialties: {
+      en: ["Budget refrigerators", "Basic appliances", "Good price-to-performance", "Availability"],
+      es: ["Frigoríficos económicos", "Electrodomésticos básicos", "Buena relación precio-rendimiento", "Disponibilidad"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Compressor noise", "Ice problems", "Faulty controls"],
+      es: ["No enfría", "Ruido de compresor", "Problemas de hielo", "Control defectuoso"],
+    },
     priceRange: "budget",
   },
   KitchenAid: {
@@ -290,9 +452,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1919,
-    description: "Gama media-alta famosa por sus batidoras y cocinas. Electrodomésticos de calidad para cocinas funcionales.",
-    specialties: ["Cocinas de calidad", "Batidoras legendarias", "Frigoríficos built-in", "Diseño funcional"],
-    commonIssues: ["Quemador no enciende", "Problemas de horno", "Control defectuoso", "Motor débil"],
+    description: {
+      en: "Mid-to-upper range famous for mixers and ranges. Quality appliances for functional kitchens.",
+      es: "Gama media-alta famosa por sus batidoras y cocinas. Electrodomésticos de calidad para cocinas funcionales.",
+    },
+    specialties: {
+      en: ["Quality ranges", "Legendary mixers", "Built-in refrigerators", "Functional design"],
+      es: ["Cocinas de calidad", "Batidoras legendarias", "Frigoríficos built-in", "Diseño funcional"],
+    },
+    commonIssues: {
+      en: ["Burner won't light", "Oven problems", "Faulty control", "Weak motor"],
+      es: ["Quemador no enciende", "Problemas de horno", "Control defectuoso", "Motor débil"],
+    },
     priceRange: "mid",
   },
   Bosch: {
@@ -300,9 +471,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "Alemania",
     founded: 1921,
-    description: "Fabricante alemán famosa por lavavajillas ultra silenciosos y diseño europeo. Ingeniería de precisión.",
-    specialties: ["Lavavajillas silenciosos", "Ingeniería alemana", "Eficiencia energética", "Integración europea"],
-    commonIssues: ["No drena bien", "Bomba débil", "Brazo rociador atascado", "Errores de sensor"],
+    description: {
+      en: "German manufacturer famous for ultra-silent dishwashers and European design. Precision engineering.",
+      es: "Fabricante alemán famosa por lavavajillas ultra silenciosos y diseño europeo. Ingeniería de precisión.",
+    },
+    specialties: {
+      en: ["Silent dishwashers", "German engineering", "Energy efficiency", "European integration"],
+      es: ["Lavavajillas silenciosos", "Ingeniería alemana", "Eficiencia energética", "Integración europea"],
+    },
+    commonIssues: {
+      en: ["Poor drainage", "Weak pump", "Clogged spray arm", "Sensor errors"],
+      es: ["No drena bien", "Bomba débil", "Brazo rociador atascado", "Errores de sensor"],
+    },
     priceRange: "mid",
   },
   Electrolux: {
@@ -310,9 +490,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "Suecia",
     founded: 1919,
-    description: "Gama media-alta sueca, fuerte en lavandería premium. Lavadoras con tecnología escandinava y frigoríficos eficientes.",
-    specialties: ["Lavadoras premium", "Frigoríficos eficientes", "Tecnología escandinava", "Lavavajillas avanzados"],
-    commonIssues: ["Problemas de motor", "No centrifuga bien", "Fugas de agua", "Errores de control"],
+    description: {
+      en: "Swedish mid-to-upper range, strong in premium laundry. Washers with Scandinavian technology and efficient refrigerators.",
+      es: "Gama media-alta sueca, fuerte en lavandería premium. Lavadoras con tecnología escandinava y frigoríficos eficientes.",
+    },
+    specialties: {
+      en: ["Premium washers", "Efficient refrigerators", "Scandinavian technology", "Advanced dishwashers"],
+      es: ["Lavadoras premium", "Frigoríficos eficientes", "Tecnología escandinava", "Lavavajillas avanzados"],
+    },
+    commonIssues: {
+      en: ["Motor problems", "Poor spin cycle", "Water leaks", "Control errors"],
+      es: ["Problemas de motor", "No centrifuga bien", "Fugas de agua", "Errores de control"],
+    },
     priceRange: "mid",
   },
   Kenmore: {
@@ -320,9 +509,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1927,
-    description: "Marca tradicional de Sears, ahora fabricada bajo licencia. Frigoríficos, lavadoras y electrodomésticos generales.",
-    specialties: ["Frigoríficos confiables", "Lavadoras robustas", "Electrodomésticos generales", "Disponibilidad"],
-    commonIssues: ["No enfría", "Problemas de motor", "Fugas", "Control defectuoso"],
+    description: {
+      en: "Sears traditional brand, now manufactured under license. Refrigerators, washers and general appliances.",
+      es: "Marca tradicional de Sears, ahora fabricada bajo licencia. Frigoríficos, lavadoras y electrodomésticos generales.",
+    },
+    specialties: {
+      en: ["Reliable refrigerators", "Robust washers", "General appliances", "Availability"],
+      es: ["Frigoríficos confiables", "Lavadoras robustas", "Electrodomésticos generales", "Disponibilidad"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Motor problems", "Leaks", "Faulty controls"],
+      es: ["No enfría", "Problemas de motor", "Fugas", "Control defectuoso"],
+    },
     priceRange: "mid",
   },
   Amana: {
@@ -330,9 +528,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1934,
-    description: "Línea económica y de primera necesidad del grupo Whirlpool. Electrodomésticos básicos a precio accesible.",
-    specialties: ["Electrodomésticos económicos", "Confiabilidad básica", "Fácil reparación", "Disponibilidad"],
-    commonIssues: ["No enfría", "Problemas generales", "Desgaste de componentes", "Falla de control"],
+    description: {
+      en: "Budget line from Whirlpool group. Basic appliances at affordable prices.",
+      es: "Línea económica y de primera necesidad del grupo Whirlpool. Electrodomésticos básicos a precio accesible.",
+    },
+    specialties: {
+      en: ["Budget appliances", "Basic reliability", "Easy to repair", "Availability"],
+      es: ["Electrodomésticos económicos", "Confiabilidad básica", "Fácil reparación", "Disponibilidad"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "General problems", "Component wear", "Control failure"],
+      es: ["No enfría", "Problemas generales", "Desgaste de componentes", "Falla de control"],
+    },
     priceRange: "budget",
   },
   Hotpoint: {
@@ -340,9 +547,18 @@ export const brandDatabase: Record<string, BrandInfo> = {
     category: "home",
     country: "USA",
     founded: 1912,
-    description: "Modelos básicos operada por Whirlpool en EE. UU. Electrodomésticos entry-level de bajo costo.",
-    specialties: ["Modelos económicos", "Electrodomésticos básicos", "Fácil mantenimiento", "Bajo costo"],
-    commonIssues: ["No enfría", "Quemadores débiles", "Desgaste rápido", "Falla de componentes"],
+    description: {
+      en: "Basic models operated by Whirlpool in the US. Entry-level low-cost appliances.",
+      es: "Modelos básicos operada por Whirlpool en EE. UU. Electrodomésticos entry-level de bajo costo.",
+    },
+    specialties: {
+      en: ["Budget models", "Basic appliances", "Easy maintenance", "Low cost"],
+      es: ["Modelos económicos", "Electrodomésticos básicos", "Fácil mantenimiento", "Bajo costo"],
+    },
+    commonIssues: {
+      en: ["Not cooling", "Weak burners", "Rapid wear", "Component failure"],
+      es: ["No enfría", "Quemadores débiles", "Desgaste rápido", "Falla de componentes"],
+    },
     priceRange: "budget",
   },
 };
