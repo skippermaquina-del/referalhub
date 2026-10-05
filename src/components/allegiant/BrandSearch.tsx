@@ -86,6 +86,9 @@ export function BrandSearch({ lang }: { lang: Lang }) {
       specialties: "Specialties",
       commonIssues: "Common issues we fix",
       noResults: "No brands found",
+      voiceLabel: "Speak",
+      voiceStart: "Search by voice",
+      voiceListening: "Listening…",
     },
     es: {
       title: "Explora las marcas que reparamos",
@@ -97,6 +100,9 @@ export function BrandSearch({ lang }: { lang: Lang }) {
       specialties: "Especialidades",
       commonIssues: "Problemas comunes que reparamos",
       noResults: "No se encontraron marcas",
+      voiceLabel: "Hablar",
+      voiceStart: "Buscar por voz",
+      voiceListening: "Escuchando…",
     },
   };
 
@@ -138,40 +144,40 @@ export function BrandSearch({ lang }: { lang: Lang }) {
               style={{
                 padding: "0 20px",
                 borderRadius: 8,
-                border: "2px solid var(--al-line-3)",
+                border: "2px solid var(--al-accent)",
                 backgroundColor: isListening ? "var(--al-accent)" : "var(--al-bg)",
-                color: isListening ? "var(--al-bg)" : "var(--al-text)",
+                color: isListening ? "var(--al-bg)" : "var(--al-accent)",
                 cursor: "pointer",
-                fontSize: 20,
+                fontSize: 15,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
                 transition: "all 0.2s",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                minWidth: 56,
+                gap: 10,
+                whiteSpace: "nowrap",
               }}
-              title={isListening ? "Escuchando..." : "Buscar por voz"}
-              aria-label="Voice search"
+              title={isListening ? t.voiceListening : t.voiceStart}
+              aria-label={isListening ? t.voiceListening : t.voiceStart}
+              aria-pressed={isListening}
             >
               <svg
                 viewBox="0 0 24 24"
                 width="24"
                 height="24"
-                fill="none"
+                fill={isListening ? "currentColor" : "none"}
                 stroke="currentColor"
                 strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 aria-hidden="true"
               >
-                {isListening ? (
-                  <>
-                    <path d="M12 2c-3.3 0-6 2.7-6 6v7c0 3.3 2.7 6 6 6s6-2.7 6-6V8c0-3.3-2.7-6-6-6z" />
-                    <path d="M4 10h16" />
-                    <circle cx="12" cy="21" r="1" fill="currentColor" />
-                    <path d="M12 18v3" />
-                  </>
-                ) : (
-                  <path d="M12 2c-3.3 0-6 2.7-6 6v7c0 3.3 2.7 6 6 6s6-2.7 6-6V8c0-3.3-2.7-6-6-6zm0 16c-2.2 0-4-1.8-4-4v-7c0-2.2 1.8-4 4-4s4 1.8 4 4v7c0 2.2-1.8 4-4 4z" />
-                )}
+                <rect x="9" y="2" width="6" height="12" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0" fill="none" />
+                <path d="M12 18v4M8 22h8" fill="none" />
               </svg>
+              <span>{isListening ? t.voiceListening : t.voiceLabel}</span>
             </button>
           )}
         </div>

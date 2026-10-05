@@ -78,12 +78,12 @@ export function HomePage({ lang }: { lang: Lang }) {
             ))}
           </section>
 
-          <section id="marques" className="al-section al-light">
-            <ContinuousCarousel lang={lang} />
-          </section>
-
           <section className="al-section al-light" style={{ backgroundColor: "var(--al-bg-2)" }}>
             <BrandSearch lang={lang} />
+          </section>
+
+          <section id="marques" className="al-section al-light">
+            <ContinuousCarousel lang={lang} />
           </section>
 
           <section className="al-section al-light al-tone-2" style={{ paddingBottom: 100 }}>
