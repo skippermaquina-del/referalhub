@@ -9,6 +9,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
   const [isListening, setIsListening] = useState(false);
   const [voiceSupported, setVoiceSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   // Initialize Web Speech API
   useEffect(() => {
@@ -38,6 +39,12 @@ export function BrandSearch({ lang }: { lang: Lang }) {
       recognitionRef.current = recognition;
     }
   }, [lang]);
+
+  useEffect(() => {
+    if (selected && window.matchMedia("(max-width: 1024px)").matches) {
+      detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [selected]);
 
   const toggleVoiceSearch = () => {
     if (!recognitionRef.current) return;
@@ -116,8 +123,9 @@ export function BrandSearch({ lang }: { lang: Lang }) {
         </h2>
 
         {/* Search input with voice button */}
-        <div style={{ gridColumn: "1 / span 12", marginBottom: 40, display: "flex", gap: 12, alignItems: "stretch" }}>
+        <div className="al-search-row" style={{ gridColumn: "1 / span 12", marginBottom: 40, display: "flex", gap: 12, alignItems: "stretch" }}>
           <input
+            className="al-search-input"
             type="text"
             placeholder={t.placeholder}
             value={search}
@@ -127,6 +135,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
             }}
             style={{
               flex: 1,
+              minWidth: 0,
               padding: "16px 20px",
               fontSize: 18,
               border: "2px solid var(--al-line-3)",
@@ -139,6 +148,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
           />
           {voiceSupported && (
             <button
+              className="al-voice-btn"
               type="button"
               onClick={toggleVoiceSearch}
               style={{
@@ -187,6 +197,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
           <>
             {/* Brands list on left, details on right */}
             <div
+              className="al-brand-list"
               style={{
                 gridColumn: "1 / span 5",
                 display: "flex",
@@ -229,8 +240,8 @@ export function BrandSearch({ lang }: { lang: Lang }) {
 
             {/* Brand details on right */}
             {selectedBrand && (
-              <div style={{ gridColumn: "8 / span 5" }}>
-                <div style={{ paddingLeft: 20 }}>
+              <div ref={detailRef} className="al-brand-detail" style={{ gridColumn: "8 / span 5" }}>
+                <div className="al-brand-detail-inner" style={{ paddingLeft: 20 }}>
                   <h3 style={{ fontSize: 28, margin: "0 0 24px", color: "var(--al-accent)" }}>
                     {selectedBrand.name}
                   </h3>

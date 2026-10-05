@@ -1446,3 +1446,31 @@ html:has(.allegiant) {
   color: var(--al-text);
   text-align: left;
 }
+
+/* Buscador de marcas en pantallas pequeñas */
+@media (max-width: 1024px) {
+  .al-brand-list {
+    max-height: 260px !important;
+  }
+  .al-brand-detail-inner {
+    padding-left: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .al-brand-search {
+    padding: 40px 0 !important;
+  }
+  .al-search-row {
+    gap: 8px !important;
+  }
+  .al-search-input {
+    font-size: 16px !important;
+    padding: 14px 14px !important;
+  }
+  .al-voice-btn {
+    padding: 0 14px !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+  }
+}
