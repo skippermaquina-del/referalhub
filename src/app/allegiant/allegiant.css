@@ -1401,6 +1401,8 @@ html:has(.allegiant) {
   display: flex;
   width: max-content;
   will-change: transform;
+  /* El blanco de los logos con fondo propio (Dacor) desaparece sobre el beige */
+  mix-blend-mode: multiply;
 }
 
 .al-carousel-continuous-card {
@@ -1419,13 +1421,25 @@ html:has(.allegiant) {
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  /* Un solo tono para que todos los logos se vean parejos (algunos vienen en blanco) */
+  filter: brightness(0);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.al-carousel-continuous-logo.is-boxed {
+  filter: grayscale(1);
+  opacity: 0.85;
 }
 
 .al-carousel-continuous-name {
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-al-serif), serif;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   text-align: center;
   color: var(--al-text);
+  opacity: 0.72;
 }
 
 .al-carousel-continuous-tag {

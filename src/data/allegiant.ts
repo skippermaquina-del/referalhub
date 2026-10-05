@@ -86,7 +86,34 @@ export const homeBrands = [
  * tenga los archivos de cada marca; mientras falte uno, la tarjeta muestra el
  * nombre en tipografía.
  */
-export const brandLogos: Record<string, string> = {};
+export const brandLogos: Record<string, string> = {
+  "Sub-Zero": "/images/brands/sub-zero.png",
+  Miele: "/images/brands/miele.svg",
+  Gaggenau: "/images/brands/gaggenau.png",
+  Thermador: "/images/brands/thermador.png",
+  Viking: "/images/brands/viking.png",
+  "La Cornue": "/images/brands/la-cornue.png",
+  "Fisher & Paykel": "/images/brands/fisher-paykel.svg",
+  Liebherr: "/images/brands/liebherr.png",
+  Dacor: "/images/brands/dacor.png",
+  Monogram: "/images/brands/monogram.svg",
+  Smeg: "/images/brands/smeg.svg",
+  Samsung: "/images/brands/samsung.svg",
+  LG: "/images/brands/lg.svg",
+  Whirlpool: "/images/brands/whirlpool.png",
+  GE: "/images/brands/ge.svg",
+  Maytag: "/images/brands/maytag.png",
+  Frigidaire: "/images/brands/frigidaire.png",
+  KitchenAid: "/images/brands/kitchenaid.png",
+  Bosch: "/images/brands/bosch.svg",
+  Electrolux: "/images/brands/electrolux.svg",
+  Kenmore: "/images/brands/kenmore.png",
+  Amana: "/images/brands/amana.png",
+  Hotpoint: "/images/brands/hotpoint.png",
+};
+
+/** Logos que traen su propio fondo de color: van en escala de grises en vez de un solo tono. */
+export const brandLogosWithBackground = new Set(["Miele", "Maytag", "Viking", "Dacor"]);
 
 /**
  * Información detallada de marcas de electrodomésticos.

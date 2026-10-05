@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { luxuryBrands, homeBrands, copy, brandLogos, type Lang } from "@/data/allegiant";
+import { luxuryBrands, homeBrands, copy, brandLogos, brandLogosWithBackground, type Lang } from "@/data/allegiant";
 
 type Brand = { name: string; tag: string };
 
@@ -104,7 +104,7 @@ function LoopRow({ brands, offset }: { brands: Brand[]; offset: number }) {
                 width={180}
                 height={80}
                 draggable={false}
-                className="al-carousel-continuous-logo"
+                className={`al-carousel-continuous-logo${brandLogosWithBackground.has(brand.name) ? " is-boxed" : ""}`}
               />
             ) : (
               <span className="al-carousel-continuous-name">{brand.name}</span>
