@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { business, brandDatabase, copy, type Lang } from "@/data/allegiant";
+import { trackBookingConversion } from "@/lib/ads";
 
 type BookingContextValue = { openBook: () => void };
 
@@ -70,6 +71,7 @@ export function AllegiantShell({
       if (!res.ok) throw new Error(String(res.status));
       form.reset();
       setStatus("sent");
+      trackBookingConversion();
     } catch {
       setStatus("error");
     }

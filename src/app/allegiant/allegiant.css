@@ -1377,7 +1377,7 @@ html:has(.allegiant) {
   }
 }
 
-/* Carrusel continuo: 3 filas con movimiento alterno */
+/* Carrusel manual y sin fin: 3 filas que se arrastran con el dedo */
 .al-carousel-continuous {
   padding: 60px var(--al-pad-section);
 }
@@ -1387,26 +1387,27 @@ html:has(.allegiant) {
   margin-bottom: 40px;
   background: var(--al-bg-subtle);
   border-radius: 8px;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.al-carousel-continuous-row:active {
+  cursor: grabbing;
 }
 
 .al-carousel-continuous-track {
   display: flex;
-  animation: scroll-continuous 60s linear infinite;
-}
-
-.al-carousel-continuous-row[data-direction="left"] .al-carousel-continuous-track {
-  animation-direction: reverse;
-}
-
-@keyframes scroll-continuous {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  width: max-content;
+  will-change: transform;
+  /* El blanco de los logos con fondo propio (Dacor) desaparece sobre el beige */
+  mix-blend-mode: multiply;
 }
 
 .al-carousel-continuous-card {
   flex-shrink: 0;
-  width: 18%;
-  min-width: 140px;
+  width: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1420,13 +1421,25 @@ html:has(.allegiant) {
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  /* Un solo tono para que todos los logos se vean parejos (algunos vienen en blanco) */
+  filter: brightness(0);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.al-carousel-continuous-logo.is-boxed {
+  filter: grayscale(1);
+  opacity: 0.85;
 }
 
 .al-carousel-continuous-name {
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-al-serif), serif;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   text-align: center;
   color: var(--al-text);
+  opacity: 0.72;
 }
 
 .al-carousel-continuous-tag {
@@ -1445,4 +1458,32 @@ html:has(.allegiant) {
 .al-brand-search .al-h2 {
   color: var(--al-text);
   text-align: left;
+}
+
+/* Buscador de marcas en pantallas pequeñas */
+@media (max-width: 1024px) {
+  .al-brand-list {
+    max-height: 260px !important;
+  }
+  .al-brand-detail-inner {
+    padding-left: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .al-brand-search {
+    padding: 40px 0 !important;
+  }
+  .al-search-row {
+    gap: 8px !important;
+  }
+  .al-search-input {
+    font-size: 16px !important;
+    padding: 14px 14px !important;
+  }
+  .al-voice-btn {
+    padding: 0 14px !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+  }
 }
