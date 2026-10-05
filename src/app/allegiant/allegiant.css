@@ -1377,7 +1377,7 @@ html:has(.allegiant) {
   }
 }
 
-/* Carrusel continuo: 3 filas con movimiento alterno */
+/* Carrusel manual y sin fin: 3 filas que se arrastran con el dedo */
 .al-carousel-continuous {
   padding: 60px var(--al-pad-section);
 }
@@ -1387,26 +1387,25 @@ html:has(.allegiant) {
   margin-bottom: 40px;
   background: var(--al-bg-subtle);
   border-radius: 8px;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.al-carousel-continuous-row:active {
+  cursor: grabbing;
 }
 
 .al-carousel-continuous-track {
   display: flex;
-  animation: scroll-continuous 25s linear infinite;
-}
-
-.al-carousel-continuous-row[data-direction="left"] .al-carousel-continuous-track {
-  animation-direction: reverse;
-}
-
-@keyframes scroll-continuous {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  width: max-content;
+  will-change: transform;
 }
 
 .al-carousel-continuous-card {
   flex-shrink: 0;
-  width: 18%;
-  min-width: 140px;
+  width: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
