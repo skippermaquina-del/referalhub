@@ -19,7 +19,7 @@ export const business = {
    */
   reviewsUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_REVIEWS_URL ??
-    "https://www.google.com/search?q=Allegiant+Appliances+Inc+reviews",
+    "https://share.google/dUAHoST79DXRbFNId",
   writeReviewUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_WRITE_REVIEW_URL ??
     "https://www.google.com/search?q=Allegiant+Appliances+Inc+reviews",
