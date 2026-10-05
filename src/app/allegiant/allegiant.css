@@ -1391,7 +1391,7 @@ html:has(.allegiant) {
 
 .al-carousel-continuous-track {
   display: flex;
-  animation: scroll-continuous 60s linear infinite;
+  animation: scroll-continuous 25s linear infinite;
 }
 
 .al-carousel-continuous-row[data-direction="left"] .al-carousel-continuous-track {
