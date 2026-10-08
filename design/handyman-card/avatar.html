@@ -1,0 +1,34 @@
+<!doctype html>
+<!--
+  SUPERHMAN — profile picture, 1080 x 1080.
+
+  The same mark as the card, so the Instagram avatar and the printed card read
+  as one brand. Instagram crops avatars to a circle and renders them as small
+  as 32 px in a feed, so this is the mark alone: no wordmark, nothing that has
+  to be read. It is also a logo rather than a person, which is what takes the
+  account out of Instagram's "AI-generated profile" label.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — avatar</title>
+<style>
+  :root{ --ink:#0E1116; --hero:#FF5C1A; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--ink); width:1080px; height:1080px;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  /* 50% keeps the mark well clear of the circular crop on every surface */
+  svg{width:50%;height:50%;color:var(--hero);display:block}
+</style>
+</head>
+<body>
+  <svg viewBox="0 0 100 100" aria-label="SUPERHMAN">
+    <path fill="currentColor" fill-rule="evenodd"
+          d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z
+             M50 38 62 44v12l-12 6-12-6V44Z"/>
+  </svg>
+</body>
+</html>

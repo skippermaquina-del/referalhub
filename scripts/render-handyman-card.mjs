@@ -28,6 +28,8 @@ const CARD_W_MM = 94.9; // 3.5 in trim + 3 mm bleed each side
 const CARD_H_MM = 56.8; // 2 in   trim + 3 mm bleed each side
 const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
+// Square brand assets rendered one-to-one: [file, pixel size]
+const SQUARES = [["avatar.html", 1080]];
 
 function chromePath() {
   const candidates = [
@@ -180,6 +182,19 @@ try {
       rmSync(tmp);
     }
     log.push(`PDF superhman-${stem}.pdf + ${stem}-front.png / ${stem}-back.png`);
+  }
+
+  for (const [file, px] of SQUARES) {
+    if (!existsSync(join(designDir, file))) continue;
+    await open(cdp, join(designDir, file));
+    const { data } = await cdp.send("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: true,
+      clip: { x: 0, y: 0, width: px, height: px, scale: 1 },
+    });
+    const out = file.replace(/\.html$/, ".png");
+    writeFileSync(join(outDir, out), Buffer.from(data, "base64"));
+    log.push(`IMG ${out} (${px} x ${px})`);
   }
 } finally {
   cdp.close();
