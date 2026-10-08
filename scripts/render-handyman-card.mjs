@@ -30,6 +30,11 @@ const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
 // Square brand assets rendered one-to-one: [file, pixel size]
 const SQUARES = [["avatar.html", 1080]];
+// Full-page print pieces: [file, width mm, height mm]
+const PAGES = [
+  ["print-van.html", 297, 210],
+  ["print-door.html", 210, 297],
+];
 
 function chromePath() {
   const candidates = [
@@ -182,6 +187,27 @@ try {
       rmSync(tmp);
     }
     log.push(`PDF superhman-${stem}.pdf + ${stem}-front.png / ${stem}-back.png`);
+  }
+
+  for (const [file, wmm, hmm] of PAGES) {
+    const path = join(designDir, file);
+    if (!existsSync(path)) continue;
+    const html = readFileSync(path, "utf8");
+    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
+    await open(cdp, path);
+    const { data: pdf } = await cdp.send("Page.printToPDF", {
+      paperWidth: wmm / 25.4, paperHeight: hmm / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true, preferCSSPageSize: true,
+    });
+    const stem = file.replace(/\.html$/, "");
+    writeFileSync(join(outDir, `superhman-${stem}.pdf`), Buffer.from(pdf, "base64"));
+    const { data: png } = await cdp.send("Page.captureScreenshot", {
+      format: "png", captureBeyondViewport: true,
+      clip: { x: 0, y: 0, width: wmm * CSS_PX_PER_MM, height: hmm * CSS_PX_PER_MM, scale: 150 / 96 },
+    });
+    writeFileSync(join(outDir, `${stem}.png`), Buffer.from(png, "base64"));
+    log.push(`A4  superhman-${stem}.pdf + ${stem}.png (${wmm} x ${hmm} mm)`);
   }
 
   for (const [file, px] of SQUARES) {

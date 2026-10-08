@@ -1,0 +1,115 @@
+<!doctype html>
+<!--
+  SUPERHMAN — van panel, A4 landscape (297 x 210 mm).
+
+  Printed on adhesive vinyl and stuck on the van doors. Read from a parking
+  lot, not from a desk: the phone number is the whole design and everything
+  else exists to frame it.
+
+  White ground because most work vans are white — a white decal reads as if it
+  were painted on, a black rectangle reads as a patch. If your van is dark,
+  put class="dark" on the <html> tag and the whole thing inverts.
+
+  Ask the print shop for "adhesivo vinilo, impresión a sangre". If they print
+  on plain A4 instead, cut along the dashed line.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — van panel</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{
+    --ground:#FFFFFF; --ink:#0E1116; --hero:#FF5C1A; --muted:#6B7078;
+    --line:rgba(14,17,22,.22);
+  }
+  :root.dark{ --ground:#0E1116; --ink:#FFFFFF; --muted:#A7ACB4; --line:rgba(255,255,255,.26); }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{ size:297mm 210mm; margin:0 }
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:297mm;height:210mm;background:var(--ground);color:var(--ink);
+    position:relative;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .cut{position:absolute;inset:8mm;border:.3mm dashed var(--line);border-radius:2mm}
+  .inner{position:absolute;inset:20mm;display:flex;flex-direction:column;justify-content:space-between}
+
+  .top{display:flex;align-items:center;gap:7mm}
+  .mark{width:26mm;height:26mm;color:var(--hero);flex:none}
+  .word{font-size:48pt;font-weight:800;font-stretch:108%;letter-spacing:.03em;line-height:1}
+  .word b{color:var(--hero);font-weight:800}
+  .trade{
+    margin-left:auto;text-align:right;font-size:13pt;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--muted);line-height:1.5;
+  }
+
+  .mid{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .phone{
+    font-size:104pt;font-weight:800;letter-spacing:-.02em;line-height:.92;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .kicker{
+    font-size:14pt;font-weight:800;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--hero);margin-bottom:3mm;
+  }
+
+  .bottom{display:flex;align-items:flex-end;gap:10mm}
+  .services{font-size:16pt;font-weight:600;letter-spacing:.01em;line-height:1.45;max-width:190mm}
+  .services i{color:var(--hero);font-style:normal;font-weight:800}
+  .zone{
+    margin-top:2.5mm;font-size:12pt;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  figure.qr{margin-left:auto;width:34mm;text-align:center;flex:none}
+  figure.qr img{width:34mm;height:34mm;display:block}
+  figure.qr figcaption{
+    margin-top:1.8mm;font-size:8.5pt;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);
+  }
+</style>
+</head>
+<body>
+  <div class="cut"></div>
+  <div class="inner">
+
+    <header class="top">
+      <svg class="mark" viewBox="0 0 100 100" aria-label="SUPERHMAN">
+        <path fill="currentColor" fill-rule="evenodd"
+              d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+      </svg>
+      <div class="word">SUPER<b>H</b>MAN</div>
+      <!-- ==== EDIT ME ==== -->
+      <div class="trade">Handyman<br>Insured</div>
+    </header>
+
+    <div class="mid">
+      <div class="kicker">Hero hotline</div>
+      <!-- ==== EDIT ME: phone ==== -->
+      <div class="phone">(645) 221-9200</div>
+    </div>
+
+    <footer class="bottom">
+      <div>
+        <!-- ==== EDIT ME: services ==== -->
+        <div class="services">
+          Carpentry <i>&middot;</i> Drywall <i>&middot;</i> Painting <i>&middot;</i>
+          Mounting <i>&middot;</i> Assembly <i>&middot;</i> Odd jobs
+        </div>
+        <div class="zone">Broward &middot; Dade &middot; Boca Raton</div>
+      </div>
+      <figure class="qr">
+        <img data-qr="https://wa.me/16452219200?text=Hi%20Andy"
+             src="./assets/qr-whatsapp.svg" alt="Scan to message Andy on WhatsApp">
+        <figcaption>Scan &rarr; WhatsApp</figcaption>
+      </figure>
+    </footer>
+
+  </div>
+</body>
+</html>
