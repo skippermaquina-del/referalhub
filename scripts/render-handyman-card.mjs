@@ -33,6 +33,7 @@ const SQUARES = [["avatar.html", 1080]];
 // Full-page print pieces: [file, width mm, height mm]
 const PAGES = [
   ["print-van.html", 297, 210],
+  ["print-van-logo.html", 297, 210],
   ["print-door.html", 210, 297],
 ];
 
@@ -126,7 +127,6 @@ async function writeQrs(html) {
     writeFileSync(join(designDir, "assets", src), svg);
     written.push(`${src} -> ${url}`);
   }
-  if (!written.length) throw new Error("no <img data-qr=... src=./assets/*.svg> found");
   return written;
 }
 
@@ -158,7 +158,9 @@ try {
     const stem = file.replace(/\.html$/, "");
     const path = join(designDir, file);
     const html = readFileSync(path, "utf8");
-    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
+    const qrs = await writeQrs(html);
+    if (!qrs.length) throw new Error(`${file}: a card must carry at least one QR`);
+    log.push(...qrs.map((l) => `QR  ${l}`));
 
     await open(cdp, path);
     const { data: pdf } = await cdp.send("Page.printToPDF", {
