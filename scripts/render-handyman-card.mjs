@@ -1,0 +1,205 @@
+// Renders the SUPERHMAN business card (design/handyman-card/card.html) into
+// print-ready and preview files:
+//
+//   design/handyman-card/assets/qr.svg   QR code, generated from the data-qr
+//                                        attribute on <html> in card.html
+//   public/handyman/superhman-card.pdf   2 pages (front, back), 3 mm bleed —
+//                                        this is the file the printer needs
+//   public/handyman/card-front.png       300 DPI previews, exact card size
+//   public/handyman/card-back.png
+//
+// Usage: node scripts/render-handyman-card.mjs
+//
+// Drives the Chromium that already ships with this repo's tooling over the
+// DevTools protocol (the plain --screenshot flag can't crop to an exact box,
+// and Chrome clamps small window sizes). Override the binary with CHROME_PATH.
+
+import { spawn } from "node:child_process";
+import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import QRCode from "qrcode";
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const designDir = join(root, "design/handyman-card");
+const outDir = join(root, "public/handyman");
+
+const CARD_W_MM = 94.9; // 3.5 in trim + 3 mm bleed each side
+const CARD_H_MM = 56.8; // 2 in   trim + 3 mm bleed each side
+const CSS_PX_PER_MM = 96 / 25.4;
+const DPI = 300;
+// Square brand assets rendered one-to-one: [file, pixel size]
+const SQUARES = [["avatar.html", 1080]];
+
+function chromePath() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  ].filter(Boolean);
+  const found = candidates.find((p) => existsSync(p));
+  if (!found) throw new Error("No Chrome/Chromium found — set CHROME_PATH and re-run.");
+  return found;
+}
+
+function launchChrome() {
+  const child = spawn(chromePath(), [
+    "--headless=new", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
+    "--remote-debugging-port=0", "--remote-allow-origins=*", "about:blank",
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+
+  return new Promise((resolve, reject) => {
+    let stderr = "";
+    const timer = setTimeout(() => reject(new Error("Chrome did not start in 20s")), 20_000);
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+      const url = stderr.match(/ws:\/\/\S+/)?.[0];
+      if (url) { clearTimeout(timer); resolve({ child, url }); }
+    });
+    child.on("exit", (code) => reject(new Error(`Chrome exited early (${code})`)));
+  });
+}
+
+async function connect(url) {
+  const ws = new WebSocket(url);
+  await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });
+  let nextId = 0;
+  const pending = new Map();
+  const waiters = [];
+  ws.onmessage = (ev) => {
+    const msg = JSON.parse(ev.data);
+    if (msg.id !== undefined) pending.get(msg.id)?.(msg), pending.delete(msg.id);
+    else for (let i = waiters.length - 1; i >= 0; i--) {
+      if (waiters[i].method === msg.method) waiters.splice(i, 1)[0].resolve(msg);
+    }
+  };
+  const client = {
+    session: undefined,
+    send: (method, params = {}) => new Promise((resolve, reject) => {
+      const id = nextId++;
+      pending.set(id, (m) => (m.error ? reject(new Error(`${method}: ${m.error.message}`)) : resolve(m.result)));
+      ws.send(JSON.stringify({ id, method, params, sessionId: client.session }));
+    }),
+    once: (method) => new Promise((resolve) => waiters.push({ method, resolve })),
+    close: () => ws.close(),
+  };
+
+  // The endpoint Chrome prints is the browser target; attach to a real page
+  // so the Page/Runtime domains become available.
+  const { targetId } = await client.send("Target.createTarget", { url: "about:blank" });
+  const { sessionId } = await client.send("Target.attachToTarget", { targetId, flatten: true });
+  client.session = sessionId;
+  return client;
+}
+
+async function open(cdp, file) {
+  const loaded = cdp.once("Page.loadEventFired");
+  await cdp.send("Page.navigate", { url: pathToFileURL(file).href });
+  await loaded;
+  // Web fonts are font-display:block, so wait for them before capturing.
+  await cdp.send("Runtime.evaluate", { expression: "document.fonts.ready", awaitPromise: true });
+}
+
+// Each <img> that shows a QR carries its own target in data-qr and the file it
+// wants in src, so a card can have as many codes as it needs and the HTML stays
+// the single source of truth.
+async function writeQrs(html) {
+  const written = [];
+  for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
+    const target = tag.match(/\sdata-qr="([^"]+)"/)?.[1];
+    const src = tag.match(/\ssrc="\.\/assets\/([^"]+\.svg)"/)?.[1];
+    if (!target || !src) continue;
+    const url = target.replace(/&amp;/g, "&");
+    const svg = await QRCode.toString(url, {
+      type: "svg",
+      errorCorrectionLevel: "M", // M keeps the modules chunky enough at 18 mm
+      margin: 2, // quiet zone; a caption sits just below the code
+      color: { dark: "#0E1116", light: "#0000" },
+    });
+    writeFileSync(join(designDir, "assets", src), svg);
+    written.push(`${src} -> ${url}`);
+  }
+  if (!written.length) throw new Error("no <img data-qr=... src=./assets/*.svg> found");
+  return written;
+}
+
+// Chrome renders the whole page, so capture one side at a time from a
+// throwaway copy that hides the other card and strips the screen padding.
+function isolate(html, stem, side) {
+  const tmp = join(designDir, `.tmp-${stem}-${side}.html`);
+  writeFileSync(tmp, html.replace("</head>", `<style>
+    body{background:none!important;padding:0!important;gap:0!important;display:block!important}
+    .card{display:none}
+    .card.${side}{display:block}
+    .guide{display:none!important}
+  </style></head>`));
+  return tmp;
+}
+
+const cards = readdirSync(designDir)
+  .filter((f) => /^card.*\.html$/.test(f))
+  .sort();
+mkdirSync(outDir, { recursive: true });
+
+const { child, url } = await launchChrome();
+const cdp = await connect(url);
+const log = [];
+try {
+  await cdp.send("Page.enable");
+
+  for (const file of cards) {
+    const stem = file.replace(/\.html$/, "");
+    const path = join(designDir, file);
+    const html = readFileSync(path, "utf8");
+    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
+
+    await open(cdp, path);
+    const { data: pdf } = await cdp.send("Page.printToPDF", {
+      paperWidth: CARD_W_MM / 25.4,
+      paperHeight: CARD_H_MM / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true,
+      preferCSSPageSize: true,
+    });
+    writeFileSync(join(outDir, `superhman-${stem}.pdf`), Buffer.from(pdf, "base64"));
+
+    for (const side of ["front", "back"]) {
+      const tmp = isolate(html, stem, side);
+      await open(cdp, tmp);
+      const { data } = await cdp.send("Page.captureScreenshot", {
+        format: "png",
+        captureBeyondViewport: true,
+        clip: {
+          x: 0, y: 0,
+          width: CARD_W_MM * CSS_PX_PER_MM,
+          height: CARD_H_MM * CSS_PX_PER_MM,
+          scale: DPI / 96,
+        },
+      });
+      writeFileSync(join(outDir, `${stem}-${side}.png`), Buffer.from(data, "base64"));
+      rmSync(tmp);
+    }
+    log.push(`PDF superhman-${stem}.pdf + ${stem}-front.png / ${stem}-back.png`);
+  }
+
+  for (const [file, px] of SQUARES) {
+    if (!existsSync(join(designDir, file))) continue;
+    await open(cdp, join(designDir, file));
+    const { data } = await cdp.send("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: true,
+      clip: { x: 0, y: 0, width: px, height: px, scale: 1 },
+    });
+    const out = file.replace(/\.html$/, ".png");
+    writeFileSync(join(outDir, out), Buffer.from(data, "base64"));
+    log.push(`IMG ${out} (${px} x ${px})`);
+  }
+} finally {
+  cdp.close();
+  child.kill();
+}
+
+console.log(log.join("\n"));
+console.log(`\n${CARD_W_MM} x ${CARD_H_MM} mm with bleed, ${DPI} DPI previews -> public/handyman/`);
