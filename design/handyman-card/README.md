@@ -188,6 +188,10 @@ abajo (`fila 1 · col 2`) y una línea de corte punteada a 8 mm del borde.
 4. Medí la pieza armada: tiene que dar **843 × 388 mm**. Si da distinto, la
    impresora escaló.
 
+`print-van-poster-armado.png` es cómo tiene que quedar — sale de rasterizar el
+PDF real, recortar los márgenes y pegar las seis, así que si tu armado no se
+parece a eso, algo se escaló o se cortó de más.
+
 Si la copistería puede imprimir **a sangre / sin márgenes**, pedilo y saltás
 el corte entero.
 

@@ -73,23 +73,26 @@
   body{width:var(--poster-w);height:var(--poster-h)}
   .sheet{display:contents}
 
-  /* ---- tiles mode: one A4 page per tile, all in one document ---- */
-  html.tiles body{width:auto;height:auto;background:#fff}
+  /* ---- tiles mode: one A4 page per tile, all in one document ----
+     Everything here stays in normal flow. Chrome's paginated printer drops an
+     absolutely positioned box nested inside another one, which silently
+     produced blank sheets — so the clip is a plain block and the poster is
+     merely shifted with position:relative. ---- */
+  html.tiles body{width:auto;height:auto;background:#fff;margin:0}
   html.tiles .page{
     position:relative;width:297mm;height:210mm;overflow:hidden;
+    padding:var(--margin);
     page-break-after:always;break-after:page;
   }
   html.tiles .page:last-child{page-break-after:auto;break-after:auto}
   html.tiles .sheet{
-    display:block;position:absolute;
-    left:var(--margin);top:var(--margin);
-    width:var(--tile-w);height:var(--tile-h);overflow:hidden;
+    display:block;width:var(--tile-w);height:var(--tile-h);overflow:hidden;
   }
-  html.tiles .poster{position:absolute;left:var(--tx);top:var(--ty)}
+  html.tiles .poster{position:relative;left:var(--tx);top:var(--ty)}
   html.tiles .cut{
     position:absolute;left:var(--margin);top:var(--margin);
     width:var(--tile-w);height:var(--tile-h);
-    border:.25mm dashed rgba(14,17,22,.45);
+    outline:.25mm dashed rgba(14,17,22,.5);
   }
   html.tiles .id{
     position:absolute;left:0;right:0;bottom:1.6mm;text-align:center;
