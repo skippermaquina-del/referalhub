@@ -284,6 +284,19 @@ export const offers: Offer[] = [
     referralUrl: "https://share.axosbank.com/andriy!2ff1a65fbc!a",
   },
   {
+    slug: "revolut",
+    name: "Revolut",
+    category: "banking",
+    emoji: "🌍",
+    domain: "revolut.com",
+    bonus: "$100",
+    description: "Global money app with multi-currency accounts, fee-free transfers, and spending abroad.",
+    requirements:
+      "Sign up with the link and verify your identity, add money, make 3 purchases of $10+ each, and order a physical card — all before Oct 27, 2026. Some cash-like transactions don't count.",
+    referralUrl:
+      "https://revolut.com/referral/?referral-code=andriy_b7_j0v4!OCT1-26-AR-US-H2-REFBLOCK&geo-redirect",
+  },
+  {
     slug: "fetch-rewards",
     name: "Fetch Rewards",
     category: "apps",
