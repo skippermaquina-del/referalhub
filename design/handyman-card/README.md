@@ -163,3 +163,45 @@ customers, the two safe fallbacks that keep the brand and the URL are
 Deliberately **not** used anywhere: a diamond/shield badge, a cape, and the
 red‑blue‑yellow palette. "Every home needs a hero" is the whole superhero
 reference the card needs, and it is the part nobody can send a letter about.
+
+
+## El cartel de la van, en 6 hojas A4
+
+`print-van-poster.html` genera **dos salidas del mismo dibujo**:
+
+| Archivo | Qué es |
+|---|---|
+| `superhman-print-van-poster-A4-tiles.pdf` | 6 páginas A4 apaisadas. Lo imprimís hoy en cualquier lado. |
+| `superhman-print-van-poster-FULL.pdf` | Una sola pieza de 843 × 388 mm. Es el archivo que le das a la gráfica cuando puedas pagar el ploteo. |
+
+No hay que rediseñar nada para pasar de uno al otro: es el mismo HTML.
+
+### Armado
+
+Las hojas van en **3 columnas × 2 filas**. Cada una trae su posición impresa
+abajo (`fila 1 · col 2`) y una línea de corte punteada a 8 mm del borde.
+
+1. Imprimí el PDF de 6 páginas, al 100 % — **sin «ajustar a la página»**, que
+   es lo que arruina el calce.
+2. Cortá las seis por la línea punteada. La etiqueta se va con el recorte.
+3. Juntá los bordes a tope, sin superponer. Pegá por detrás con cinta.
+4. Medí la pieza armada: tiene que dar **843 × 388 mm**. Si da distinto, la
+   impresora escaló.
+
+Si la copistería puede imprimir **a sangre / sin márgenes**, pedilo y saltás
+el corte entero.
+
+### Que sobreviva afuera
+
+Papel común pegado a una camioneta en Florida dura una lluvia. Tres opciones,
+de mejor a más barata:
+
+- **Vinilo adhesivo** en la copistería, laminado. Es lo que querés y no cuesta
+  tanto por seis A4.
+- **Papel sobre coroplast o foam board**, cubierto con laminado autoadhesivo
+  transparente. Se sujeta con imanes y lo sacás cuando querés.
+- **Papel y cinta transparente ancha** por encima, sellando los bordes. Es el
+  más barato y el que peor envejece — sirve para probar una semana, no más.
+
+Lo que no conviene es pegar papel pelado: a los tres días se ve descuidado, y
+una marca descuidada en la puerta de la camioneta trabaja en tu contra.
