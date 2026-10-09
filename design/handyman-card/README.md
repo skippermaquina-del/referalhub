@@ -209,3 +209,21 @@ de mejor a más barata:
 
 Lo que no conviene es pegar papel pelado: a los tres días se ve descuidado, y
 una marca descuidada en la puerta de la camioneta trabaja en tu contra.
+
+
+## La chuleta de llamada
+
+`print-phone.html` → `superhman-print-phone.pdf`, dos hojas A4 para el parasol de
+la camioneta.
+
+- **Hoja 1** — cómo atender, las seis preguntas en inglés / español / ruso, y la
+  regla de distancia al pie (va acá porque la pregunta por la dirección está en
+  esta misma hoja).
+- **Hoja 2** — los tres cierres en los tres idiomas, y lo que nunca se hace.
+
+Archivo no tiene cirílico, así que el ruso cae en Inter mediante `unicode-range`.
+Las dos son grotescas y al tamaño del texto el salto no se nota. El subset está
+en `assets/inter-cyrillic.woff2`.
+
+Si cambiás un idioma: las frases van completas y entre comillas a propósito, para
+poder decirlas sin traducir con el cliente esperando.

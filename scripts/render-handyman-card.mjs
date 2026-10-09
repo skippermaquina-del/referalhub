@@ -44,6 +44,7 @@ const PAGES = [
   ["print-van.html", 297, 210],
   ["print-van-logo.html", 297, 210],
   ["print-door.html", 210, 297],
+  ["print-phone.html", 210, 297],
 ];
 
 function chromePath() {
