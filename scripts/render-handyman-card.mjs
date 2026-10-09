@@ -29,7 +29,7 @@ const CARD_H_MM = 56.8; // 2 in   trim + 3 mm bleed each side
 const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
 // Square brand assets rendered one-to-one: [file, pixel size]
-const SQUARES = [["avatar.html", 1080]];
+const SQUARES = [["avatar.html", 2048]];
 // Posters printed whole AND sliced across sheets: the same artwork becomes
 // the cheap tiled version to put up today and the file a sign shop plots later.
 const POSTERS = [{
@@ -274,6 +274,9 @@ try {
 
   for (const [file, px] of SQUARES) {
     if (!existsSync(join(designDir, file))) continue;
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: px, height: px, deviceScaleFactor: 1, mobile: false,
+    });
     await open(cdp, join(designDir, file));
     const { data } = await cdp.send("Page.captureScreenshot", {
       format: "png",
@@ -282,6 +285,7 @@ try {
     });
     const out = file.replace(/\.html$/, ".png");
     writeFileSync(join(outDir, out), Buffer.from(data, "base64"));
+    await cdp.send("Emulation.clearDeviceMetricsOverride");
     log.push(`IMG ${out} (${px} x ${px})`);
   }
 } finally {
