@@ -1,0 +1,171 @@
+<!doctype html>
+<!--
+  SUPERHMAN — door flyer, A4 portrait (210 x 297 mm).
+
+  Read up close by someone standing at their own door, so this one argues:
+  what I fix, what it costs, why you can trust me, and one easy next step.
+
+  Printed on plain A4 — no bleed, 15 mm clear of every edge, because office
+  and home printers cannot print to the paper edge.
+
+  BEFORE YOU STICK ANY OF THESE: most condo and HOA buildings in South Florida
+  ban solicitation, and a flyer taped to a door is the fastest way to be
+  escorted out of a building you wanted to work in. Ask the building manager
+  first — that conversation is also how you meet the person who hires
+  handymen for the whole property.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — door flyer</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{ --paper:#FFFFFF; --ink:#0E1116; --hero:#FF5C1A; --muted:#6B7078; --line:rgba(14,17,22,.16); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{ size:210mm 297mm; margin:0 }
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:210mm;height:297mm;background:var(--paper);color:var(--ink);
+    padding:15mm;display:flex;flex-direction:column;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+
+  header{display:flex;align-items:center;gap:5mm;padding-bottom:6mm;border-bottom:.5mm solid var(--ink)}
+  .mark{width:15mm;height:15mm;color:var(--hero);flex:none}
+  .word{font-size:27pt;font-weight:800;font-stretch:106%;letter-spacing:.05em;line-height:1}
+  .word b{color:var(--hero)}
+  .tag{
+    margin-left:auto;text-align:right;font-size:8.5pt;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--muted);line-height:1.6;
+  }
+
+  h1{
+    margin-top:11mm;font-size:35pt;font-weight:800;line-height:1.02;
+    letter-spacing:-.02em;max-width:150mm;
+  }
+  h1 em{font-style:normal;color:var(--hero)}
+  .sub{margin-top:5mm;font-size:13pt;font-weight:500;line-height:1.5;color:var(--muted);max-width:150mm}
+
+  .menu{margin-top:10mm;border-top:.4mm solid var(--line)}
+  .menu .lbl{
+    margin-top:4mm;font-size:8.5pt;font-weight:800;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--hero);
+  }
+  .menu ul{list-style:none;margin-top:3.5mm}
+  .menu li{
+    display:flex;align-items:baseline;gap:3mm;padding:2.6mm 0;
+    border-bottom:.3mm solid var(--line);font-size:13pt;
+  }
+  .menu li b{font-weight:600}
+  .menu li span{
+    margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .menu .note{margin-top:3mm;font-size:9.5pt;font-weight:500;color:var(--muted)}
+
+  .trust{
+    margin-top:8mm;display:flex;flex-wrap:wrap;gap:2.5mm 6mm;
+    font-size:11pt;font-weight:700;
+  }
+  .trust i{font-style:normal;color:var(--hero)}
+  .trust .es{color:var(--hero)}
+
+  .steps{
+    margin-top:auto;display:flex;gap:6mm;
+    padding:7mm 0;border-top:.4mm solid var(--line);border-bottom:.4mm solid var(--line);
+  }
+  .steps div{flex:1}
+  .steps b{
+    display:block;font-size:9pt;font-weight:800;letter-spacing:.2em;color:var(--hero);
+    margin-bottom:1.8mm;
+  }
+  .steps span{font-size:11.5pt;font-weight:600;line-height:1.4}
+
+  footer{
+    margin-top:9mm;display:flex;align-items:flex-end;gap:8mm;
+    border-top:.5mm solid var(--ink);padding-top:7mm;
+  }
+  .call{flex:1;min-width:0}
+  .call .lbl{
+    font-size:8.5pt;font-weight:800;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--hero);margin-bottom:2mm;
+  }
+  .call .phone{
+    font-size:40pt;font-weight:800;letter-spacing:-.02em;line-height:1;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .call .who{margin-top:3mm;font-size:11.5pt;font-weight:600}
+  .call .who span{color:var(--muted);font-weight:500}
+  figure.qr{width:30mm;text-align:center;flex:none}
+  figure.qr img{width:30mm;height:30mm;display:block}
+  figure.qr figcaption{
+    margin-top:1.6mm;font-size:7.5pt;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);line-height:1.5;
+  }
+  figure.qr figcaption b{display:block;color:var(--ink);font-size:8.5pt;letter-spacing:.02em}
+</style>
+</head>
+<body>
+
+  <header>
+    <svg class="mark" viewBox="0 0 100 100" aria-label="SUPERHMAN">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <div class="word">SUPER<b>H</b>MAN</div>
+    <div class="tag">Every home<br>needs a hero</div>
+  </header>
+
+  <!-- ==== EDIT ME: the headline ==== -->
+  <h1>The things you keep<br>meaning to <em>fix</em>.</h1>
+  <p class="sub">The shelf that never went up. The door that sticks. The patch
+  by the shower. One visit, one person, done this week.</p>
+
+  <!-- ==== EDIT ME: prices. "from" keeps you honest and keeps you free. ==== -->
+  <section class="menu">
+    <div class="lbl">What it costs</div>
+    <ul>
+      <li><b>TV mounted on the wall</b><span>from $150</span></li>
+      <li><b>Ceiling fan replaced</b><span>from $180</span></li>
+      <li><b>Drywall patched &amp; painted</b><span>from $120</span></li>
+      <li><b>Door adjusted so it closes right</b><span>from $90</span></li>
+      <li><b>Furniture assembled</b><span>from $120</span></li>
+      <li><b>Shelves, curtains, mirrors hung</b><span>from $100</span></li>
+    </ul>
+    <p class="note">Free estimate before anything starts. You hear the price first.</p>
+  </section>
+
+  <!-- ==== EDIT ME: only what is true ==== -->
+  <div class="trust">
+    <span>Insured</span><i>&middot;</i>
+    <span>Free estimates</span><i>&middot;</i>
+    <span>Same-week appointments</span><i>&middot;</i>
+    <span class="es">Se habla español</span>
+  </div>
+
+  <!-- ==== EDIT ME: the promise ==== -->
+  <section class="steps">
+    <div><b>01</b><span>Text me a photo of the problem</span></div>
+    <div><b>02</b><span>You get a price before I start</span></div>
+    <div><b>03</b><span>Fixed this week</span></div>
+  </section>
+
+  <footer>
+    <div class="call">
+      <div class="lbl">Hero hotline</div>
+      <!-- ==== EDIT ME: phone ==== -->
+      <div class="phone">(645) 221-9200</div>
+      <div class="who">Andy <span>&middot; Broward &middot; Dade &middot; Boca Raton</span></div>
+    </div>
+    <figure class="qr">
+      <img data-qr="https://wa.me/16452219200?text=Hi%20Andy"
+           src="./assets/qr-whatsapp.svg" alt="Scan to message Andy on WhatsApp">
+      <figcaption><b>Text me</b>Scan &rarr; WhatsApp</figcaption>
+    </figure>
+  </footer>
+
+</body>
+</html>

@@ -163,3 +163,67 @@ customers, the two safe fallbacks that keep the brand and the URL are
 Deliberately **not** used anywhere: a diamond/shield badge, a cape, and the
 red‑blue‑yellow palette. "Every home needs a hero" is the whole superhero
 reference the card needs, and it is the part nobody can send a letter about.
+
+
+## El cartel de la van, en 6 hojas A4
+
+`print-van-poster.html` genera **dos salidas del mismo dibujo**:
+
+| Archivo | Qué es |
+|---|---|
+| `superhman-print-van-poster-A4-tiles.pdf` | 6 páginas A4 apaisadas. Lo imprimís hoy en cualquier lado. |
+| `superhman-print-van-poster-FULL.pdf` | Una sola pieza de 843 × 388 mm. Es el archivo que le das a la gráfica cuando puedas pagar el ploteo. |
+
+No hay que rediseñar nada para pasar de uno al otro: es el mismo HTML.
+
+### Armado
+
+Las hojas van en **3 columnas × 2 filas**. Cada una trae su posición impresa
+abajo (`fila 1 · col 2`) y una línea de corte punteada a 8 mm del borde.
+
+1. Imprimí el PDF de 6 páginas, al 100 % — **sin «ajustar a la página»**, que
+   es lo que arruina el calce.
+2. Cortá las seis por la línea punteada. La etiqueta se va con el recorte.
+3. Juntá los bordes a tope, sin superponer. Pegá por detrás con cinta.
+4. Medí la pieza armada: tiene que dar **843 × 388 mm**. Si da distinto, la
+   impresora escaló.
+
+`print-van-poster-armado.png` es cómo tiene que quedar — sale de rasterizar el
+PDF real, recortar los márgenes y pegar las seis, así que si tu armado no se
+parece a eso, algo se escaló o se cortó de más.
+
+Si la copistería puede imprimir **a sangre / sin márgenes**, pedilo y saltás
+el corte entero.
+
+### Que sobreviva afuera
+
+Papel común pegado a una camioneta en Florida dura una lluvia. Tres opciones,
+de mejor a más barata:
+
+- **Vinilo adhesivo** en la copistería, laminado. Es lo que querés y no cuesta
+  tanto por seis A4.
+- **Papel sobre coroplast o foam board**, cubierto con laminado autoadhesivo
+  transparente. Se sujeta con imanes y lo sacás cuando querés.
+- **Papel y cinta transparente ancha** por encima, sellando los bordes. Es el
+  más barato y el que peor envejece — sirve para probar una semana, no más.
+
+Lo que no conviene es pegar papel pelado: a los tres días se ve descuidado, y
+una marca descuidada en la puerta de la camioneta trabaja en tu contra.
+
+
+## La chuleta de llamada
+
+`print-phone.html` → `superhman-print-phone.pdf`, dos hojas A4 para el parasol de
+la camioneta.
+
+- **Hoja 1** — cómo atender, las seis preguntas en inglés / español / ruso, y la
+  regla de distancia al pie (va acá porque la pregunta por la dirección está en
+  esta misma hoja).
+- **Hoja 2** — los tres cierres en los tres idiomas, y lo que nunca se hace.
+
+Archivo no tiene cirílico, así que el ruso cae en Inter mediante `unicode-range`.
+Las dos son grotescas y al tamaño del texto el salto no se nota. El subset está
+en `assets/inter-cyrillic.woff2`.
+
+Si cambiás un idioma: las frases van completas y entre comillas a propósito, para
+poder decirlas sin traducir con el cliente esperando.

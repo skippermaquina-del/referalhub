@@ -29,7 +29,23 @@ const CARD_H_MM = 56.8; // 2 in   trim + 3 mm bleed each side
 const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
 // Square brand assets rendered one-to-one: [file, pixel size]
-const SQUARES = [["avatar.html", 1080]];
+const SQUARES = [["avatar.html", 2048]];
+// Posters printed whole AND sliced across sheets: the same artwork becomes
+// the cheap tiled version to put up today and the file a sign shop plots later.
+const POSTERS = [{
+  file: "print-van-poster.html",
+  cols: 3, rows: 2,
+  tileW: 281, tileH: 194,   // artwork per sheet, inside the margin
+  pageW: 297, pageH: 210,   // A4 landscape
+}];
+
+// Full-page print pieces: [file, width mm, height mm]
+const PAGES = [
+  ["print-van.html", 297, 210],
+  ["print-van-logo.html", 297, 210],
+  ["print-door.html", 210, 297],
+  ["print-phone.html", 210, 297],
+];
 
 function chromePath() {
   const candidates = [
@@ -121,7 +137,6 @@ async function writeQrs(html) {
     writeFileSync(join(designDir, "assets", src), svg);
     written.push(`${src} -> ${url}`);
   }
-  if (!written.length) throw new Error("no <img data-qr=... src=./assets/*.svg> found");
   return written;
 }
 
@@ -153,7 +168,9 @@ try {
     const stem = file.replace(/\.html$/, "");
     const path = join(designDir, file);
     const html = readFileSync(path, "utf8");
-    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
+    const qrs = await writeQrs(html);
+    if (!qrs.length) throw new Error(`${file}: a card must carry at least one QR`);
+    log.push(...qrs.map((l) => `QR  ${l}`));
 
     await open(cdp, path);
     const { data: pdf } = await cdp.send("Page.printToPDF", {
@@ -184,8 +201,83 @@ try {
     log.push(`PDF superhman-${stem}.pdf + ${stem}-front.png / ${stem}-back.png`);
   }
 
+  for (const [file, wmm, hmm] of PAGES) {
+    const path = join(designDir, file);
+    if (!existsSync(path)) continue;
+    const html = readFileSync(path, "utf8");
+    log.push(...(await writeQrs(html)).map((l) => `QR  ${l}`));
+    await open(cdp, path);
+    const { data: pdf } = await cdp.send("Page.printToPDF", {
+      paperWidth: wmm / 25.4, paperHeight: hmm / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true, preferCSSPageSize: true,
+    });
+    const stem = file.replace(/\.html$/, "");
+    writeFileSync(join(outDir, `superhman-${stem}.pdf`), Buffer.from(pdf, "base64"));
+    const { data: png } = await cdp.send("Page.captureScreenshot", {
+      format: "png", captureBeyondViewport: true,
+      clip: { x: 0, y: 0, width: wmm * CSS_PX_PER_MM, height: hmm * CSS_PX_PER_MM, scale: 150 / 96 },
+    });
+    writeFileSync(join(outDir, `${stem}.png`), Buffer.from(png, "base64"));
+    log.push(`A4  superhman-${stem}.pdf + ${stem}.png (${wmm} x ${hmm} mm)`);
+  }
+
+  for (const poster of POSTERS) {
+    const path = join(designDir, poster.file);
+    if (!existsSync(path)) continue;
+    const stem = poster.file.replace(/\.html$/, "");
+    const html = readFileSync(path, "utf8");
+    const W = poster.cols * poster.tileW;
+    const H = poster.rows * poster.tileH;
+
+    // 1. the whole thing, for the sign shop
+    await open(cdp, path);
+    const { data: full } = await cdp.send("Page.printToPDF", {
+      paperWidth: W / 25.4, paperHeight: H / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true, preferCSSPageSize: true,
+    });
+    writeFileSync(join(outDir, `superhman-${stem}-FULL.pdf`), Buffer.from(full, "base64"));
+    const { data: prev } = await cdp.send("Page.captureScreenshot", {
+      format: "png", captureBeyondViewport: true,
+      clip: { x: 0, y: 0, width: W * CSS_PX_PER_MM, height: H * CSS_PX_PER_MM, scale: 0.5 },
+    });
+    writeFileSync(join(outDir, `${stem}.png`), Buffer.from(prev, "base64"));
+    log.push(`BIG superhman-${stem}-FULL.pdf (${W} x ${H} mm) + ${stem}.png`);
+
+    // 2. the same artwork sliced across sheets, to put up today. One document
+    //    with a page per tile, so Chrome emits the whole set as one PDF.
+    const unit = html.match(/<!--TILE-UNIT-START-->([\s\S]*?)<!--TILE-UNIT-END-->/)?.[1];
+    if (!unit) throw new Error(`${poster.file}: no <!--TILE-UNIT-START--> block to tile`);
+    const head = html.slice(html.indexOf("<head>"), html.indexOf("</head>"))
+      .replace(/@page\{[^}]*\}/, `@page{ size:${poster.pageW}mm ${poster.pageH}mm; margin:0 }`);
+
+    let body = "";
+    for (let r = 0; r < poster.rows; r++) {
+      for (let c = 0; c < poster.cols; c++) {
+        body += `<div class="page" style="--tx:-${c * poster.tileW}mm;--ty:-${r * poster.tileH}mm">`
+          + unit.replace(/(<div class="id">)[^<]*/, `$1fila ${r + 1} &middot; col ${c + 1}`)
+          + "</div>\n";
+      }
+    }
+    const tmp = join(designDir, ".tmp-tiles.html");
+    writeFileSync(tmp, `<!doctype html><html lang="en" class="tiles">${head}</head><body>${body}</body></html>`);
+    await open(cdp, tmp);
+    const { data: tiles } = await cdp.send("Page.printToPDF", {
+      paperWidth: poster.pageW / 25.4, paperHeight: poster.pageH / 25.4,
+      marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
+      printBackground: true, preferCSSPageSize: true,
+    });
+    writeFileSync(join(outDir, `superhman-${stem}-A4-tiles.pdf`), Buffer.from(tiles, "base64"));
+    rmSync(tmp);
+    log.push(`A4  superhman-${stem}-A4-tiles.pdf (${poster.cols} x ${poster.rows} hojas, 1 PDF)`);
+  }
+
   for (const [file, px] of SQUARES) {
     if (!existsSync(join(designDir, file))) continue;
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: px, height: px, deviceScaleFactor: 1, mobile: false,
+    });
     await open(cdp, join(designDir, file));
     const { data } = await cdp.send("Page.captureScreenshot", {
       format: "png",
@@ -194,6 +286,7 @@ try {
     });
     const out = file.replace(/\.html$/, ".png");
     writeFileSync(join(outDir, out), Buffer.from(data, "base64"));
+    await cdp.send("Emulation.clearDeviceMetricsOverride");
     log.push(`IMG ${out} (${px} x ${px})`);
   }
 } finally {

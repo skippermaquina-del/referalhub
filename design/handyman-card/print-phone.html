@@ -1,0 +1,216 @@
+<!doctype html>
+<!--
+  SUPERHMAN — chuleta de llamada, trilingüe. Dos hojas A4.
+
+  Hoja 1: cómo atender y las seis preguntas, en inglés, español y ruso.
+  Hoja 2: los tres cierres en los tres idiomas, lo que nunca se hace, y la
+  regla de distancia.
+
+  Se lee de un vistazo con el teléfono en la mano, no sentado: las frases van
+  entre comillas y completas para poder decirlas sin traducir en el momento.
+
+  Archivo no tiene cirílico, así que el ruso cae en Inter por unicode-range.
+  Las dos son grotescas y a este tamaño el salto no se nota.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — chuleta de llamada</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  @font-face{
+    font-family:'Inter';
+    src:url('./assets/inter-cyrillic.woff2') format('woff2');
+    font-weight:400 800; font-display:block;
+    unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  }
+  :root{ --ink:#0E1116; --hero:#FF5C1A; --mu:#6B7078; --line:rgba(14,17,22,.16); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{ size:210mm 297mm; margin:0 }
+  html{font-family:'Archivo','Inter',system-ui,sans-serif}
+  body{background:#fff;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  .page{
+    width:210mm;height:297mm;padding:14mm 14mm 12mm;
+    display:flex;flex-direction:column;overflow:hidden;
+    page-break-after:always;break-after:page;
+  }
+  .page:last-child{page-break-after:auto;break-after:auto}
+
+  header{display:flex;align-items:center;gap:4mm;padding-bottom:3.5mm;border-bottom:.6mm solid var(--ink)}
+  .mark{width:8mm;height:8mm;color:var(--hero);flex:none}
+  .wm{font-size:15pt;font-weight:800;letter-spacing:.07em}
+  .wm b{color:var(--hero)}
+  .goal{margin-left:auto;font-size:9.5pt;font-weight:500;color:var(--mu);font-style:italic;text-align:right}
+
+  .lbl{
+    font-size:8pt;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--hero);margin:7mm 0 3mm;
+  }
+  .lbl:first-of-type{margin-top:6mm}
+
+  /* --- grilla: [nº] [EN] [ES] [RU] --- */
+  .grid{display:grid;grid-template-columns:6mm 1fr 1fr 1fr;gap:0 5mm}
+  .grid > div{padding:2.6mm 0}
+  .head{
+    font-size:7.5pt;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--mu);border-bottom:.5mm solid var(--ink);padding-bottom:1.6mm !important;
+  }
+  .num{font-size:10pt;font-weight:800;color:var(--hero);padding-top:3.2mm !important}
+  .q{font-size:11.5pt;font-weight:600;line-height:1.32;border-bottom:.25mm solid var(--line)}
+  .q.ru{font-weight:500}
+  .q i{display:block;font-style:normal;font-weight:500;font-size:9pt;color:var(--mu);margin-top:1.2mm}
+
+  .hello{display:grid;grid-template-columns:6mm 1fr 1fr 1fr;gap:0 5mm}
+  .hello > div{padding:3mm 0}
+  .hello .say{font-size:14pt;font-weight:700;line-height:1.25}
+  .hello .say.ru{font-weight:600;font-size:13.5pt}
+  .tip{margin-top:3mm;font-size:9.5pt;font-weight:500;color:var(--mu);line-height:1.45;max-width:150mm}
+
+  /* --- cierres --- */
+  .close{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5mm;padding:3.5mm 0;border-bottom:.25mm solid var(--line)}
+  .close p{font-size:10.5pt;font-weight:600;line-height:1.4}
+  .close p.ru{font-weight:500}
+  .case{
+    font-size:8.5pt;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink);margin:5mm 0 1mm;
+  }
+  .case span{color:var(--hero)}
+
+  ul.never{list-style:none;margin-top:3mm}
+  ul.never li{font-size:11.5pt;font-weight:600;padding:1.8mm 0 1.8mm 6mm;position:relative}
+  ul.never li::before{content:"×";position:absolute;left:0;color:var(--hero);font-weight:800;font-size:11pt}
+
+  .strip{margin-top:auto;display:flex;gap:5mm;padding-top:4mm;border-top:.6mm solid var(--ink)}
+  .strip div{flex:1;font-size:10pt;line-height:1.4}
+  .strip b{display:block;font-weight:800;color:var(--hero);font-size:8pt;
+           letter-spacing:.14em;text-transform:uppercase;margin-bottom:1mm}
+</style>
+</head>
+<body>
+
+<!-- ==================== HOJA 1 ==================== -->
+<section class="page">
+  <header>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <span class="wm">SUPER<b>H</b>MAN</span>
+    <span class="goal">La llamada no es para cerrar.<br>Es para decidir si vale la pena ir.</span>
+  </header>
+
+  <div class="lbl">Atendé así — nunca «¿hola?»</div>
+  <div class="hello">
+    <div></div>
+    <div class="say">&laquo;SUPERHMAN, this is Andy.&raquo;</div>
+    <div class="say">&laquo;SUPERHMAN, habla Andy.&raquo;</div>
+    <div class="say ru">&laquo;SUPERHMAN, Энди слушает.&raquo;</div>
+  </div>
+  <p class="tip">Si no podés atender bien —arriba de una escalera, con la amoladora
+  prendida— mandá a buzón y devolvé en diez minutos. Atender mal convierte peor que
+  no atender.</p>
+
+  <div class="lbl">Preguntá, en este orden</div>
+  <div class="grid">
+    <div class="head"></div>
+    <div class="head">English</div>
+    <div class="head">Español</div>
+    <div class="head">Русский</div>
+
+    <div class="num">1</div>
+    <div class="q">What do you need done?</div>
+    <div class="q">¿Qué necesitás?<i>Dejalo hablar sin interrumpir.</i></div>
+    <div class="q ru">Что нужно сделать?</div>
+
+    <div class="num">2</div>
+    <div class="q">What's the exact address?</div>
+    <div class="q">¿Cuál es la dirección exacta?<i>Filtro número uno. Va temprano.</i></div>
+    <div class="q ru">Какой точный адрес?</div>
+
+    <div class="num">3</div>
+    <div class="q">Do you own the place or rent?</div>
+    <div class="q">¿Sos el dueño o alquilás?<i>El inquilino no autoriza casi nada.</i></div>
+    <div class="q ru">Вы собственник или снимаете?</div>
+
+    <div class="num">4</div>
+    <div class="q">How long has it been like that? Has anyone tried to fix it?</div>
+    <div class="q">¿Hace cuánto está así? ¿Alguien lo intentó arreglar?<i>Cambia el precio, y a veces la respuesta.</i></div>
+    <div class="q ru">Давно так? Кто-нибудь уже пытался починить?</div>
+
+    <div class="num">5</div>
+    <div class="q">Can you send me two or three photos on WhatsApp?</div>
+    <div class="q">¿Me mandás dos o tres fotos por WhatsApp?<i>Innegociable. Ahorra media visita.</i></div>
+    <div class="q ru">Пришлёте пару фото в WhatsApp?</div>
+
+    <div class="num">6</div>
+    <div class="q">What works better — tomorrow morning or Thursday afternoon?</div>
+    <div class="q">¿Qué te sirve más, mañana a la mañana o el jueves a la tarde?<i>Dos ventanas concretas. Nunca «cuando quieras».</i></div>
+    <div class="q ru">Когда удобнее — завтра утром или в четверг днём?</div>
+  </div>
+
+  <div class="strip">
+    <div><b>Hasta 30 min</b>Precio de lista</div>
+    <div><b>30–60 min · Boca, Delray</b>Mínimo 3 horas o $350</div>
+    <div><b>60+ min · West Palm</b>Sólo día completo</div>
+  </div>
+</section>
+
+<!-- ==================== HOJA 2 ==================== -->
+<section class="page">
+  <header>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <span class="wm">SUPER<b>H</b>MAN</span>
+    <span class="goal">Cerrá con una de estas tres.<br>Nunca con aire.</span>
+  </header>
+
+  <div class="lbl">Los tres cierres</div>
+
+  <div class="case">01 · <span>Está en el menú de precios</span></div>
+  <div class="close">
+    <p>&laquo;I can do that for $___, labor and the standard part included. If tomorrow
+    morning works, it'll be done in about an hour and a half.&raquo;</p>
+    <p>&laquo;Eso lo hago por $___, incluye mano de obra y la pieza. Si mañana a la
+    mañana te sirve, en hora y media está listo.&raquo;</p>
+    <p class="ru">&laquo;Сделаю за $___, работа и стандартная деталь включены. Если
+    завтра утром удобно — закончу за полтора часа.&raquo;</p>
+  </div>
+
+  <div class="case">02 · <span>Hay que ir a verlo</span></div>
+  <div class="close">
+    <p>&laquo;It's somewhere between $___ and $___, but I won't quote a firm number
+    sight unseen. The visit is $75, and I take it off the job if you hire me.&raquo;</p>
+    <p>&laquo;Está entre $___ y $___, pero no te tiro un número sin verlo. La visita
+    son $75 y te la descuento si me contratás.&raquo;</p>
+    <p class="ru">&laquo;Примерно от $___ до $___, но точную цену без осмотра не назову.
+    Выезд — $75, и я вычту их из стоимости работы, если договоримся.&raquo;</p>
+  </div>
+
+  <div class="case">03 · <span>Queda lejos</span></div>
+  <div class="close">
+    <p>&laquo;I'll come, but for that distance I book the whole day. If you've got
+    several things at once, it's worth it.&raquo;</p>
+    <p>&laquo;Voy, pero por la distancia tomo el día entero. Si tenés varias cosas
+    juntas, conviene.&raquo;</p>
+    <p class="ru">&laquo;Приеду, но из-за расстояния беру день целиком. Если наберётся
+    несколько задач — выгоднее.&raquo;</p>
+  </div>
+
+  <div class="lbl">Nunca, en ningún idioma</div>
+  <ul class="never">
+    <li>Dar precio cerrado sin ver ni foto. Un rango sí, un número no.</li>
+    <li>Negociar el fee de visita. Si lo negociás, después negociás todo.</li>
+    <li>Cortar con «te aviso». Cerrá con fecha, o con «te mando el presupuesto hoy antes de las 8».</li>
+  </ul>
+
+</section>
+
+</body>
+</html>

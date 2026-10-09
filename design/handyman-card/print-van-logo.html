@@ -1,0 +1,82 @@
+<!doctype html>
+<!--
+  SUPERHMAN — van panel, LOGO-FORWARD variant. A4 landscape (297 x 210 mm).
+
+  The alternative to print-van.html: the mark carries the panel and the phone
+  number is a footnote. Looks more like an established company — and that is
+  exactly the catch. Logo-only works once people already know the name; until
+  then it asks a stranger to remember you instead of letting them call you.
+
+  Print this one when the van is mostly parked where people already know the
+  brand, or alongside the phone-forward panel on the opposite side.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — van panel, logo</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{ --ground:#FFFFFF; --ink:#0E1116; --hero:#FF5C1A; --muted:#6B7078; --line:rgba(14,17,22,.22); }
+  :root.dark{ --ground:#0E1116; --ink:#FFFFFF; --muted:#A7ACB4; --line:rgba(255,255,255,.26); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{ size:297mm 210mm; margin:0 }
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:297mm;height:210mm;background:var(--ground);color:var(--ink);
+    position:relative;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .cut{position:absolute;inset:8mm;border:.3mm dashed var(--line);border-radius:2mm}
+  .inner{
+    position:absolute;inset:20mm;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+  }
+  .mark{width:52mm;height:52mm;color:var(--hero);display:block}
+  .word{
+    margin-top:9mm;font-size:62pt;font-weight:800;font-stretch:106%;
+    letter-spacing:.05em;line-height:1;text-indent:.05em;
+  }
+  .word b{color:var(--hero);font-weight:800}
+  .rule{width:26mm;height:1.4mm;background:var(--hero);border-radius:1mm;margin:7mm 0 6mm}
+  .tagline{
+    font-size:15pt;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--muted);text-indent:.3em;
+  }
+  .foot{
+    position:absolute;left:20mm;right:20mm;bottom:20mm;
+    display:flex;align-items:flex-end;gap:8mm;
+  }
+  .foot .phone{
+    font-size:30pt;font-weight:800;letter-spacing:-.01em;line-height:1;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .foot .trade{
+    margin-left:auto;text-align:right;font-size:11pt;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--muted);line-height:1.6;
+  }
+</style>
+</head>
+<body>
+  <div class="cut"></div>
+
+  <div class="inner">
+    <svg class="mark" viewBox="0 0 100 100" aria-label="SUPERHMAN">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <div class="word">SUPER<b>H</b>MAN</div>
+    <div class="rule"></div>
+    <div class="tagline">Every home needs a hero</div>
+  </div>
+
+  <div class="foot">
+    <!-- ==== EDIT ME: phone ==== -->
+    <div class="phone">(645) 221-9200</div>
+    <div class="trade">Handyman<br>Insured</div>
+  </div>
+</body>
+</html>
