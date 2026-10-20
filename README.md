@@ -21,6 +21,24 @@ for a program and get your real link, paste it in and the offer goes live automa
 Links are served through `/go/[slug]`, which redirects to the real URL and (optionally)
 counts the click.
 
+## The roomwalk page
+
+`/roomwalk` lays the offers out as an apartment you walk through: scrolling moves
+a camera forward from room to room instead of sliding the page up. Every room is
+a category and the offers hang on the walls you pass.
+
+It is built on the `roomwalk` plugin in `plugins/roomwalk` — a dependency-free
+CSS 3D engine plus the `/roomwalk` command for building pages like this one. The
+engine lives in `plugins/roomwalk/skills/roomwalk/assets/` and the app imports it
+through the `@roomwalk/*` path alias, so there is only ever one copy of it.
+
+Open `plugins/roomwalk/skills/roomwalk/assets/starter.html` (served over HTTP, not
+`file://`) for a standalone example with no framework.
+
+The page degrades on purpose: with JS off, or when the reader prefers reduced
+motion, it is an ordinary stack of sections, and the button in the corner
+switches between the two at any time.
+
 ## Enabling click tracking (optional)
 
 By default, clicks aren't counted anywhere (the redirect still works fine). To track clicks:

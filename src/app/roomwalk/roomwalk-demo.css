@@ -1,0 +1,174 @@
+/* Aspecto del piso de demostración. La geometría la pone roomwalk.css; esto
+   es sólo la decoración: materiales, tipografía y los cuadros de las paredes. */
+
+.rwd {
+  --rw-ambient: #0b0d12;
+  --rw-wall: #39414f;
+  --rw-wall-side: #2b3240;
+  --rw-floor: #1f242d;
+  --rw-ceiling: #161a21;
+  --rw-line: rgba(255, 255, 255, 0.11);
+  --rw-fog: #090b0f;
+  --rw-fog-strength: 0.58;
+  --rw-ink: #f2f4f8;
+  --rw-ink-dim: rgba(242, 244, 248, 0.72);
+  --rw-accent: #c9a45c;
+
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  background: var(--rw-ambient);
+}
+
+/* Un zócalo de luz al pie de cada pared lateral: es lo que más ayuda a leer
+   la profundidad cuando pasas por delante. */
+.rwd .rw-face--left,
+.rwd .rw-face--right {
+  background-image: linear-gradient(
+    to top,
+    rgba(201, 164, 92, 0.16) 0,
+    transparent 18%
+  );
+}
+
+.rwd .rw-face--floor {
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.05) 0 2px,
+    transparent 2px 92px
+  );
+}
+
+/* --- Cuadros ------------------------------------------------------------ */
+
+.rwd-plate {
+  border: 1px solid var(--rw-line);
+  border-radius: 2px;
+  background: rgba(10, 13, 18, 0.55);
+  padding: 30px 34px;
+  width: 460px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+}
+
+.rwd-plate__eyebrow {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--rw-accent);
+}
+
+.rwd-plate__name {
+  margin: 0 0 6px;
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.rwd-plate__bonus {
+  margin: 0 0 14px;
+  font-size: 21px;
+  color: var(--rw-accent);
+}
+
+.rwd-plate__body {
+  margin: 0 0 20px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--rw-ink-dim);
+}
+
+.rwd-plate__link {
+  display: inline-block;
+  border: 1px solid var(--rw-accent);
+  border-radius: 999px;
+  padding: 11px 24px;
+  font-size: 15px;
+  color: var(--rw-ink);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.rwd-plate__link:hover,
+.rwd-plate__link:focus-visible {
+  background: var(--rw-accent);
+  color: #14161c;
+}
+
+.rwd-plate__soon {
+  font-size: 15px;
+  color: var(--rw-ink-dim);
+}
+
+/* --- Rótulos ------------------------------------------------------------ */
+
+.rwd-sign {
+  width: 620px;
+  text-align: center;
+}
+
+.rwd-sign__title {
+  margin: 0;
+  font-size: 64px;
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.rwd-sign__sub {
+  margin: 14px 0 0;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--rw-ink-dim);
+}
+
+.rwd-door-sign {
+  width: 520px;
+  text-align: center;
+}
+
+.rwd-door-sign h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rw-accent);
+}
+
+.rwd-door-sign p {
+  margin: 8px 0 0;
+  font-size: 17px;
+  color: var(--rw-ink-dim);
+}
+
+/* --- Modo lista --------------------------------------------------------- */
+
+/* Cuando se sale del paseo el contenido vuelve a su sección: aquí se le quita
+   el tamaño de «cuadro colgado» para que se lea como una página normal. */
+.rwd:not([data-rw-active]) .rwd-plate,
+.rwd:not([data-rw-active]) .rwd-sign,
+.rwd:not([data-rw-active]) .rwd-door-sign {
+  width: auto;
+  max-width: 100%;
+  box-shadow: none;
+  text-align: left;
+}
+
+.rwd:not([data-rw-active]) .rwd-sign__title {
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+}
+
+.rwd:not([data-rw-active]) .rwd-plate {
+  margin-bottom: 1.25rem;
+}
+
+.rwd:not([data-rw-active]) [data-rw-room]::before {
+  content: attr(data-rw-room);
+  display: block;
+  margin-bottom: 1.5rem;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--rw-accent);
+}
