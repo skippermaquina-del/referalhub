@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { business, brandDatabase, copy, type Lang } from "@/data/allegiant";
 import { trackBookingConversion } from "@/lib/ads";
+import { OfferBalloon } from "./OfferBalloon";
 
 type BookingContextValue = { openBook: () => void };
 
@@ -109,6 +110,7 @@ export function AllegiantShell({
             </svg>
             {t.nav.book}
           </button>
+          <OfferBalloon lang={lang} suppressed={open || chat} onBook={openBook} />
         </>
       )}
 

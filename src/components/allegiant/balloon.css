@@ -1,0 +1,214 @@
+/* Globo de oferta (OfferBalloon) y su cupón. */
+.al-balloon {
+  position: fixed;
+  right: 24px;
+  bottom: 120px;
+  z-index: 40;
+  width: 150px;
+  height: 267px;
+  pointer-events: none;
+  animation: al-balloon-rise 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.al-balloon[data-hidden] {
+  opacity: 0;
+}
+/* Vaga por la pantalla para que dé ganas de pincharlo. */
+.al-balloon-drift {
+  animation: al-balloon-wander 24s ease-in-out infinite alternate;
+}
+.al-balloon-drift[data-still] {
+  animation: none;
+}
+.al-balloon-box {
+  position: relative;
+  width: 150px;
+  height: 267px;
+}
+.al-balloon-src {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.al-balloon-canvas {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.35));
+}
+/* Solo el cuerpo del globo recibe el toque, no el cuadro transparente. */
+.al-balloon-hit {
+  position: absolute;
+  left: 18%;
+  top: 4%;
+  width: 64%;
+  height: 46%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.al-balloon-x {
+  position: absolute;
+  top: 2%;
+  right: 4%;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  line-height: 24px;
+  font-size: 18px;
+  color: #f4efe6;
+  background: rgba(8, 16, 30, 0.85);
+  border: 1px solid #3a4a6e;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.al-balloon-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(3, 5, 10, 0.72);
+  --al-text: #f4efe6;
+  --al-muted: #c6cfde;
+  --al-accent: #f26f21;
+  --al-accent-fill: #f26f21;
+  color: var(--al-text);
+}
+.al-balloon-modal .al-box-coupon {
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+.al-balloon-close {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 14px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c6cfde;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+@keyframes al-balloon-rise {
+  from { transform: translateY(70vh); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes al-balloon-wander {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(calc(-1 * min(28vw, 380px)), -14vh); }
+  50% { transform: translate(calc(-1 * min(52vw, 700px)), -4vh); }
+  75% { transform: translate(calc(-1 * min(34vw, 460px)), -24vh); }
+  100% { transform: translate(calc(-1 * min(12vw, 160px)), -10vh); }
+}
+@media (max-width: 760px) {
+  .al-balloon {
+    right: 8px;
+    bottom: 130px;
+    width: 110px;
+    height: 196px;
+  }
+  .al-balloon-box {
+    width: 110px;
+    height: 196px;
+  }
+  @keyframes al-balloon-wander {
+    0% { transform: translate(0, 0); }
+    35% { transform: translate(calc(-1 * 40vw), -16vh); }
+    70% { transform: translate(calc(-1 * 62vw), -6vh); }
+    100% { transform: translate(calc(-1 * 20vw), -22vh); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-balloon,
+  .al-balloon-drift {
+    animation: none;
+  }
+}
+
+/* Cupón */
+.al-box-coupon {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 34px 32px 30px;
+  text-align: center;
+  background: rgba(10, 16, 32, 0.92);
+  border: 1px solid var(--al-accent);
+  animation: al-box-in 0.4s ease both;
+}
+.al-box-big {
+  margin: 10px 0 0;
+  font-family: var(--font-al-serif), serif;
+  font-weight: 400;
+  font-size: clamp(52px, 8vw, 72px);
+  line-height: 1;
+  color: var(--al-text);
+}
+.al-box-applies {
+  margin: 14px 0 0;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--al-text);
+}
+.al-box-how {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--al-muted);
+}
+.al-box-valid {
+  margin: 8px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--al-faint, #a6b1c6);
+}
+.al-box-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
+}
+.al-box-primary,
+.al-box-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 26px;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--al-accent);
+  cursor: pointer;
+}
+.al-box-primary {
+  background: var(--al-accent-fill);
+  color: #08101e;
+}
+.al-box-ghost {
+  background: transparent;
+  color: var(--al-text);
+  border-color: #3a4a6e;
+}
+@keyframes al-box-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 760px) {
+  .al-box-actions > * {
+    flex: 1 1 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-box-coupon {
+    animation: none;
+  }
+}
