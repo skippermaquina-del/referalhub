@@ -262,6 +262,34 @@ const microwaveStory: Story = {
   },
 };
 
+const wineCoolerStory: Story = {
+  id: "winecooler",
+  mp4: "/allegiant/scan/winecooler.mp4",
+  webm: "/allegiant/scan/winecooler.webm",
+  poster: "/allegiant/scan/winecooler-poster.jpg",
+  endImage: "/allegiant/scan/winecooler-end.jpg",
+  duration: 24.9,
+  aspect: 720 / 1280,
+  endAt: 20.7,
+  totalSteps: 5,
+  phases: [
+    p("intro", 0.2, 2.0, undefined, ["Bottles warming up? Cooler working overtime?", "¿Las botellas se calientan? ¿Trabaja de más?"]),
+    p("scan", 2.0, 5.6, "scan", ["X-ray scan", "Escaneo de rayos X"], ["Seeing the shelves, coils and compressor through the glass.", "Vemos los estantes, los serpentines y el compresor a través del vidrio."]),
+    p("board", 5.6, 6.8, "normal", ["Control board & sensor", "Placa de control y sensor"], ["Keeps each zone at exactly the right temperature.", "Mantiene cada zona a la temperatura justa."], 1),
+    p("evap", 6.8, 8.6, "normal", ["Evaporator coil", "Evaporador"], ["Pulls the heat out of the cabinet.", "Saca el calor del interior."], 2),
+    p("comp", 8.6, 10.2, "normal", ["Compressor", "Compresor"], ["Pumps refrigerant around the cooling loop.", "Bombea el refrigerante por el circuito de frío."], 3),
+    p("fan", 10.2, 11.4, "normal", ["Cooling fan", "Ventilador"], ["Moves air through the coil to shed the heat.", "Mueve aire por el serpentín para disipar el calor."], 4),
+    p("fault", 11.4, 14.3, "fault", ["Condenser coil & fan", "Condensador y ventilador"], ["Clogged with dust — the fan jams and the compressor overheats.", "Tapado de polvo: el ventilador se traba y el compresor se sobrecalienta."], 5),
+    p("fix", 14.3, 19.2, "fix", ["Condenser coil & fan", "Condensador y ventilador"], ["Brushing out the dust and freeing the fan.", "Limpiamos el polvo y liberamos el ventilador."], 5),
+    p("done", 19.2, 20.7, "done", ["Condenser coil & fan", "Condensador y ventilador"], ["Clean and spinning. Cold air flows again.", "Limpio y girando. El aire frío vuelve a circular."], 5),
+  ],
+  endTitle: { en: "Wine cooler not cooling?", es: "¿La vinoteca no enfría?" },
+  endBody: {
+    en: "Vadim finds the real cause and fixes it: fans, coils, compressors and sensors.",
+    es: "Vadim encuentra la causa real y la repara: ventiladores, serpentines, compresores y sensores.",
+  },
+};
+
 /** Escaneo en video de cada tipo de aparato del recorrido (si existe). */
 export function scanStoryFor(kind: ApplianceKind): Story | null {
   switch (kind) {
@@ -275,6 +303,8 @@ export function scanStoryFor(kind: ApplianceKind): Story | null {
       return dryerStory;
     case "micro":
       return microwaveStory;
+    case "wine":
+      return wineCoolerStory;
     default:
       return null;
   }
@@ -287,6 +317,7 @@ export const scanGallery: { kind: ApplianceKind; story: Story }[] = [
   { kind: "washer", story: washerStory },
   { kind: "dryer", story: dryerStory },
   { kind: "micro", story: microwaveStory },
+  { kind: "wine", story: wineCoolerStory },
 ];
 
 /**
