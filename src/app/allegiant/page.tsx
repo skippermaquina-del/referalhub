@@ -2,7 +2,7 @@ import Image from "next/image";
 import QRCode from "qrcode";
 import { SurpriseBox } from "@/components/allegiant/SurpriseBox";
 import { HeroVideo } from "@/components/allegiant/HeroVideo";
-import { HouseTour } from "@/components/allegiant/HouseTour";
+import { InsideStories } from "@/components/allegiant/InsideStories";
 import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
 import { LeadForm } from "@/components/allegiant/LeadForm";
 import { areas, brands, business, premiumBrands, faqs, reasons, services, steps, vcard } from "@/data/allegiant";
@@ -71,7 +71,7 @@ export default async function AllegiantPage() {
         <HeroVideo />
       </div>
 
-      <HouseTour />
+      <InsideStories />
 
       {/* Services */}
       <section id="services" className={section}>
