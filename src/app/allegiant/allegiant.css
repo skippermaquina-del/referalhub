@@ -28,3 +28,8 @@ html:has(.allegiant) {
 .allegiant [id] {
   scroll-margin-top: 4.5rem;
 }
+
+/* Modo captura (render a video): sin controles de UI. */
+html[data-capture-ready] .hx-controls {
+  display: none;
+}

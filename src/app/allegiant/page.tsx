@@ -1,14 +1,11 @@
 import Image from "next/image";
 import QRCode from "qrcode";
+import { HeroXray } from "@/components/allegiant/HeroXray";
 import { HouseTour } from "@/components/allegiant/HouseTour";
 import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
 import { LeadForm } from "@/components/allegiant/LeadForm";
 import { areas, brands, business, premiumBrands, faqs, reasons, services, steps, vcard } from "@/data/allegiant";
 
-const btnPrimary =
-  "inline-flex items-center justify-center rounded-lg bg-[color:var(--al-orange)] px-7 py-4 text-[15px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-[color:var(--al-orange-dim)]";
-const btnGhost =
-  "inline-flex items-center justify-center rounded-lg border-2 border-white/30 px-7 py-4 text-[15px] font-bold tracking-wide text-white transition-colors hover:border-white";
 const section = "px-5 py-16 md:py-24";
 const wrap = "mx-auto max-w-6xl";
 const h2 = "text-[32px] font-extrabold leading-tight md:text-[44px]";
@@ -69,29 +66,9 @@ export default async function AllegiantPage() {
       </header>
 
       {/* Hero */}
-      <section id="top" className="bg-[color:var(--al-black)] px-5 py-16 text-white md:py-28">
-        <div className={`${wrap} grid items-center gap-12 md:grid-cols-[1.2fr_0.8fr]`}>
-          <div>
-            <p className="mb-5 inline-block rounded-full border border-[color:var(--al-orange)] px-4 py-1.5 text-[13px] font-bold uppercase tracking-widest text-[color:var(--al-orange)]">
-              {business.discount} · scan to save contact
-            </p>
-            <h1 className="text-[38px] font-extrabold leading-[1.05] md:text-[64px]">
-              {business.headline}
-            </h1>
-            <p className="mt-6 max-w-xl text-[18px] leading-relaxed text-white/75">{business.subhead}</p>
-            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <a href="#book" className={btnPrimary}>Book Service</a>
-              <a href={business.phoneHref} className={btnGhost}>Call {business.phone}</a>
-            </div>
-            <p className="mt-6 text-[14px] font-semibold text-white/60">
-              Residential &amp; Commercial · Licensed &amp; Insured · {business.area}
-            </p>
-          </div>
-          <div className="flex justify-center">
-            <Image src="/allegiant/logo-full.jpg" alt="Allegiant Appliances Inc" width={440} height={390} priority className="h-auto w-full max-w-[380px]" />
-          </div>
-        </div>
-      </section>
+      <div id="top">
+        <HeroXray />
+      </div>
 
       <HouseTour />
 
