@@ -16,6 +16,10 @@
 .al-balloon-drift {
   animation: al-balloon-wander 24s ease-in-out infinite alternate;
 }
+/* Se detiene bajo el mouse para poder pincharlo (o cerrarlo) con calma. */
+.al-balloon-drift:hover {
+  animation-play-state: paused;
+}
 .al-balloon-drift[data-still] {
   animation: none;
 }
@@ -65,6 +69,20 @@
   border-radius: 50%;
   cursor: pointer;
   pointer-events: auto;
+  /* Discreta: solo se ve al acercar el mouse al globo o con el teclado. */
+  opacity: 0;
+  transition: opacity 0.2s 0.1s;
+}
+.al-balloon-hit:hover ~ .al-balloon-x,
+.al-balloon-x:hover,
+.al-balloon-x:focus-visible {
+  opacity: 1;
+}
+/* En pantallas táctiles no hay hover: sin "×", el globo sale una sola vez. */
+@media (hover: none) {
+  .al-balloon-x {
+    display: none;
+  }
 }
 .al-balloon-modal {
   position: fixed;
