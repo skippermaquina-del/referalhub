@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Lang } from "@/data/allegiant";
 import { balloonDelaySec, balloonText } from "@/data/allegiant-offer";
-import { Coupon } from "./SurpriseBox";
+import { Coupon } from "./Coupon";
 import "./balloon.css";
 
 const KEY = "al-offer-balloon";

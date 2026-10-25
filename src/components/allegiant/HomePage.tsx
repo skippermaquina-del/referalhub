@@ -5,7 +5,6 @@ import { ContinuousCarousel } from "./ContinuousCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
 import { ScanGallery } from "./ScanGallery";
-import { SurpriseBox } from "./SurpriseBox";
 import { Ribbon } from "./Ribbon";
 
 function Star() {
@@ -132,8 +131,6 @@ export function HomePage({ lang }: { lang: Lang }) {
           </section>
 
           <ScanGallery lang={lang} />
-
-          <SurpriseBox lang={lang} />
 
           <section id="reviews" className="al-section al-grid12 al-reviews al-light al-tone-3">
             <div style={{ gridColumn: "1 / span 6" }}>

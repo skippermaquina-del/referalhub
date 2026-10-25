@@ -1,9 +1,6 @@
 /**
- * Oferta que se muestra al abrir el regalo de la "Caja sorpresa".
- *
- * BORRADOR — confirmar con Vadim antes de publicar:
- *  - porcentaje y a qué aplica (mantenimiento / mano de obra de reparación)
- *  - si tiene vigencia (`valid`)
+ * Oferta que se muestra al pinchar el globo. Confirmada por Vadim: 20 % en
+ * mantenimiento y mano de obra de reparación, sin vencimiento (`valid: null`).
  * Todo lo que ve el cliente está aquí, en inglés y español.
  */
 import type { Lang } from "./allegiant";
@@ -14,7 +11,7 @@ export const offer: {
   big: Text;
   applies: Text;
   how: Text;
-  /** Vigencia opcional, p. ej. { en: "Valid through Dec 31", es: "Válido hasta el 31 de dic." } */
+  /** Vigencia opcional; sin vencimiento por decisión de Vadim. */
   valid: Text | null;
 } = {
   big: { en: "20% OFF", es: "20 % DE DESCUENTO" },
@@ -29,46 +26,10 @@ export const offer: {
   valid: null,
 };
 
-/** Textos de la sección "Caja sorpresa". */
-export const boxText: Record<
-  Lang,
-  {
-    eyebrow: string;
-    h2: string;
-    p: string;
-    hint: string;
-    openGift: string;
-    won: string;
-    save: string;
-    book: string;
-    tagline: string;
-    fragile: string;
-  }
-> = {
-  en: {
-    eyebrow: "Surprise box",
-    h2: "Grab a box. Tap the gift.",
-    p: "Throw the boxes around, then open the gift to claim your discount.",
-    hint: "Drag & throw the boxes · tap the gift",
-    openGift: "Open the gift",
-    won: "You won",
-    save: "Save contact",
-    book: "Book a visit",
-    tagline: "WE REPAIR IT ✓",
-    fragile: "FRAGILE",
-  },
-  es: {
-    eyebrow: "Caja sorpresa",
-    h2: "Agarra una caja. Toca el regalo.",
-    p: "Lanza las cajas y abre el regalo para reclamar tu descuento.",
-    hint: "Arrastra y lanza las cajas · toca el regalo",
-    openGift: "Abrir el regalo",
-    won: "¡Ganaste!",
-    save: "Guardar contacto",
-    book: "Reservar visita",
-    tagline: "LO REPARAMOS ✓",
-    fragile: "FRÁGIL",
-  },
+/** Textos del cupón. */
+export const couponText: Record<Lang, { won: string; save: string; book: string }> = {
+  en: { won: "You won", save: "Save contact", book: "Book a visit" },
+  es: { won: "¡Ganaste!", save: "Guardar contacto", book: "Reservar visita" },
 };
 
 /** Globo flotante que aparece a los pocos segundos y abre la oferta. */
