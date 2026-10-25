@@ -119,7 +119,7 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
   function pop() {
     remember();
     setPopped(true);
-    window.setTimeout(() => setModal(true), still ? 0 : 1300);
+    window.setTimeout(() => setModal(true), still ? 0 : 900);
   }
 
   function dismiss() {
@@ -150,19 +150,15 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
       )}
 
       {modal && (
-        <div className="al-balloon-modal" role="dialog" aria-modal="true" onClick={dismiss}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <Coupon
-              lang={lang}
-              onBook={() => {
-                dismiss();
-                onBook();
-              }}
-            />
-            <button type="button" className="al-balloon-close" onClick={dismiss}>
-              {t.close}
-            </button>
-          </div>
+        <div className="al-balloon-card">
+          <Coupon
+            lang={lang}
+            onClose={dismiss}
+            onBook={() => {
+              dismiss();
+              onBook();
+            }}
+          />
         </div>
       )}
     </>
