@@ -102,8 +102,10 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
   const still = useSyncExternalStore(subscribeRM, () => window.matchMedia(RM).matches, () => false);
 
   useEffect(() => {
-    if (read()) return;
-    const id = window.setTimeout(() => setShow(true), balloonDelaySec * 1000);
+    // ?balloon=1 lo fuerza a los 2 s e ignora que ya se haya visto (para probar).
+    const forced = new URLSearchParams(window.location.search).get("balloon") === "1";
+    if (!forced && read()) return;
+    const id = window.setTimeout(() => setShow(true), forced ? 2000 : balloonDelaySec * 1000);
     return () => window.clearTimeout(id);
   }, []);
 
