@@ -79,7 +79,7 @@ export function HomePage({ lang }: { lang: Lang }) {
             ))}
           </section>
 
-          <section className="al-section al-light" style={{ backgroundColor: "var(--al-bg-2)" }}>
+          <section className="al-section al-light al-tone-2">
             <BrandSearch lang={lang} />
           </section>
 
