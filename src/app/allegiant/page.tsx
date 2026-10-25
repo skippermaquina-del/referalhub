@@ -1,5 +1,6 @@
 import Image from "next/image";
 import QRCode from "qrcode";
+import { SurpriseBox } from "@/components/allegiant/SurpriseBox";
 import { HeroVideo } from "@/components/allegiant/HeroVideo";
 import { HouseTour } from "@/components/allegiant/HouseTour";
 import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
@@ -148,6 +149,8 @@ export default async function AllegiantPage() {
           </div>
         </div>
       </section>
+
+      <SurpriseBox />
 
       {/* Discount QR */}
       <section className="bg-[color:var(--al-black)] px-5 py-16 text-white md:py-20">
