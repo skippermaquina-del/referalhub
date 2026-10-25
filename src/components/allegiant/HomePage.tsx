@@ -4,6 +4,7 @@ import { BrandSearch } from "./BrandSearch";
 import { ContinuousCarousel } from "./ContinuousCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
+import { ScanGallery } from "./ScanGallery";
 import { Ribbon } from "./Ribbon";
 
 function Star() {
@@ -128,6 +129,8 @@ export function HomePage({ lang }: { lang: Lang }) {
               <a className="al-btn-line" href={p.tour}>{t.tourTeaser.cta}</a>
             </div>
           </section>
+
+          <ScanGallery lang={lang} />
 
           <section id="reviews" className="al-section al-grid12 al-reviews al-light al-tone-3">
             <div style={{ gridColumn: "1 / span 6" }}>

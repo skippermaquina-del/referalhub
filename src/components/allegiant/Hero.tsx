@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { copy, heroImages, paths, type Lang } from "@/data/allegiant";
+import { scanGallery, scanText } from "@/data/allegiant-stories";
 import { useBooking } from "./AllegiantShell";
+import { ScanModal } from "./ScanModal";
 
 /** Portada a pantalla completa: los ambientes de la casa se alternan solos. */
 export function Hero({ lang }: { lang: Lang }) {
@@ -11,6 +13,7 @@ export function Hero({ lang }: { lang: Lang }) {
   const { openBook } = useBooking();
   const [room, setRoom] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [scan, setScan] = useState(false);
 
   useEffect(() => {
     if (paused) return;
@@ -46,6 +49,9 @@ export function Hero({ lang }: { lang: Lang }) {
         <p className="al-hero-p">{t.p}</p>
         <div className="al-hero-actions">
           <a className="al-link" href={paths(lang).tour}>{t.tour}</a>
+          <button type="button" className="al-link" style={{ background: "none", borderTop: 0, borderLeft: 0, borderRight: 0 }} onClick={() => setScan(true)}>
+            {scanText[lang].button}
+          </button>
         </div>
       </div>
 
@@ -66,6 +72,18 @@ export function Hero({ lang }: { lang: Lang }) {
           </button>
         ))}
       </div>
+
+      {scan && (
+        <ScanModal
+          story={scanGallery[0].story}
+          lang={lang}
+          onClose={() => setScan(false)}
+          onBook={() => {
+            setScan(false);
+            openBook();
+          }}
+        />
+      )}
     </section>
   );
 }

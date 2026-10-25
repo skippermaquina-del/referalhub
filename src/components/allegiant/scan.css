@@ -1,0 +1,458 @@
+/* Escaneo en video del recorrido (ScanModal). Usa las variables del sitio. */
+
+.al-scan {
+  /* Siempre oscuro, aunque se abra desde una sección clara (.al-light). */
+  --al-bg: #08101e;
+  --al-bg-deep: #060d19;
+  --al-panel: #0f1b33;
+  --al-text: #f4efe6;
+  --al-text-2: #e1e6f0;
+  --al-muted: #c6cfde;
+  --al-faint: #a6b1c6;
+  --al-line: #1d2c4a;
+  --al-line-2: #2a3b5e;
+  --al-line-3: #3a4a6e;
+  --al-accent: #f26f21;
+  --al-accent-fill: #f26f21;
+  color: var(--al-text);
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  display: grid;
+  place-items: center;
+  background: rgba(3, 6, 13, 0.92);
+  animation: al-scan-in 0.25s ease both;
+}
+
+.al-scan-box {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) auto;
+  grid-template-rows: minmax(0, 1fr);
+  height: min(88vh, 800px);
+  max-width: 96vw;
+  background: var(--al-bg-deep, #060d19);
+  border: 1px solid var(--al-line-2, #2a3b5e);
+  overflow: hidden;
+}
+
+.al-scan-media {
+  position: relative;
+  order: 2;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: var(--al-scan-aspect, 0.5625);
+  background: #000;
+}
+.al-scan-media video,
+.al-scan-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.al-scan-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, var(--al-bg-deep, #060d19) 0%, transparent 22%);
+}
+.al-scan-endfade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(3, 6, 13, 0.55);
+}
+.al-scan-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: rgba(244, 239, 230, 0.14);
+}
+.al-scan-progress > div {
+  height: 100%;
+  background: var(--al-accent, #f26f21);
+}
+
+.al-scan-side {
+  position: relative;
+  order: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  padding: 56px 36px 56px 44px;
+}
+.al-scan-label {
+  position: absolute;
+  left: 44px;
+  top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--al-faint, #a6b1c6);
+}
+.al-scan-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(244, 239, 230, 0.35);
+}
+.al-scan-dot[data-live] {
+  background: #ff4d4d;
+  animation: al-scan-pulse 1.4s ease-in-out infinite;
+}
+
+.al-scan-card {
+  --al-scan-color: var(--al-accent, #f26f21);
+  border-left: 2px solid var(--al-scan-color);
+  padding-left: 22px;
+  animation: al-scan-in 0.35s ease both;
+}
+.al-scan-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--al-faint, #a6b1c6);
+}
+.al-scan-status {
+  border: 1px solid var(--al-scan-color);
+  color: var(--al-scan-color);
+  padding: 4px 12px;
+  font-size: 12px;
+}
+.al-scan-title {
+  margin: 14px 0 0;
+  font-family: var(--font-al-serif), serif;
+  font-weight: 400;
+  font-size: clamp(34px, 3.4vw, 48px);
+  line-height: 1.06;
+  color: var(--al-text, #f4efe6);
+}
+.al-scan-note {
+  margin: 14px 0 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--al-text-2, #e1e6f0);
+}
+.al-scan-intro {
+  margin: 0;
+  font-family: var(--font-al-serif), serif;
+  font-weight: 400;
+  font-size: clamp(38px, 3.8vw, 54px);
+  line-height: 1.08;
+  color: var(--al-text, #f4efe6);
+}
+
+.al-scan-end {
+  position: absolute;
+  left: 44px;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.2s;
+}
+.al-scan-end-title {
+  margin: 14px 0 0;
+  font-family: var(--font-al-serif), serif;
+  font-weight: 400;
+  font-size: clamp(36px, 3.6vw, 52px);
+  line-height: 1.06;
+  color: var(--al-text, #f4efe6);
+}
+.al-scan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+.al-scan-primary,
+.al-scan-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 26px;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--al-accent, #f26f21);
+}
+.al-scan-primary {
+  background: var(--al-accent-fill, #f26f21);
+  color: #08101e;
+}
+.al-scan-ghost {
+  background: transparent;
+  color: var(--al-text, #f4efe6);
+  border-color: var(--al-line-3, #3a4a6e);
+}
+
+.al-scan-close,
+.al-scan-toggle {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 16, 30, 0.7);
+  border: 1px solid var(--al-line-3, #3a4a6e);
+  color: var(--al-text, #f4efe6);
+  backdrop-filter: blur(6px);
+}
+.al-scan-close {
+  right: 14px;
+  top: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+.al-scan-toggle {
+  left: 44px;
+  bottom: 28px;
+  padding: 10px 20px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@keyframes al-scan-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes al-scan-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* Móvil: el video llena la pantalla y el texto va abajo. */
+@media (max-width: 760px) {
+  .al-scan-box {
+    display: block;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    border: 0;
+  }
+  .al-scan-media {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+  }
+  .al-scan-fade {
+    background: linear-gradient(to top, rgba(3, 6, 13, 0.95) 0%, rgba(3, 6, 13, 0.55) 38%, transparent 62%);
+  }
+  .al-scan-side {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 0 22px 84px;
+    gap: 0;
+    justify-content: flex-end;
+  }
+  .al-scan-label {
+    position: fixed;
+    left: 22px;
+    top: 26px;
+    z-index: 2;
+  }
+  .al-scan-end {
+    position: static;
+    transform: none;
+    left: auto;
+    right: auto;
+    top: auto;
+    margin-top: -4px;
+  }
+  .al-scan-end[style*="opacity: 0"] {
+    display: none;
+  }
+  .al-scan-toggle {
+    left: 22px;
+    bottom: 26px;
+  }
+  .al-scan-primary,
+  .al-scan-ghost {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .al-scan,
+  .al-scan-card {
+    animation: none;
+  }
+  .al-scan-dot[data-live] {
+    animation: none;
+  }
+}
+
+/* ---------- Home: galería de escaneos ---------- */
+.al-scan-gallery-p {
+  margin: 28px 0 44px;
+  max-width: 560px;
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--al-muted, #c6cfde);
+}
+.al-scan-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--al-gap, 20px);
+}
+.al-scan-card-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  overflow: hidden;
+  background: #060d19;
+  border: 1px solid var(--al-line-2, #2a3b5e);
+  text-align: left;
+  cursor: pointer;
+}
+.al-scan-card-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.al-scan-card-btn:hover img {
+  transform: scale(1.04);
+}
+.al-scan-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3, 6, 13, 0.92) 0%, rgba(3, 6, 13, 0.2) 55%, transparent 100%);
+}
+.al-scan-card-play {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--al-accent, #f26f21);
+  background: rgba(8, 16, 30, 0.6);
+  color: var(--al-accent, #f26f21);
+  backdrop-filter: blur(6px);
+}
+.al-scan-card-text {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.al-scan-card-name {
+  font-family: var(--font-al-serif), serif;
+  font-size: clamp(30px, 2.6vw, 40px);
+  line-height: 1.05;
+  color: #f4efe6;
+}
+.al-scan-card-cta {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--al-accent, #f26f21);
+}
+@media (max-width: 760px) {
+  .al-scan-cards {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 -8%;
+    padding: 0 8%;
+    scrollbar-width: none;
+  }
+  .al-scan-cards::-webkit-scrollbar {
+    display: none;
+  }
+  .al-scan-cards > li {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+}
+
+/* Portada en móvil: que los enlaces no queden bajo el botón de chat. */
+@media (max-width: 760px) {
+  .al-hero-actions {
+    padding-right: 76px;
+  }
+}
+
+/* ---------- Recorrido: cada aparato de la foto es el botón ---------- */
+.al-hit {
+  position: absolute;
+  z-index: 3;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+.al-hit:hover,
+.al-hit:focus-visible {
+  border-color: var(--al-accent, #f26f21);
+  background: rgba(242, 111, 33, 0.1);
+  box-shadow: 0 0 0 1px rgba(242, 111, 33, 0.3), 0 0 30px rgba(242, 111, 33, 0.35);
+}
+.al-hit-label {
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  padding: 7px 14px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f4efe6;
+  background: rgba(8, 16, 30, 0.88);
+  border: 1px solid var(--al-accent, #f26f21);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.al-hit:hover .al-hit-label,
+.al-hit:focus-visible .al-hit-label {
+  opacity: 1;
+}
+/* Al entrar a un cuarto, todos los aparatos tocables destellan una vez. */
+.al-tour-layer[data-active] .al-hit {
+  animation: al-hit-flash 2.4s ease-out 0.6s 1 both;
+}
+@keyframes al-hit-flash {
+  0% { border-color: rgba(242, 111, 33, 0); box-shadow: 0 0 0 0 rgba(242, 111, 33, 0.55); }
+  25% { border-color: rgba(242, 111, 33, 0.95); background: rgba(242, 111, 33, 0.14); box-shadow: 0 0 0 6px rgba(242, 111, 33, 0.18), 0 0 28px rgba(242, 111, 33, 0.4); }
+  100% { border-color: rgba(242, 111, 33, 0); background: transparent; box-shadow: 0 0 0 0 rgba(242, 111, 33, 0); }
+}
+/* En pantallas táctiles (sin hover) queda un contorno tenue permanente. */
+@media (hover: none) {
+  .al-hit {
+    border: 1px dashed rgba(242, 111, 33, 0.55);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-tour-layer[data-active] .al-hit {
+    animation: none;
+  }
+}
