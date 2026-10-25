@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { copy, paths, tourScenes, type Lang } from "@/data/allegiant";
-import { scanStoryFor, scanText } from "@/data/allegiant-stories";
+import { hitAreas, scanStoryFor, scanText, type Story } from "@/data/allegiant-stories";
 import { PowerMark } from "./PowerMark";
 import { ScanModal } from "./ScanModal";
 import { useBooking } from "./AllegiantShell";
@@ -18,20 +18,30 @@ export function Tour({ lang }: { lang: Lang }) {
   const { openBook } = useBooking();
   const [scene, setScene] = useState(0);
   const [spot, setSpot] = useState<string | null>(null);
-  const [xray, setXray] = useState(false);
-  const [scan, setScan] = useState(false);
+  const [hover, setHover] = useState<string | null>(null);
+  const [scan, setScan] = useState<Story | null>(null);
 
   const count = tourScenes.length;
-  const current = tourScenes[scene].hotspots.find((h) => h.id === spot) ?? null;
-  const kind = current ? t.kinds[current.kind] : null;
-  const canXray = !!current?.xray;
-  const scanStory = current ? scanStoryFor(current.kind) : null;
-  const xrayOn = xray && canXray;
+  const hotspots = tourScenes[scene].hotspots;
+  // La ficha de la derecha muestra el aparato señalado con el mouse o el último
+  // tocado que no tiene escaneo (microondas, vinoteca).
+  const shown = hotspots.find((h) => h.id === (hover ?? spot)) ?? null;
+  const kind = shown ? t.kinds[shown.kind] : null;
 
   const go = (i: number) => {
     setScene((i + count) % count);
     setSpot(null);
-    setXray(false);
+    setHover(null);
+  };
+
+  const pick = (id: string, k: (typeof hotspots)[number]["kind"]) => {
+    const story = scanStoryFor(k);
+    if (story) {
+      setScan(story);
+      setSpot(null);
+    } else {
+      setSpot((cur) => (cur === id ? null : id));
+    }
   };
 
   return (
@@ -42,51 +52,33 @@ export function Tour({ lang }: { lang: Lang }) {
           <div key={s.src} className="al-tour-layer" data-active={active ? "" : undefined} aria-hidden={!active}>
             <div className="al-tour-stage">
               <Image src={s.src} alt={t.scenes[si]} fill sizes="100vw" priority={si === 0} />
-              <div className="al-tour-dim" data-on={xrayOn ? "" : undefined} />
 
-              {active && xrayOn && current?.xray && (
-                <div
-                  className="al-xray"
-                  style={{
-                    left: `${current.xray.left}%`,
-                    top: `${current.xray.top}%`,
-                    width: `${current.xray.width}%`,
-                    height: `${current.xray.height}%`,
-                  }}
-                >
-                  <svg viewBox="0 0 100 270" width="100%" height="100%" fill="none" stroke="#7fb4d6" strokeWidth="1" aria-hidden="true">
-                    <rect x="8" y="10" width="84" height="74" rx="2" strokeDasharray="3 3" />
-                    <rect x="8" y="98" width="84" height="108" rx="2" strokeDasharray="3 3" />
-                    <line x1="4" y1="91" x2="96" y2="91" />
-                    <rect x="22" y="222" width="56" height="32" rx="3" />
-                    <path d="M50 206 L50 222" />
-                    <path d="M68 180 C92 180 94 140 92 110 C90 70 72 48 52 54 C36 58 30 74 36 88" stroke="#f26f21" strokeDasharray="2 3" />
-                    <circle cx="68" cy="180" r="5" fill="#f26f21" stroke="none" />
-                    <circle className="al-xray-valve-ring" cx="68" cy="180" r="5" stroke="#f26f21" />
-                  </svg>
-                  <div className="al-xray-scan" />
-                </div>
-              )}
-
-              {s.hotspots.map((h) => (
-                <button
-                  key={h.id}
-                  type="button"
-                  className="al-spot"
-                  style={{ left: `${h.x}%`, top: `${h.y}%` }}
-                  data-hidden={xrayOn ? "" : undefined}
-                  aria-label={t.kinds[h.kind].name}
-                  aria-pressed={spot === h.id}
-                  tabIndex={active ? 0 : -1}
-                  onClick={() => {
-                    setSpot((cur) => (cur === h.id ? null : h.id));
-                    setXray(false);
-                  }}
-                >
-                  <span className="al-spot-ring" />
-                  <span className="al-spot-dot" />
-                </button>
-              ))}
+              {hotspots.map((h) => {
+                const area = hitAreas[h.id];
+                if (!area) return null;
+                const name = t.kinds[h.kind].name;
+                const hasScan = !!scanStoryFor(h.kind);
+                return (
+                  <button
+                    key={h.id}
+                    type="button"
+                    className="al-hit"
+                    style={{ left: `${area.left}%`, top: `${area.top}%`, width: `${area.width}%`, height: `${area.height}%` }}
+                    aria-label={hasScan ? `${name} — ${scanText[lang].button}` : name}
+                    tabIndex={active ? 0 : -1}
+                    onClick={() => pick(h.id, h.kind)}
+                    onMouseEnter={() => setHover(h.id)}
+                    onMouseLeave={() => setHover(null)}
+                    onFocus={() => setHover(h.id)}
+                    onBlur={() => setHover(null)}
+                  >
+                    <span className="al-hit-label">
+                      {hasScan && <span aria-hidden="true">▶ </span>}
+                      {name}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         );
@@ -125,39 +117,23 @@ export function Tour({ lang }: { lang: Lang }) {
               ))}
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 28, alignItems: "center", marginTop: 36 }}>
-              {canXray && (
-                <button type="button" className="al-xray-btn" aria-pressed={xrayOn} onClick={() => setXray((v) => !v)}>
-                  {xrayOn ? t.xrayOff : t.xrayOn}
-                </button>
-              )}
-              {scanStory && (
-                <button type="button" className="al-xray-btn" onClick={() => setScan(true)}>
-                  {scanText[lang].button}
-                </button>
-              )}
               <button type="button" className="al-link" style={{ background: "none", borderTop: 0, borderLeft: 0, borderRight: 0 }} onClick={openBook}>
                 {t.book}
               </button>
             </div>
-            {xrayOn && (
-              <div style={{ marginTop: 28, borderLeft: "1px solid var(--al-accent)", paddingLeft: 18, maxWidth: 380 }}>
-                <div style={{ fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--al-accent)" }}>{t.xrayTitle}</div>
-                <p style={{ margin: "8px 0 0", fontSize: 17, lineHeight: 1.7, color: "var(--al-text-2)" }}>{t.xrayNote}</p>
-              </div>
-            )}
           </div>
         ) : (
-          <p style={{ margin: "26px 0 0", fontSize: 19, lineHeight: 1.8, color: "var(--al-text-2)", maxWidth: 380 }}>{t.hint}</p>
+          <p style={{ margin: "26px 0 0", fontSize: 19, lineHeight: 1.8, color: "var(--al-text-2)", maxWidth: 380 }}>{scanText[lang].tourHint}</p>
         )}
       </div>
 
-      {scan && scanStory && (
+      {scan && (
         <ScanModal
-          story={scanStory}
+          story={scan}
           lang={lang}
-          onClose={() => setScan(false)}
+          onClose={() => setScan(null)}
           onBook={() => {
-            setScan(false);
+            setScan(null);
             openBook();
           }}
         />

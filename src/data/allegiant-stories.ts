@@ -68,6 +68,8 @@ export const scanText: Record<
     call: string;
     book: string;
     gallery: { eyebrow: string; h2: string; p: string };
+    /** Ayuda del recorrido por la casa. */
+    tourHint: string;
   }
 > = {
   en: {
@@ -84,6 +86,7 @@ export const scanText: Record<
       h2: "See what's really going on inside.",
       p: "Real failures, scanned and repaired. Tap one to watch.",
     },
+    tourHint: "Tap any appliance to look inside — a real X-ray scan.",
   },
   es: {
     button: "Ver el escaneo",
@@ -99,6 +102,7 @@ export const scanText: Record<
       h2: "Mira lo que realmente pasa por dentro.",
       p: "Fallas reales, escaneadas y reparadas. Toca una para verla.",
     },
+    tourHint: "Toca cualquier aparato para mirar por dentro: un escaneo de rayos X real.",
   },
 };
 
@@ -258,3 +262,25 @@ export const scanGallery: { kind: ApplianceKind; story: Story }[] = [
   { kind: "washer", story: washerStory },
   { kind: "dryer", story: dryerStory },
 ];
+
+/**
+ * Zona de toque de cada aparato del recorrido, en % de la foto
+ * (izquierda, arriba, ancho, alto). Las claves son los `id` de `tourScenes`.
+ */
+export const hitAreas: Record<string, { left: number; top: number; width: number; height: number }> = {
+  // La cocina
+  a1: { left: 64.3, top: 27.3, width: 9.5, height: 46.3 },
+  a2: { left: 50.2, top: 32.9, width: 5.1, height: 22.6 },
+  a3: { left: 38.7, top: 61, width: 5.7, height: 17.4 },
+  a4: { left: 27.4, top: 54.5, width: 3.3, height: 15.5 },
+  // La isla
+  b1: { left: 31.6, top: 20.8, width: 11.6, height: 50 },
+  b2: { left: 50, top: 60.2, width: 10, height: 20.4 },
+  b3: { left: 60, top: 58, width: 7.8, height: 30.4 },
+  b4: { left: 79.4, top: 52.8, width: 3.7, height: 21.4 },
+  // La lavandería
+  c1: { left: 44.8, top: 29.6, width: 8.2, height: 17.8 },
+  c2: { left: 44.8, top: 48.9, width: 8.2, height: 20.2 },
+  c3: { left: 62.4, top: 52.8, width: 5.9, height: 23.6 },
+  c4: { left: 83.2, top: 65, width: 16, height: 35 },
+};
