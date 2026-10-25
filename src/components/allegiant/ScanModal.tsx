@@ -134,7 +134,9 @@ export function ScanModal({
               ) : (
                 <>
                   <div className="al-scan-meta">
-                    <span>{phase.step ? `${String(phase.step).padStart(2, "0")} / ${String(story.totalSteps).padStart(2, "0")}` : "SCAN"}</span>
+                    {(phase.step || phase.status === "scan") && (
+                      <span>{phase.step ? `${String(phase.step).padStart(2, "0")} / ${String(story.totalSteps).padStart(2, "0")}` : "SCAN"}</span>
+                    )}
                     {phase.status && <span className="al-scan-status">{statusLabels[lang][phase.status]}</span>}
                   </div>
                   <p className="al-scan-title">{phase.title[lang]}</p>

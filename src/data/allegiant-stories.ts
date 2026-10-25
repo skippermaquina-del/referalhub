@@ -239,6 +239,29 @@ const dryerStory: Story = {
   },
 };
 
+const microwaveStory: Story = {
+  id: "microwave",
+  mp4: "/allegiant/scan/microwave.mp4",
+  webm: "/allegiant/scan/microwave.webm",
+  poster: "/allegiant/scan/microwave-poster.jpg",
+  endImage: "/allegiant/scan/microwave-end.jpg",
+  duration: 19.3,
+  aspect: 720 / 1280,
+  endAt: 15.0,
+  totalSteps: 1,
+  phases: [
+    p("intro", 0.2, 3.0, undefined, ["Won't heat? Sparks or a burning smell?", "¿No calienta? ¿Chispas o olor a quemado?"]),
+    p("fault", 3.1, 8.7, "fault", ["Magnetron", "Magnetrón"], ["Overheating and arcing — the tube is burning out.", "Se sobrecalienta y hace arco: el tubo se está quemando."]),
+    p("fix", 8.7, 13.0, "fix", ["Magnetron", "Magnetrón"], ["Removing the burnt tube and fitting a new one.", "Sacamos el tubo quemado y montamos uno nuevo."]),
+    p("done", 13.0, 15.0, "done", ["Magnetron", "Magnetrón"], ["New magnetron fitted. Heating normally again.", "Magnetrón nuevo instalado. Vuelve a calentar con normalidad."]),
+  ],
+  endTitle: { en: "Microwave not heating or sparking?", es: "¿El microondas no calienta o echa chispas?" },
+  endBody: {
+    en: "Vadim finds the real cause and fixes it: magnetrons, diodes, capacitors and boards.",
+    es: "Vadim encuentra la causa real y la repara: magnetrones, diodos, capacitores y placas.",
+  },
+};
+
 /** Escaneo en video de cada tipo de aparato del recorrido (si existe). */
 export function scanStoryFor(kind: ApplianceKind): Story | null {
   switch (kind) {
@@ -250,6 +273,8 @@ export function scanStoryFor(kind: ApplianceKind): Story | null {
       return washerStory;
     case "dryer":
       return dryerStory;
+    case "micro":
+      return microwaveStory;
     default:
       return null;
   }
@@ -261,6 +286,7 @@ export const scanGallery: { kind: ApplianceKind; story: Story }[] = [
   { kind: "dish", story: dishwasherStory },
   { kind: "washer", story: washerStory },
   { kind: "dryer", story: dryerStory },
+  { kind: "micro", story: microwaveStory },
 ];
 
 /**
