@@ -20,8 +20,8 @@ const remember = () => {
   } catch {}
 };
 
-const W = 300;
-const H = 534;
+const W = 400;
+const H = 480;
 
 /**
  * Reproduce un video grabado sobre fondo negro y lo dibuja en un canvas con
@@ -98,6 +98,8 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
   const t = balloonText[lang];
   const [show, setShow] = useState(false);
   const [popped, setPopped] = useState(false);
+  // 0 = primer globo (solo juego); 1 = segundo globo, el que trae la oferta.
+  const [stage, setStage] = useState(0);
   const [modal, setModal] = useState(false);
   const still = useSyncExternalStore(subscribeRM, () => window.matchMedia(RM).matches, () => false);
 
@@ -117,15 +119,28 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
   }, [modal]);
 
   function pop() {
-    remember();
+    if (still) {
+      remember();
+      setModal(true);
+      return;
+    }
     setPopped(true);
-    window.setTimeout(() => setModal(true), still ? 0 : 900);
+    if (stage === 0) {
+      window.setTimeout(() => {
+        setPopped(false);
+        setStage(1);
+      }, 1500);
+    } else {
+      remember();
+      window.setTimeout(() => setModal(true), 900);
+    }
   }
 
   function dismiss() {
     remember();
     setShow(false);
     setPopped(false);
+    setStage(0);
     setModal(false);
   }
 
@@ -134,8 +149,9 @@ export function OfferBalloon({ lang, suppressed, onBook }: { lang: Lang; suppres
       {show && !modal && (
         <div className="al-balloon" data-hidden={suppressed ? "" : undefined}>
           <div className="al-balloon-drift" data-still={still ? "" : undefined}>
-            <div className="al-balloon-box">
+            <div className="al-balloon-box" key={stage} data-stage={stage}>
               {popped && !still ? <KeyedVideo key="pop" name="pop" /> : <KeyedVideo key="float" name="float" loop still={still} />}
+              {stage === 1 && !popped && <span className="al-balloon-hint">{t.more}</span>}
               {!popped && (
                 <>
                   <button type="button" className="al-balloon-hit" aria-label={t.label} onClick={pop} />

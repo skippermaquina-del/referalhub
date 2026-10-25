@@ -35,9 +35,9 @@ export const couponText: Record<Lang, { call: string; save: string; book: string
 };
 
 /** Globo flotante que aparece a los pocos segundos y abre la oferta. */
-export const balloonText: Record<Lang, { label: string; close: string }> = {
-  en: { label: "A surprise for you — tap to open", close: "Close" },
-  es: { label: "Una sorpresa para ti — toca para abrir", close: "Cerrar" },
+export const balloonText: Record<Lang, { label: string; close: string; more: string }> = {
+  en: { label: "A surprise for you — tap to pop", close: "Close", more: "One more…" },
+  es: { label: "Una sorpresa para ti — toca para pinchar", close: "Cerrar", more: "Una más…" },
 };
 
 /** Segundos antes de que aparezca el globo. */
