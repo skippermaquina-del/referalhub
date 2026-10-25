@@ -29,7 +29,12 @@ html:has(.allegiant) {
   scroll-margin-top: 4.5rem;
 }
 
-/* Modo captura (render a video): sin controles de UI. */
-html[data-capture-ready] .hx-controls {
-  display: none;
+/* Aparición suave de las etiquetas del hero. */
+@keyframes al-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.al-fade { animation: al-fade 0.35s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .al-fade { animation: none; }
 }

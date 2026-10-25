@@ -1,6 +1,6 @@
 import Image from "next/image";
 import QRCode from "qrcode";
-import { HeroXray } from "@/components/allegiant/HeroXray";
+import { HeroVideo } from "@/components/allegiant/HeroVideo";
 import { HouseTour } from "@/components/allegiant/HouseTour";
 import { BrandCarousel } from "@/components/allegiant/BrandCarousel";
 import { LeadForm } from "@/components/allegiant/LeadForm";
@@ -67,7 +67,7 @@ export default async function AllegiantPage() {
 
       {/* Hero */}
       <div id="top">
-        <HeroXray />
+        <HeroVideo />
       </div>
 
       <HouseTour />
