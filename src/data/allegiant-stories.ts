@@ -58,10 +58,48 @@ export const statusColors: Record<StatusKey, string> = {
 /** Texto de la interfaz del escaneo, por idioma. */
 export const scanText: Record<
   Lang,
-  { button: string; close: string; play: string; pause: string; replay: string; label: string; call: string; book: string }
+  {
+    button: string;
+    close: string;
+    play: string;
+    pause: string;
+    replay: string;
+    label: string;
+    call: string;
+    book: string;
+    gallery: { eyebrow: string; h2: string; p: string };
+  }
 > = {
-  en: { button: "Watch the scan", close: "Close", play: "Play", pause: "Pause", replay: "Replay", label: "Allegiant · Internal scan", call: "Call", book: "Book a repair" },
-  es: { button: "Ver el escaneo", close: "Cerrar", play: "Reproducir", pause: "Pausar", replay: "Repetir", label: "Allegiant · Escaneo interno", call: "Llamar", book: "Reservar reparación" },
+  en: {
+    button: "Watch the scan",
+    close: "Close",
+    play: "Play",
+    pause: "Pause",
+    replay: "Replay",
+    label: "Allegiant · Internal scan",
+    call: "Call",
+    book: "Book a repair",
+    gallery: {
+      eyebrow: "X-ray scans",
+      h2: "See what's really going on inside.",
+      p: "Real failures, scanned and repaired. Tap one to watch.",
+    },
+  },
+  es: {
+    button: "Ver el escaneo",
+    close: "Cerrar",
+    play: "Reproducir",
+    pause: "Pausar",
+    replay: "Repetir",
+    label: "Allegiant · Escaneo interno",
+    call: "Llamar",
+    book: "Reservar reparación",
+    gallery: {
+      eyebrow: "Escaneos de rayos X",
+      h2: "Mira lo que realmente pasa por dentro.",
+      p: "Fallas reales, escaneadas y reparadas. Toca una para verla.",
+    },
+  },
 };
 
 const p = (
@@ -168,6 +206,35 @@ const washerStory: Story = {
   },
 };
 
+
+const dryerStory: Story = {
+  id: "dryer",
+  mp4: "/allegiant/scan/dryer.mp4",
+  webm: "/allegiant/scan/dryer.webm",
+  poster: "/allegiant/scan/dryer-poster.jpg",
+  endImage: "/allegiant/scan/dryer-end.jpg",
+  duration: 24.9,
+  aspect: 720 / 1280,
+  endAt: 20.7,
+  totalSteps: 5,
+  phases: [
+    p("intro", 0.2, 2.0, undefined, ["Won't heat? Clothes still damp?", "¿No calienta? ¿La ropa sigue húmeda?"]),
+    p("scan", 2.0, 5.6, "scan", ["X-ray scan", "Escaneo de rayos X"], ["Seeing the drum, blower and heater without taking it apart.", "Vemos el tambor, el ventilador y la resistencia sin desarmarla."]),
+    p("board", 5.6, 6.8, "normal", ["Main control board", "Placa de control principal"], ["Reads the sensors and runs the drying cycle.", "Lee los sensores y maneja el ciclo de secado."], 1),
+    p("drum", 6.8, 8.0, "normal", ["Drum", "Tambor"], ["Tumbles the clothes so hot air reaches every fold.", "Voltea la ropa para que el aire caliente llegue a todo."], 2),
+    p("heater", 8.0, 9.6, "normal", ["Heating element", "Resistencia"], ["Makes the heat that dries the load.", "Genera el calor que seca la carga."], 3),
+    p("blower", 9.6, 11.4, "normal", ["Blower & exhaust", "Ventilador y salida de aire"], ["Pushes hot air through the clothes and out the vent.", "Empuja el aire caliente por la ropa y hacia la salida."], 4),
+    p("fault", 11.4, 14.3, "fault", ["Heating element", "Resistencia"], ["Broken coil — it sparks and the air stays cold.", "Bobina rota: chispea y el aire sale frío."], 5),
+    p("fix", 14.3, 17.9, "fix", ["Heating element", "Resistencia"], ["Removing the burnt coil and fitting a new element.", "Sacamos la bobina quemada y montamos una resistencia nueva."], 5),
+    p("done", 17.9, 20.7, "done", ["Heating element", "Resistencia"], ["New element fitted. Hot air flows again.", "Resistencia nueva instalada. El aire caliente vuelve a fluir."], 5),
+  ],
+  endTitle: { en: "Dryer not heating or taking forever?", es: "¿La secadora no calienta o tarda una eternidad?" },
+  endBody: {
+    en: "Vadim finds the real cause and fixes it: heating elements, blowers, vents and boards.",
+    es: "Vadim encuentra la causa real y la repara: resistencias, ventiladores, ductos y placas.",
+  },
+};
+
 /** Escaneo en video de cada tipo de aparato del recorrido (si existe). */
 export function scanStoryFor(kind: ApplianceKind): Story | null {
   switch (kind) {
@@ -177,7 +244,17 @@ export function scanStoryFor(kind: ApplianceKind): Story | null {
       return dishwasherStory;
     case "washer":
       return washerStory;
+    case "dryer":
+      return dryerStory;
     default:
       return null;
   }
 }
+
+/** Los escaneos disponibles, en el orden en que aparecen en la home. */
+export const scanGallery: { kind: ApplianceKind; story: Story }[] = [
+  { kind: "fridge", story: fridgeStory },
+  { kind: "dish", story: dishwasherStory },
+  { kind: "washer", story: washerStory },
+  { kind: "dryer", story: dryerStory },
+];

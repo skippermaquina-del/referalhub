@@ -1,6 +1,20 @@
 /* Escaneo en video del recorrido (ScanModal). Usa las variables del sitio. */
 
 .al-scan {
+  /* Siempre oscuro, aunque se abra desde una sección clara (.al-light). */
+  --al-bg: #08101e;
+  --al-bg-deep: #060d19;
+  --al-panel: #0f1b33;
+  --al-text: #f4efe6;
+  --al-text-2: #e1e6f0;
+  --al-muted: #c6cfde;
+  --al-faint: #a6b1c6;
+  --al-line: #1d2c4a;
+  --al-line-2: #2a3b5e;
+  --al-line-3: #3a4a6e;
+  --al-accent: #f26f21;
+  --al-accent-fill: #f26f21;
+  color: var(--al-text);
   position: fixed;
   inset: 0;
   z-index: 44;
@@ -14,6 +28,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(300px, 420px) auto;
+  grid-template-rows: minmax(0, 1fr);
   height: min(88vh, 800px);
   max-width: 96vw;
   background: var(--al-bg-deep, #060d19);
@@ -25,6 +40,7 @@
   position: relative;
   order: 2;
   height: 100%;
+  min-height: 0;
   aspect-ratio: var(--al-scan-aspect, 0.5625);
   background: #000;
 }
@@ -63,6 +79,7 @@
 .al-scan-side {
   position: relative;
   order: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -275,5 +292,109 @@
   }
   .al-scan-dot[data-live] {
     animation: none;
+  }
+}
+
+/* ---------- Home: galería de escaneos ---------- */
+.al-scan-gallery-p {
+  margin: 28px 0 44px;
+  max-width: 560px;
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--al-muted, #c6cfde);
+}
+.al-scan-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--al-gap, 20px);
+}
+.al-scan-card-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  background: #060d19;
+  border: 1px solid var(--al-line-2, #2a3b5e);
+  text-align: left;
+  cursor: pointer;
+}
+.al-scan-card-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.al-scan-card-btn:hover img {
+  transform: scale(1.04);
+}
+.al-scan-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3, 6, 13, 0.92) 0%, rgba(3, 6, 13, 0.2) 55%, transparent 100%);
+}
+.al-scan-card-play {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--al-accent, #f26f21);
+  background: rgba(8, 16, 30, 0.6);
+  color: var(--al-accent, #f26f21);
+  backdrop-filter: blur(6px);
+}
+.al-scan-card-text {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.al-scan-card-name {
+  font-family: var(--font-al-serif), serif;
+  font-size: clamp(30px, 2.6vw, 40px);
+  line-height: 1.05;
+  color: #f4efe6;
+}
+.al-scan-card-cta {
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--al-accent, #f26f21);
+}
+@media (max-width: 760px) {
+  .al-scan-cards {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 -8%;
+    padding: 0 8%;
+    scrollbar-width: none;
+  }
+  .al-scan-cards::-webkit-scrollbar {
+    display: none;
+  }
+  .al-scan-cards > li {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+}
+
+/* Portada en móvil: que los enlaces no queden bajo el botón de chat. */
+@media (max-width: 760px) {
+  .al-hero-actions {
+    padding-right: 76px;
   }
 }
