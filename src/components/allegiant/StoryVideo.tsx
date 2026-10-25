@@ -105,11 +105,12 @@ export function StoryVideo({ story, variant }: { story: Story; variant: "hero" |
       <div className="absolute inset-0 flex justify-end md:pr-[5%]">
         {still ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={story.endImage} alt="" className="h-full w-full object-cover md:aspect-[464/688] md:w-auto md:object-contain" />
+          <img src={story.endImage} alt="" className="h-full w-full object-cover md:w-auto md:object-contain" style={{ aspectRatio: story.aspect }} />
         ) : (
           <video
             ref={ref}
-            className="h-full w-full object-cover md:aspect-[464/688] md:w-auto md:object-contain [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]"
+            className="h-full w-full object-cover md:w-auto md:object-contain [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]"
+            style={{ aspectRatio: story.aspect }}
             poster={story.poster}
             autoPlay={hero}
             muted

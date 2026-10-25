@@ -29,6 +29,8 @@ export type Story = {
   poster: string;
   endImage: string;
   duration: number;
+  /** Ancho / alto del video (para el panel en escritorio). */
+  aspect: number;
   /** A partir de este segundo aparece la tarjeta final. */
   endAt: number;
   totalSteps: number;
@@ -47,6 +49,7 @@ export const fridgeStory: Story = {
   poster: "/allegiant/hero-poster.jpg",
   endImage: "/allegiant/hero-end.jpg",
   duration: 24.9,
+  aspect: 464 / 688,
   endAt: 20.7,
   totalSteps: 6,
   phases: [
@@ -71,6 +74,7 @@ export const dishwasherStory: Story = {
   poster: "/allegiant/dishwasher-poster.jpg",
   endImage: "/allegiant/dishwasher-end.jpg",
   duration: 24.9,
+  aspect: 464 / 688,
   endAt: 20.7,
   totalSteps: 6,
   phases: [
@@ -87,4 +91,30 @@ export const dishwasherStory: Story = {
   ],
   endTitle: "Dishwasher not draining or cleaning?",
   endBody: "Vadim finds the real cause and fixes it: pumps, spray arms, valves and boards.",
+};
+
+export const washerStory: Story = {
+  id: "washer",
+  label: "Washer",
+  mp4: "/allegiant/washer.mp4",
+  webm: "/allegiant/washer.webm",
+  poster: "/allegiant/washer-poster.jpg",
+  endImage: "/allegiant/washer-end.jpg",
+  duration: 17.8,
+  aspect: 720 / 1280,
+  endAt: 16.0,
+  totalSteps: 5,
+  phases: [
+    { id: "intro", a: 0.2, b: 3.0, title: "Won't drain? Clothes still soaking?" },
+    { id: "board", a: 3.1, b: 4.3, step: 1, title: "Main control board", note: "Runs every wash, rinse and spin cycle.", status: normal },
+    { id: "valves", a: 4.3, b: 5.6, step: 2, title: "Water inlet valves", note: "Fill the drum with hot and cold water.", status: normal },
+    { id: "drum", a: 5.6, b: 7.2, step: 3, title: "Drum", note: "Spins and tumbles your clothes.", status: normal },
+    { id: "motor", a: 7.2, b: 8.2, step: 4, title: "Motor & belt", note: "Drives the drum at every speed.", status: normal },
+    { id: "pump", a: 8.2, b: 8.7, step: 5, title: "Drain pump", note: "Pushes dirty water out to the drain.", status: normal },
+    { id: "fault", a: 8.7, b: 11.8, step: 5, title: "Drain pump", note: "A sock and a coin are jamming it — the water can't leave.", status: { label: "FAULT DETECTED", color: RED } },
+    { id: "fix", a: 11.8, b: 13.8, step: 5, title: "Drain pump", note: "Pulling out the blockage and refitting the pump.", status: { label: "REPAIRING", color: AMBER } },
+    { id: "done", a: 13.8, b: 16.0, step: 5, title: "Drain pump", note: "Clear and draining. Spin cycle back to normal.", status: { label: "REPAIRED ✓", color: GREEN } },
+  ],
+  endTitle: "Washer won't drain or spin?",
+  endBody: "Vadim finds the real cause and fixes it: pumps, belts, valves and boards.",
 };
