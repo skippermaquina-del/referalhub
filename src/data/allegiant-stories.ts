@@ -118,3 +118,28 @@ export const washerStory: Story = {
   endTitle: "Washer won't drain or spin?",
   endBody: "Vadim finds the real cause and fixes it: pumps, belts, valves and boards.",
 };
+
+export const iceMakerStory: Story = {
+  id: "icemaker",
+  label: "Ice maker",
+  mp4: "/allegiant/icemaker.mp4",
+  webm: "/allegiant/icemaker.webm",
+  poster: "/allegiant/icemaker-poster.jpg",
+  endImage: "/allegiant/icemaker-end.jpg",
+  duration: 19.3,
+  aspect: 720 / 1280,
+  endAt: 14.9,
+  totalSteps: 5,
+  phases: [
+    { id: "board", a: 0.2, b: 1.2, step: 1, title: "Main control board", note: "Times every freeze, harvest and refill.", status: normal },
+    { id: "valve", a: 1.2, b: 2.2, step: 2, title: "Water inlet valve", note: "Sends just enough water to the mold.", status: normal },
+    { id: "mold", a: 2.2, b: 3.2, step: 3, title: "Ice mold", note: "Freezes the water into cubes.", status: normal },
+    { id: "arms", a: 3.2, b: 4.6, step: 4, title: "Ejector arms", note: "Push the finished cubes out of the mold.", status: normal },
+    { id: "motor", a: 4.6, b: 5.6, step: 5, title: "Ejector motor", note: "Moves the arms through every harvest.", status: normal },
+    { id: "fault", a: 5.6, b: 8.7, step: 5, title: "Ejector arm", note: "Frozen solid — the arm is jammed and the motor is straining.", status: { label: "FAULT DETECTED", color: RED } },
+    { id: "fix", a: 8.7, b: 12.6, step: 5, title: "Ejector arm", note: "Freeing the arm and fitting a new motor.", status: { label: "REPAIRING", color: AMBER } },
+    { id: "done", a: 12.6, b: 14.9, step: 5, title: "Ejector arm", note: "Moving freely. Fresh cubes are dropping again.", status: { label: "REPAIRED ✓", color: GREEN } },
+  ],
+  endTitle: "Ice maker not making ice?",
+  endBody: "Vadim finds the real cause and fixes it: valves, motors, molds and boards.",
+};

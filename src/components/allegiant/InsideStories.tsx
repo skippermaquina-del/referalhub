@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { dishwasherStory, washerStory } from "@/data/allegiant-stories";
+import { dishwasherStory, iceMakerStory, washerStory } from "@/data/allegiant-stories";
 import { StoryVideo } from "./StoryVideo";
 
 /**
  * "Mira por dentro": una historia en video por aparato, con pestañas.
  * Para sumar otro aparato: añadir su Story a `stories` (ver allegiant-stories.ts).
  */
-const stories = [dishwasherStory, washerStory];
+const stories = [dishwasherStory, washerStory, iceMakerStory];
 
 export function InsideStories() {
   const [id, setId] = useState(stories[0].id);
