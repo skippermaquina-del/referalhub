@@ -116,7 +116,7 @@ export function BrandSearch({ lang }: { lang: Lang }) {
   const t = labels[lang];
 
   return (
-    <section className="al-brand-search" style={{ padding: "60px 20px" }}>
+    <section className="al-brand-search">
       <div className="al-grid12">
         <h2 className="al-h2" style={{ gridColumn: "1 / span 12", marginBottom: 48 }}>
           {t.title}

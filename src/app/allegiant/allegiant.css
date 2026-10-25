@@ -1451,8 +1451,9 @@ html:has(.allegiant) {
 
 /* ---------- Buscador de Marcas ---------- */
 
+/* Hereda el fondo y los márgenes de la sección que lo envuelve (sin caja propia). */
 .al-brand-search {
-  background: var(--al-bg);
+  background: transparent;
 }
 
 .al-brand-search .al-h2 {
@@ -1471,9 +1472,6 @@ html:has(.allegiant) {
 }
 
 @media (max-width: 640px) {
-  .al-brand-search {
-    padding: 40px 0 !important;
-  }
   .al-search-row {
     gap: 8px !important;
   }
