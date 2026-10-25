@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { business, brandDatabase, copy, type Lang } from "@/data/allegiant";
-import { trackBookingConversion } from "@/lib/ads";
+import { trackBookingConversion, trackPhoneClick } from "@/lib/ads";
 import { OfferBalloon } from "./OfferBalloon";
 
 type BookingContextValue = { openBook: () => void };
@@ -43,6 +43,16 @@ export function AllegiantShell({
   const closeBook = useCallback(() => {
     setOpen(false);
     setStatus((s) => (s === "sent" ? "idle" : s));
+  }, []);
+
+  // Cualquier toque en un enlace tel: de la página cuenta como una llamada iniciada.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.('a[href^="tel:"]');
+      if (link) trackPhoneClick();
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
   }, []);
 
   useEffect(() => {

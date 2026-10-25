@@ -9,3 +9,14 @@ export function trackBookingConversion() {
   const gtag = (window as unknown as { gtag?: Gtag }).gtag;
   gtag?.("event", "conversion", { send_to: `${adsId}/${bookingLabel}` });
 }
+
+const callLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CALL_LABEL;
+
+/** Registra un toque en un enlace de teléfono (evento de Analytics y, si hay etiqueta, conversión de Ads). */
+export function trackPhoneClick() {
+  if (typeof window === "undefined") return;
+  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+  if (!gtag) return;
+  gtag("event", "phone_click", { page: window.location.pathname });
+  if (adsId && callLabel) gtag("event", "conversion", { send_to: `${adsId}/${callLabel}` });
+}

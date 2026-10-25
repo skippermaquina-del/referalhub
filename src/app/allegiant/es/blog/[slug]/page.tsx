@@ -8,8 +8,9 @@ export const generateStaticParams = () => {
   return blogPosts.map((post) => ({ slug: post.slug }));
 };
 
-export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export const generateMetadata = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
   if (!post) return {};
   return {
     title: `${post.title.es} — Allegiant Appliances`,
@@ -18,8 +19,9 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   };
 };
 
-export default function BlogPostPageES({ params }: { params: { slug: string } }) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export default async function BlogPostPageES({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     notFound();
@@ -143,25 +145,7 @@ export default function BlogPostPageES({ params }: { params: { slug: string } })
               <p style={{ margin: "0 0 20px", color: "var(--al-muted)" }}>
                 Contacta a Allegiant Appliances para reparación y mantenimiento profesional.
               </p>
-              <a
-                href="/allegiant/es#contact"
-                style={{
-                  display: "inline-block",
-                  padding: "12px 24px",
-                  backgroundColor: "var(--al-accent)",
-                  color: "var(--al-bg)",
-                  textDecoration: "none",
-                  borderRadius: 4,
-                  fontWeight: 600,
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = "0.8";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = "1";
-                }}
-              >
+              <a href="/allegiant/es#contact" className="al-btn">
                 Reservar reparación
               </a>
             </div>
