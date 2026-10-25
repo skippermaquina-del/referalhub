@@ -17,7 +17,7 @@ const subscribeRM = (cb: () => void) => {
   return () => m.removeEventListener("change", cb);
 };
 
-function Coupon({ lang, onBook }: { lang: Lang; onBook: () => void }) {
+export function Coupon({ lang, onBook }: { lang: Lang; onBook: () => void }) {
   const t = boxText[lang];
   return (
     <div className="al-box-coupon">

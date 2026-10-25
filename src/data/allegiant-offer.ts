@@ -70,3 +70,12 @@ export const boxText: Record<
     fragile: "FRÁGIL",
   },
 };
+
+/** Globo flotante que aparece a los pocos segundos y abre la oferta. */
+export const balloonText: Record<Lang, { label: string; close: string }> = {
+  en: { label: "A surprise for you — tap to open", close: "Close" },
+  es: { label: "Una sorpresa para ti — toca para abrir", close: "Cerrar" },
+};
+
+/** Segundos antes de que aparezca el globo. */
+export const balloonDelaySec = 10;
