@@ -3,14 +3,27 @@
  *
  * Entrega:
  * 1. Guarda la solicitud en Supabase (siempre, sin excepciones).
- * 2. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
- *    (compatible con Slack, Make, Zapier, etc. para notificar a Vadim).
- * 3. Devuelve {ok: true, saved: true} si se guardó en la BD.
+ * 2. Si `RESEND_API_KEY` y `ALLEGIANT_NOTIFY_EMAIL` están configuradas, manda un
+ *    correo a Vadim con la solicitud (vía Resend). Las urgentes del agente
+ *    telefónico llevan "URGENT" en el asunto.
+ * 3. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
+ *    (compatible con Slack, Make, Zapier, etc.).
+ * 4. Devuelve {ok: true} si la solicitud se guardó en la BD o llegó por correo.
+ *    Si la BD falla, el correo avisa que no quedó en el panel.
  */
 
 import { createClient } from "@supabase/supabase-js";
 
 const WEBHOOK_URL = process.env.ALLEGIANT_LEADS_WEBHOOK_URL;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// Una o varias direcciones separadas por coma.
+const NOTIFY_TO = (process.env.ALLEGIANT_NOTIFY_EMAIL ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+// Sin dominio verificado en Resend, solo se puede enviar desde onboarding@resend.dev
+// y únicamente al correo dueño de la cuenta de Resend.
+const NOTIFY_FROM = process.env.ALLEGIANT_NOTIFY_FROM || "Allegiant Appliances <onboarding@resend.dev>";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -61,7 +74,9 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "invalid_fields" }, { status: 400 });
   }
 
-  // Guarda en Supabase primero
+  // Guarda en Supabase. Si falla, se sigue con el aviso por correo para que
+  // Vadim reciba la solicitud igual.
+  let saved = false;
   try {
     const { error: dbError } = await supabase.from("leads").insert({
       name: lead.name,
@@ -74,17 +89,13 @@ export async function POST(request: Request) {
       lang,
       status: "pending_approval",
     });
-
-    if (dbError) {
-      console.error("[allegiant] database insert failed", dbError);
-      return Response.json({ ok: false, error: "database_error" }, { status: 500 });
-    }
+    if (dbError) console.error("[allegiant] database insert failed", dbError);
+    else saved = true;
   } catch (error) {
     console.error("[allegiant] unexpected database error", error);
-    return Response.json({ ok: false, error: "database_error" }, { status: 500 });
   }
 
-  // Notifica por webhook si está configurado
+  // Aviso a Vadim (correo y webhook)
   const text = [
     `New Allegiant visit request (${lang.toUpperCase()})`,
     `Name: ${lead.name}`,
@@ -93,9 +104,42 @@ export async function POST(request: Request) {
     lead.zip ? `ZIP: ${lead.zip}` : null,
     lead.time ? `Preferred time: ${lead.time}` : null,
     lead.message ? `Notes: ${lead.message}` : null,
+    saved ? null : "NOT SAVED IN THE PANEL (database error). Keep this email.",
   ]
     .filter(Boolean)
     .join("\n");
+
+  let emailed = false;
+
+  if (RESEND_API_KEY && NOTIFY_TO.length) {
+    const fromPhone = lead.message.startsWith("[PHONE AGENT]");
+    const urgent = fromPhone && lead.message.includes("URGENT.");
+    const subject = [
+      urgent ? "URGENT -" : null,
+      fromPhone ? "Phone call:" : "Website request:",
+      lead.name,
+      lead.appliance ? `· ${lead.appliance}${lead.brand ? ` ${lead.brand}` : ""}` : null,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: NOTIFY_FROM,
+          to: NOTIFY_TO,
+          subject: subject.slice(0, 150),
+          text: `${text}\n\nCall back: tel:${digits.length === 10 ? `+1${digits}` : lead.phone}\nAll requests: https://allegiantappliance.com/allegiant/admin`,
+        }),
+        cache: "no-store",
+      });
+      if (res.ok) emailed = true;
+      else console.warn(`[allegiant] email returned ${res.status}: ${await res.text()}`);
+    } catch (error) {
+      console.warn("[allegiant] email delivery failed", error);
+    }
+  }
 
   if (WEBHOOK_URL) {
     try {
@@ -107,9 +151,13 @@ export async function POST(request: Request) {
       });
       if (!res.ok) console.warn(`[allegiant] webhook returned ${res.status}`);
     } catch (error) {
-      console.warn("[allegiant] webhook delivery failed (lead saved anyway)", error);
+      console.warn("[allegiant] webhook delivery failed", error);
     }
   }
 
-  return Response.json({ ok: true, saved: true });
+  // Solo es un error si la solicitud no llegó a ningún lado.
+  if (!saved && !emailed) {
+    return Response.json({ ok: false, error: "database_error" }, { status: 500 });
+  }
+  return Response.json({ ok: true, saved, emailed });
 }
