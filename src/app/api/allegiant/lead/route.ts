@@ -96,14 +96,16 @@ export async function POST(request: Request) {
   }
 
   // Aviso a Vadim (correo y webhook)
+  const fromPhone = lead.message.startsWith("[PHONE AGENT]");
+  const notes = lead.message.replace(/^\[PHONE AGENT\]\s*/, "");
   const text = [
     `New Allegiant visit request (${lang.toUpperCase()})`,
     `Name: ${lead.name}`,
     `Phone: ${lead.phone}`,
-    `Appliance: ${lead.appliance}${lead.brand ? ` · ${lead.brand}` : ""}`,
+    lead.appliance ? `Appliance: ${lead.appliance}${lead.brand ? ` · ${lead.brand}` : ""}` : null,
     lead.zip ? `ZIP: ${lead.zip}` : null,
     lead.time ? `Preferred time: ${lead.time}` : null,
-    lead.message ? `Notes: ${lead.message}` : null,
+    notes ? `Notes: ${notes}` : null,
     saved ? null : "NOT SAVED IN THE PANEL (database error). Keep this email.",
   ]
     .filter(Boolean)
@@ -112,11 +114,11 @@ export async function POST(request: Request) {
   let emailed = false;
 
   if (RESEND_API_KEY && NOTIFY_TO.length) {
-    const fromPhone = lead.message.startsWith("[PHONE AGENT]");
     const urgent = fromPhone && lead.message.includes("URGENT.");
     const subject = [
       urgent ? "URGENT -" : null,
-      fromPhone ? "Phone call:" : "Website request:",
+      // Llamada en la que el cliente solo pidió que Vadim lo llame.
+      fromPhone ? (lead.appliance ? "Phone call:" : "Callback request:") : "Website request:",
       lead.name,
       lead.appliance ? `· ${lead.appliance}${lead.brand ? ` ${lead.brand}` : ""}` : null,
     ]
