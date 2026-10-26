@@ -3,14 +3,27 @@
  *
  * Entrega:
  * 1. Guarda la solicitud en Supabase (siempre, sin excepciones).
- * 2. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
- *    (compatible con Slack, Make, Zapier, etc. para notificar a Vadim).
- * 3. Devuelve {ok: true, saved: true} si se guardó en la BD.
+ * 2. Si `RESEND_API_KEY` y `ALLEGIANT_NOTIFY_EMAIL` están configuradas, manda un
+ *    correo a Vadim con la solicitud (vía Resend). Las urgentes del agente
+ *    telefónico llevan "URGENT" en el asunto.
+ * 3. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
+ *    (compatible con Slack, Make, Zapier, etc.).
+ * 4. Devuelve {ok: true, saved: true} si se guardó en la BD. Si el aviso falla,
+ *    la solicitud queda guardada igual.
  */
 
 import { createClient } from "@supabase/supabase-js";
 
 const WEBHOOK_URL = process.env.ALLEGIANT_LEADS_WEBHOOK_URL;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// Una o varias direcciones separadas por coma.
+const NOTIFY_TO = (process.env.ALLEGIANT_NOTIFY_EMAIL ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+// Sin dominio verificado en Resend, solo se puede enviar desde onboarding@resend.dev
+// y únicamente al correo dueño de la cuenta de Resend.
+const NOTIFY_FROM = process.env.ALLEGIANT_NOTIFY_FROM || "Allegiant Appliances <onboarding@resend.dev>";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -96,6 +109,35 @@ export async function POST(request: Request) {
   ]
     .filter(Boolean)
     .join("\n");
+
+  if (RESEND_API_KEY && NOTIFY_TO.length) {
+    const fromPhone = lead.message.startsWith("[PHONE AGENT]");
+    const urgent = fromPhone && lead.message.includes("URGENT.");
+    const subject = [
+      urgent ? "URGENT -" : null,
+      fromPhone ? "Phone call:" : "Website request:",
+      lead.name,
+      lead.appliance ? `· ${lead.appliance}${lead.brand ? ` ${lead.brand}` : ""}` : null,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: NOTIFY_FROM,
+          to: NOTIFY_TO,
+          subject: subject.slice(0, 150),
+          text: `${text}\n\nCall back: tel:${digits.length === 10 ? `+1${digits}` : lead.phone}\nAll requests: https://allegiantappliance.com/allegiant/admin`,
+        }),
+        cache: "no-store",
+      });
+      if (!res.ok) console.warn(`[allegiant] email returned ${res.status}: ${await res.text()}`);
+    } catch (error) {
+      console.warn("[allegiant] email delivery failed (lead saved anyway)", error);
+    }
+  }
 
   if (WEBHOOK_URL) {
     try {
