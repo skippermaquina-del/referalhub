@@ -1,0 +1,3 @@
+{
+  "crons": [{ "path": "/api/allegiant/keepalive", "schedule": "17 15 * * *" }]
+}
