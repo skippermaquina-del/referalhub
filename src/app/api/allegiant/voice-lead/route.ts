@@ -35,6 +35,13 @@ function authorized(request: Request): boolean {
 const str = (v: unknown, max = 200): string =>
   typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f]+/g, " ").trim().slice(0, max) : "";
 
+/** Como `str`, pero vacío cuando el agente rellenó con "not given", "unknown", etc. */
+const PLACEHOLDER = /^(not given|unknown|none|n\/a|na|no|-+|no lo dio|desconocido)\.?$/i;
+const field = (v: unknown, max = 200): string => {
+  const s = str(v, max);
+  return PLACEHOLDER.test(s) ? "" : s;
+};
+
 /** Número de la llamada, o "" si llegó oculto o sin dato. */
 function callerNumber(call: Json | undefined): string {
   const customer = call?.customer as Json | undefined;
@@ -97,10 +104,10 @@ export async function POST(request: Request) {
       "[PHONE AGENT]",
       urgent ? "URGENT." : null,
       a.customerType && a.customerType !== "residential" ? `Customer: ${str(a.customerType, 30)}.` : null,
-      str(a.address, 200) ? `Address: ${str(a.address, 200)}.` : null,
-      str(a.symptom, 250) ? `Problem: ${str(a.symptom, 250)}.` : null,
+      field(a.address, 200) ? `Address: ${field(a.address, 200)}.` : null,
+      field(a.symptom, 250) ? `Problem: ${field(a.symptom, 250)}.` : null,
       a.offerMentioned === true ? "Mentioned the 20% offer." : null,
-      str(a.notes, 200) ? `Notes: ${str(a.notes, 200)}` : null,
+      str(a.notes, 200) || null,
     ]
       .filter(Boolean)
       .join(" ");
@@ -112,10 +119,10 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           name: str(a.name, 80),
           phone,
-          appliance: str(a.appliance, 60),
-          brand: str(a.brand, 60),
-          zip: str(a.zip, 10),
-          time: str(a.preferredTime, 40),
+          appliance: field(a.appliance, 60),
+          brand: field(a.brand, 60),
+          zip: field(a.zip, 10),
+          time: field(a.preferredTime, 40),
           message: note.slice(0, 800),
           lang: a.language === "es" ? "es" : "en",
         }),
