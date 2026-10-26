@@ -1,4 +1,5 @@
 import { business, copy, paths, serviceAreas, type Lang } from "@/data/allegiant";
+import { legalLabels } from "@/data/allegiant-legal";
 import { AllegiantShell } from "./AllegiantShell";
 import { BrandSearch } from "./BrandSearch";
 import { ContinuousCarousel } from "./ContinuousCarousel";
@@ -270,6 +271,11 @@ export function HomePage({ lang }: { lang: Lang }) {
             </div>
           </div>
           <p className="al-legal">{t.footer.legal}</p>
+          <p className="al-footer-docs">
+            <a href={lang === "es" ? "/allegiant/es/privacy" : "/allegiant/privacy"}>{legalLabels[lang].privacy}</a>
+            {" · "}
+            <a href={lang === "es" ? "/allegiant/es/terms" : "/allegiant/terms"}>{legalLabels[lang].terms}</a>
+          </p>
           <div className="al-footer-bottom">
             <span>© {new Date().getFullYear()} {business.name}</span>
             <span>{t.footer.mid}</span>

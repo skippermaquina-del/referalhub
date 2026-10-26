@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
         { source: "/es", has, destination: "/allegiant/es" },
         { source: "/tour", has, destination: "/allegiant/tour" },
         { source: "/es/tour", has, destination: "/allegiant/es/tour" },
+        // Política y términos de Allegiant (sin esto, /privacy mostraría la de otro sitio de esta app).
+        { source: "/privacy", has, destination: "/allegiant/privacy" },
+        { source: "/terms", has, destination: "/allegiant/terms" },
+        { source: "/es/privacy", has, destination: "/allegiant/es/privacy" },
+        { source: "/es/terms", has, destination: "/allegiant/es/terms" },
       ],
     };
   },
