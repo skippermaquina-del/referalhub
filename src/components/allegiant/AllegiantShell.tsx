@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { business, brandDatabase, copy, type Lang } from "@/data/allegiant";
 import { trackBookingConversion, trackPhoneClick } from "@/lib/ads";
 import { OfferBalloon } from "./OfferBalloon";
+import { legalLabels } from "@/data/allegiant-legal";
 
 type BookingContextValue = { openBook: () => void };
 
@@ -231,6 +232,12 @@ export function AllegiantShell({
             {status === "error" && (
               <p className="al-form-error" role="alert">{b.error}</p>
             )}
+            <p className="al-form-consent">
+              {legalLabels[lang].consent}{" "}
+              <a href={lang === "es" ? "/allegiant/es/privacy" : "/allegiant/privacy"}>{legalLabels[lang].privacy}</a>
+              {" · "}
+              <a href={lang === "es" ? "/allegiant/es/terms#sms" : "/allegiant/terms#sms"}>{legalLabels[lang].smsTerms}</a>
+            </p>
             <button type="submit" className="al-submit" disabled={status === "sending"}>
               {status === "sending" ? b.sending : b.send}
             </button>
