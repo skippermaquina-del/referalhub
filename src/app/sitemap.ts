@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...pair("/allegiant", "/allegiant/es"),
     ...pair("/allegiant/tour", "/allegiant/es/tour"),
     ...pair("/allegiant/about", "/allegiant/es/about"),
+    ...pair("/allegiant/tools", "/allegiant/es/tools"),
     ...pair("/allegiant/blog", "/allegiant/es/blog"),
     ...pair("/allegiant/privacy", "/allegiant/es/privacy"),
     ...pair("/allegiant/terms", "/allegiant/es/terms"),
