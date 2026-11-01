@@ -125,6 +125,8 @@ export async function POST(request: Request) {
           time: field(a.preferredTime, 40),
           message: note.slice(0, 800),
           lang: a.language === "es" ? "es" : "en",
+          // Solo "sí" si la persona aceptó explícitamente recibir mensajes de texto.
+          smsConsent: a.smsConsent === true || a.smsConsent === "yes",
         }),
       }),
     );
