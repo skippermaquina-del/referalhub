@@ -17,6 +17,7 @@ export const business = {
    * perfil de Google Business esté verificado (ver `.env.example`). Mientras
    * tanto apuntan a una búsqueda, para que nunca sean un enlace roto.
    */
+  youtubeUrl: "https://www.youtube.com/channel/UCSnsOtm7you2qyHWN0erXRQ",
   reviewsUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_REVIEWS_URL ??
     "https://share.google/dUAHoST79DXRbFNId",
@@ -742,6 +743,7 @@ export const copy = {
       hours: "Monday–Friday, 9am–7pm · Saturday by special request",
       explore: "Explore",
       google: "View us on Google →",
+      youtube: "Watch us on YouTube →",
       mid: "Residential & Commercial · Licensed & Insured",
       legal: "Brand names are trademarks of their respective owners. Allegiant Appliances Inc is an independent service company and is not affiliated with, sponsored or authorized by these manufacturers.",
     },
@@ -884,6 +886,7 @@ export const copy = {
       hours: "Lunes a viernes, 9 a. m.–7 p. m. · Sábado por solicitud especial",
       explore: "Explorar",
       google: "Vernos en Google →",
+      youtube: "Vernos en YouTube →",
       mid: "Residencial y comercial · Con licencia y seguro",
       legal: "Los nombres de marca pertenecen a sus respectivos propietarios. Allegiant Appliances Inc es una empresa de servicio independiente y no está afiliada, patrocinada ni autorizada por estos fabricantes.",
     },
