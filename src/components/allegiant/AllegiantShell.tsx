@@ -232,8 +232,13 @@ export function AllegiantShell({
             {status === "error" && (
               <p className="al-form-error" role="alert">{b.error}</p>
             )}
+            {/* Aceptar mensajes de texto es opcional y la casilla viene desmarcada (requisito de los operadores). */}
+            <label className="al-form-check">
+              <input type="checkbox" name="smsConsent" value="yes" />
+              <span>{legalLabels[lang].smsOptIn}</span>
+            </label>
             <p className="al-form-consent">
-              {legalLabels[lang].consent}{" "}
+              {legalLabels[lang].callNote}{" "}
               <a href={lang === "es" ? "/allegiant/es/privacy" : "/allegiant/privacy"}>{legalLabels[lang].privacy}</a>
               {" · "}
               <a href={lang === "es" ? "/allegiant/es/terms#sms" : "/allegiant/terms#sms"}>{legalLabels[lang].smsTerms}</a>

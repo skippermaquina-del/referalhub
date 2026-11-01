@@ -16,7 +16,17 @@ const PHONE = "+1 (323) 578-4010";
 
 export const legalLabels: Record<
   Lang,
-  { privacy: string; terms: string; updatedLabel: string; backHome: string; consent: string; smsTerms: string }
+  {
+    privacy: string;
+    terms: string;
+    updatedLabel: string;
+    backHome: string;
+    /** Casilla opcional y desmarcada para aceptar mensajes de texto. */
+    smsOptIn: string;
+    /** Aviso bajo el formulario: enviar solo autoriza llamadas. */
+    callNote: string;
+    smsTerms: string;
+  }
 > = {
   en: {
     privacy: "Privacy Policy",
@@ -24,8 +34,9 @@ export const legalLabels: Record<
     updatedLabel: "Last updated",
     backHome: "Back to home",
     smsTerms: "SMS Terms",
-    consent:
-      "By submitting, you agree that Allegiant Appliances may call or text you at this number about your request. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.",
+    smsOptIn:
+      "Optional: text me updates about my request at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.",
+    callNote: "By submitting, you agree that Allegiant Appliances may call you at this number about your request.",
   },
   es: {
     privacy: "Política de privacidad",
@@ -33,8 +44,9 @@ export const legalLabels: Record<
     updatedLabel: "Última actualización",
     backHome: "Volver al inicio",
     smsTerms: "Términos de mensajes de texto",
-    consent:
-      "Al enviar, aceptas que Allegiant Appliances te llame o te escriba por mensaje de texto a este número sobre tu solicitud. La frecuencia varía. Pueden aplicar tarifas de mensajes y datos. Responde STOP para dejar de recibirlos o HELP para ayuda. El consentimiento no es condición para comprar.",
+    smsOptIn:
+      "Opcional: envíenme mensajes de texto sobre mi solicitud a este número. La frecuencia varía. Pueden aplicar tarifas de mensajes y datos. Responde STOP para dejar de recibirlos o HELP para ayuda. El consentimiento no es condición para comprar.",
+    callNote: "Al enviar, aceptas que Allegiant Appliances te llame a este número sobre tu solicitud.",
   },
 };
 
@@ -238,7 +250,7 @@ export const privacy: Record<Lang, Doc> = {
 export const terms: Record<Lang, Doc> = {
   en: {
     title: "Terms of Service & SMS Terms",
-    updated: "October 26, 2026",
+    updated: "November 1, 2026",
     intro:
       "These terms apply when you use allegiantappliance.com or contact Allegiant Appliances Inc (“Allegiant”) by form, phone or text. The SMS Terms in section 7 describe our text-message program.",
     sections: [
@@ -286,7 +298,7 @@ export const terms: Record<Lang, Doc> = {
         p: [
           "Program: Allegiant Appliances service text messages.",
           "What you will receive: messages about your service request, such as confirming we received it, scheduling and confirming appointments, callbacks, technician arrival and follow-up on the work. We do not send marketing texts under this program.",
-          "How you opt in: you opt in when you give us your mobile number on our booking form and agree to be contacted, or when you call or text us and ask us to reach you at that number. Consent to receive texts is not a condition of purchasing any goods or services.",
+          "How you opt in: only by checking the optional box “Optional: text me updates about my request at this number” on our booking form. The box is unchecked by default and you can send the form without checking it; in that case we only call you. Consent to receive texts is not a condition of purchasing any goods or services.",
           "Message frequency varies depending on your request. Message and data rates may apply.",
           `How to opt out: reply STOP to any message at any time, and we will stop texting you. You may get one final message confirming it. For help, reply HELP or call ${PHONE}.`,
           "Carriers and mobile network operators are not liable for delayed or undelivered messages. Messages are not available on every carrier.",
@@ -303,7 +315,7 @@ export const terms: Record<Lang, Doc> = {
   },
   es: {
     title: "Términos de servicio y de mensajes de texto",
-    updated: "26 de octubre de 2026",
+    updated: "1 de noviembre de 2026",
     intro:
       "Estos términos se aplican cuando usas allegiantappliance.com o contactas a Allegiant Appliances Inc (“Allegiant”) por formulario, teléfono o mensaje de texto. Los Términos de mensajes de texto, en la sección 7, describen nuestro programa de mensajes.",
     sections: [
@@ -351,7 +363,7 @@ export const terms: Record<Lang, Doc> = {
         p: [
           "Programa: mensajes de texto de servicio de Allegiant Appliances.",
           "Qué recibirás: mensajes sobre tu solicitud de servicio, como confirmar que la recibimos, programar y confirmar citas, devoluciones de llamada, llegada del técnico y seguimiento del trabajo. Este programa no envía mensajes de publicidad.",
-          "Cómo aceptas: aceptas cuando nos das tu número de celular en nuestro formulario de reserva y estás de acuerdo en que te contactemos, o cuando nos llamas o escribes y nos pides que te contactemos en ese número. Aceptar recibir mensajes no es condición para comprar ningún bien ni servicio.",
+          "Cómo aceptas: solo marcando la casilla opcional “Opcional: envíenme mensajes de texto sobre mi solicitud a este número” en nuestro formulario de reserva. La casilla viene desmarcada y puedes enviar el formulario sin marcarla; en ese caso solo te llamamos. Aceptar recibir mensajes no es condición para comprar ningún bien ni servicio.",
           "La frecuencia de los mensajes varía según tu solicitud. Pueden aplicar tarifas de mensajes y datos.",
           `Cómo dejar de recibirlos: responde STOP a cualquier mensaje en cualquier momento y dejaremos de escribirte. Puedes recibir un último mensaje que lo confirme. Para ayuda, responde HELP o llama al ${PHONE}.`,
           "Las operadoras y los proveedores de redes móviles no son responsables por mensajes retrasados o no entregados. Los mensajes no están disponibles en todas las operadoras.",
