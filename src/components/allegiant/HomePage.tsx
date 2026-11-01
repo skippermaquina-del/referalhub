@@ -2,6 +2,7 @@ import { business, copy, paths, serviceAreas, type Lang } from "@/data/allegiant
 import { legalLabels } from "@/data/allegiant-legal";
 import { AllegiantShell } from "./AllegiantShell";
 import { BrandSearch } from "./BrandSearch";
+import { ChannelVideo } from "./ChannelVideo";
 import { ContinuousCarousel } from "./ContinuousCarousel";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
@@ -143,20 +144,12 @@ export function HomePage({ lang }: { lang: Lang }) {
               <p style={{ margin: "28px 0 40px", fontSize: 20, lineHeight: 1.8, color: "var(--al-muted)" }}>
                 {t.video.p}
               </p>
-              <a className="al-btn-line" href={business.youtubeUrl} target="_blank" rel="noopener noreferrer">
+              <a className="al-btn-line" href={`https://youtu.be/${business.featuredVideoId}`} target="_blank" rel="noopener noreferrer">
                 {t.video.cta}
               </a>
             </div>
             <div style={{ gridColumn: "8 / span 5" }}>
-              <div className="al-video-frame">
-                <iframe
-                  src={`https://www.youtube-nocookie.com/embed/${business.featuredVideoId}?rel=0`}
-                  title={t.video.title}
-                  loading="lazy"
-                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+              <ChannelVideo label={t.video.title} sound={t.video.sound} />
             </div>
           </section>
 
