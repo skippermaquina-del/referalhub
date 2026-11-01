@@ -134,6 +134,32 @@ export function HomePage({ lang }: { lang: Lang }) {
 
           <ScanGallery lang={lang} />
 
+          <section className="al-section al-grid12 al-teaser al-video">
+            <div style={{ gridColumn: "1 / span 6" }}>
+              <div className="al-eyebrow">{t.video.eyebrow}</div>
+              <h2>
+                {t.video.h2a} <em>{t.video.h2b}</em>
+              </h2>
+              <p style={{ margin: "28px 0 40px", fontSize: 20, lineHeight: 1.8, color: "var(--al-muted)" }}>
+                {t.video.p}
+              </p>
+              <a className="al-btn-line" href={business.youtubeUrl} target="_blank" rel="noopener noreferrer">
+                {t.video.cta}
+              </a>
+            </div>
+            <div style={{ gridColumn: "8 / span 5" }}>
+              <div className="al-video-frame">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${business.featuredVideoId}?rel=0`}
+                  title={t.video.title}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </section>
+
           <section id="reviews" className="al-section al-grid12 al-reviews al-light al-tone-3">
             <div style={{ gridColumn: "1 / span 6" }}>
               <div className="al-eyebrow" style={{ marginBottom: 28 }}>{t.reviews.eyebrow}</div>
