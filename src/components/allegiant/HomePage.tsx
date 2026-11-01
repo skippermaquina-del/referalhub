@@ -26,6 +26,7 @@ function structuredData(lang: Lang) {
     telephone: business.phoneDisplay,
     areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
     knowsLanguage: ["en", "es"],
+    sameAs: [business.youtubeUrl],
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -266,6 +267,9 @@ export function HomePage({ lang }: { lang: Lang }) {
                 <a href={p.blog}>{t.nav.blog}</a>
                 <a href={business.reviewsUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--al-accent)" }}>
                   {t.footer.google}
+                </a>
+                <a href={business.youtubeUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--al-accent)" }}>
+                  {t.footer.youtube}
                 </a>
               </div>
             </div>
