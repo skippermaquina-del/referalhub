@@ -69,6 +69,10 @@ export async function POST(request: Request) {
   });
   const lang = body.lang === "es" ? "es" : "en";
 
+  // Casilla opcional de SMS. Solo cuenta como sí si la persona la marcó
+  // (formulario: "yes"; agente telefónico: true o "yes").
+  const smsConsent = body.smsConsent === "yes" || body.smsConsent === true;
+
   const digits = lead.phone.replace(/\D/g, "");
   if (!lead.name || digits.length < 7) {
     return Response.json({ ok: false, error: "invalid_fields" }, { status: 400 });
@@ -106,6 +110,7 @@ export async function POST(request: Request) {
     lead.zip ? `ZIP: ${lead.zip}` : null,
     lead.time ? `Preferred time: ${lead.time}` : null,
     notes ? `Notes: ${notes}` : null,
+    `Text consent: ${smsConsent ? "YES (box checked)" : "NO (box not checked, do not text)"}`,
     saved ? null : "NOT SAVED IN THE PANEL (database error). Keep this email.",
   ]
     .filter(Boolean)
@@ -148,7 +153,10 @@ export async function POST(request: Request) {
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, lead: { ...lead, lang, receivedAt: new Date().toISOString() } }),
+        body: JSON.stringify({
+          text,
+          lead: { ...lead, lang, smsConsent, receivedAt: new Date().toISOString() },
+        }),
         cache: "no-store",
       });
       if (!res.ok) console.warn(`[allegiant] webhook returned ${res.status}`);

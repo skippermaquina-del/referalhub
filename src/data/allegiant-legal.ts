@@ -25,7 +25,7 @@ export const legalLabels: Record<
     backHome: "Back to home",
     smsTerms: "SMS Terms",
     consent:
-      "By submitting, you agree that Allegiant Appliances may call or text you at this number about your request. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.",
+      "Yes, text me updates about my appliance request at the number I provided (optional). Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase or of requesting a visit.",
   },
   es: {
     privacy: "Política de privacidad",
@@ -34,7 +34,7 @@ export const legalLabels: Record<
     backHome: "Volver al inicio",
     smsTerms: "Términos de mensajes de texto",
     consent:
-      "Al enviar, aceptas que Allegiant Appliances te llame o te escriba por mensaje de texto a este número sobre tu solicitud. La frecuencia varía. Pueden aplicar tarifas de mensajes y datos. Responde STOP para dejar de recibirlos o HELP para ayuda. El consentimiento no es condición para comprar.",
+      "Sí, envíenme mensajes de texto sobre mi solicitud al número que proporcioné (opcional). La frecuencia varía. Pueden aplicar tarifas de mensajes y datos. Responde STOP para dejar de recibirlos o HELP para ayuda. El consentimiento no es condición para comprar ni para solicitar una visita.",
   },
 };
 

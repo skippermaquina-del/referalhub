@@ -232,8 +232,11 @@ export function AllegiantShell({
             {status === "error" && (
               <p className="al-form-error" role="alert">{b.error}</p>
             )}
+            <label className="al-form-consent al-form-check">
+              <input type="checkbox" name="smsConsent" value="yes" />
+              <span>{legalLabels[lang].consent}</span>
+            </label>
             <p className="al-form-consent">
-              {legalLabels[lang].consent}{" "}
               <a href={lang === "es" ? "/allegiant/es/privacy" : "/allegiant/privacy"}>{legalLabels[lang].privacy}</a>
               {" · "}
               <a href={lang === "es" ? "/allegiant/es/terms#sms" : "/allegiant/terms#sms"}>{legalLabels[lang].smsTerms}</a>
