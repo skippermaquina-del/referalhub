@@ -83,6 +83,12 @@ export function AdminPanel() {
 
     if (newStatus !== "confirmed" || !lead) return;
 
+    // Solo se escribe por SMS a quien marcó la casilla opcional del formulario.
+    if (!lead.message?.startsWith("[SMS OK]")) {
+      alert(`Lead aprobado. ${lead.name} no aceptó mensajes de texto: llámalo al ${lead.phone}.`);
+      return;
+    }
+
     setSendingSms(true);
     try {
       const smsResponse = await fetch("/api/allegiant/sms", {

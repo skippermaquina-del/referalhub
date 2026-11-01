@@ -3,6 +3,9 @@
  *
  * Entrega:
  * 1. Guarda la solicitud en Supabase (siempre, sin excepciones).
+ * La casilla opcional `smsConsent` del formulario se guarda como "[SMS OK]" al
+ * inicio de la nota; sin esa marca el panel no manda SMS.
+ *
  * 2. Si `RESEND_API_KEY` y `ALLEGIANT_NOTIFY_EMAIL` están configuradas, manda un
  *    correo a Vadim con la solicitud (vía Resend). Las urgentes del agente
  *    telefónico llevan "URGENT" en el asunto.
@@ -68,6 +71,9 @@ export async function POST(request: Request) {
     lead[field] = clean(body[field], limits[field]);
   });
   const lang = body.lang === "es" ? "es" : "en";
+  // Casilla opcional del formulario. Sin ella solo se llama, nunca se escribe por SMS.
+  const smsOk = body.smsConsent === "yes";
+  if (smsOk) lead.message = `[SMS OK] ${lead.message}`.trim().slice(0, limits.message);
 
   const digits = lead.phone.replace(/\D/g, "");
   if (!lead.name || digits.length < 7) {
@@ -97,7 +103,7 @@ export async function POST(request: Request) {
 
   // Aviso a Vadim (correo y webhook)
   const fromPhone = lead.message.startsWith("[PHONE AGENT]");
-  const notes = lead.message.replace(/^\[PHONE AGENT\]\s*/, "");
+  const notes = lead.message.replace(/^\[(PHONE AGENT|SMS OK)\]\s*/, "");
   const text = [
     `New Allegiant visit request (${lang.toUpperCase()})`,
     `Name: ${lead.name}`,
@@ -106,6 +112,7 @@ export async function POST(request: Request) {
     lead.zip ? `ZIP: ${lead.zip}` : null,
     lead.time ? `Preferred time: ${lead.time}` : null,
     notes ? `Notes: ${notes}` : null,
+    fromPhone ? null : `Texts OK: ${smsOk ? "yes" : "no (call only)"}`,
     saved ? null : "NOT SAVED IN THE PANEL (database error). Keep this email.",
   ]
     .filter(Boolean)

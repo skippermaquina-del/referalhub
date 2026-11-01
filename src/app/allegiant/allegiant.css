@@ -1551,6 +1551,23 @@ html:has(.allegiant) {
   line-height: 1.6;
   color: var(--al-faint);
 }
+.al-form-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--al-muted);
+  cursor: pointer;
+}
+.al-form-check input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #f26f21;
+  cursor: pointer;
+}
 .al-form-consent a {
   color: var(--al-muted);
   text-decoration: underline;
