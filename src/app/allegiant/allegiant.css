@@ -664,6 +664,21 @@ html:has(.allegiant) {
 .al-teaser em {
   color: var(--al-accent);
 }
+/* Short vertical del canal de YouTube. */
+.al-video-frame {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  aspect-ratio: 9 / 16;
+  border: 1px solid var(--al-line-2, #3a4a6e);
+  background: #000;
+}
+.al-video-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
 
 /* ---------- Preguntas frecuentes ---------- */
 

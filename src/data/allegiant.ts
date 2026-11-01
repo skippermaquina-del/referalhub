@@ -18,6 +18,8 @@ export const business = {
    * tanto apuntan a una búsqueda, para que nunca sean un enlace roto.
    */
   youtubeUrl: "https://www.youtube.com/channel/UCSnsOtm7you2qyHWN0erXRQ",
+  /** Short del canal que se muestra en la portada. */
+  featuredVideoId: "P9RhLXpqo6Y",
   reviewsUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_REVIEWS_URL ??
     "https://share.google/dUAHoST79DXRbFNId",
@@ -717,6 +719,14 @@ export const copy = {
         { n: "05", t: "Preventive care", p: "Scheduled maintenance for estates and commercial kitchens." },
       ],
     },
+    video: {
+      eyebrow: "On the job",
+      h2a: "See Vadim",
+      h2b: "at work.",
+      p: "Short clips from our YouTube channel. Subscribe for repair stories and simple maintenance tips for your appliances.",
+      cta: "Watch on YouTube",
+      title: "Allegiant Appliances on YouTube",
+    },
     tourTeaser: {
       eyebrow: "Home tour",
       h2a: "Walk through the house.",
@@ -859,6 +869,14 @@ export const copy = {
         { n: "04", t: "Lavandería", p: "Lavadoras y secadoras, del diagnóstico a la restauración." },
         { n: "05", t: "Cuidado preventivo", p: "Mantenimiento programado para residencias y cocinas comerciales." },
       ],
+    },
+    video: {
+      eyebrow: "En el trabajo",
+      h2a: "Mira a Vadim",
+      h2b: "en acción.",
+      p: "Videos cortos de nuestro canal de YouTube. Suscríbete para ver reparaciones y consejos sencillos de mantenimiento.",
+      cta: "Ver en YouTube",
+      title: "Allegiant Appliances en YouTube",
     },
     tourTeaser: {
       eyebrow: "Recorrido",
