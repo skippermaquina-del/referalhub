@@ -1860,3 +1860,377 @@ html:has(.allegiant) {
     gap: 6px;
   }
 }
+
+/* ---------- Herramientas: parte visual ---------- */
+
+.al-tools-wide {
+  max-width: 1040px;
+}
+.al-tools-sym {
+  display: grid;
+  grid-template-columns: minmax(240px, 340px) 1fr;
+  gap: 36px;
+  align-items: start;
+  margin-top: 8px;
+}
+.al-tools-sym > div:last-child > .al-tools-card:first-child,
+.al-tools-sym > div:last-child > .al-tools-urgent {
+  margin-top: 28px;
+}
+
+/* Plano técnico del aparato */
+.al-diagram {
+  position: sticky;
+  top: 110px;
+  margin: 28px 0 0;
+  padding: 10px;
+  aspect-ratio: 300 / 340;
+  overflow: hidden;
+  border: 1px solid #2a3b5e;
+  background:
+    linear-gradient(rgba(111, 140, 196, 0.12) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, rgba(111, 140, 196, 0.12) 1px, transparent 1px) 0 0 / 22px 22px,
+    radial-gradient(circle at 50% 40%, #13213f, #08101e 75%);
+  box-shadow: 0 24px 60px rgba(8, 16, 30, 0.35);
+}
+.al-diagram svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.al-diagram-scan {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 54px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(242, 111, 33, 0), rgba(242, 111, 33, 0.22));
+  border-bottom: 1px solid rgba(242, 111, 33, 0.7);
+  animation: al-diagram-sweep 5.5s linear infinite;
+}
+.al-diagram-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: al-diagram-pulse 1.7s ease-out infinite;
+}
+.al-diagram-spot {
+  animation: al-diagram-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.al-diagram-tag {
+  position: absolute;
+  transform: translateX(-50%);
+  max-width: 78%;
+  padding: 7px 11px;
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: center;
+  color: #f4efe6;
+  background: rgba(8, 16, 30, 0.92);
+  border: 1px solid #f26f21;
+  pointer-events: none;
+  animation: al-diagram-tagin 0.45s 0.15s ease both;
+}
+.al-diagram-tag small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f26f21;
+}
+@keyframes al-diagram-sweep {
+  from { transform: translateY(-60px); }
+  to { transform: translateY(420px); }
+}
+@keyframes al-diagram-pulse {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes al-diagram-pop {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+@keyframes al-diagram-tagin {
+  from { opacity: 0; margin-top: 8px; }
+  to { opacity: 1; margin-top: 0; }
+}
+
+/* Pasos con casilla y anillo de progreso */
+.al-tools-cardhead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.al-tools-cardhead h3 {
+  margin: 0;
+}
+.al-tools-cardhead small {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--al-muted);
+}
+.al-tools-ring {
+  flex: none;
+  width: 58px;
+  height: 58px;
+  color: var(--al-text);
+}
+.al-tools-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.al-tools-steps li {
+  animation: al-diagram-tagin 0.4s ease both;
+}
+.al-tools-steps li + li {
+  margin-top: 10px;
+}
+.al-tools-steps label,
+.al-tools-row label {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--al-muted);
+}
+.al-tools-steps label[data-done] > span:last-child,
+.al-tools-row[data-done] label > span:last-child {
+  opacity: 0.55;
+  text-decoration: line-through;
+  text-decoration-color: var(--al-accent);
+}
+.al-tools-steps input,
+.al-tools-row input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.al-tools-box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-top: 2px;
+  border: 1.5px solid var(--al-line-3, #3a4a6e);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.al-tools-box svg {
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+input:checked + .al-tools-box {
+  background: var(--al-accent);
+  border-color: var(--al-accent);
+  transform: scale(1.06);
+}
+input:checked + .al-tools-box svg {
+  opacity: 1;
+  transform: none;
+}
+input:focus-visible + .al-tools-box {
+  outline: 2px solid var(--al-accent);
+  outline-offset: 3px;
+}
+.al-tools-card[data-pulse] {
+  border-color: var(--al-accent);
+  animation: al-tools-glow 1.6s ease-in-out infinite;
+}
+@keyframes al-tools-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 111, 33, 0.35); }
+  50% { box-shadow: 0 0 0 12px rgba(242, 111, 33, 0); }
+}
+.al-tools-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  font-size: 15px;
+  color: var(--al-muted);
+}
+.al-tools-progress .al-brush-bar {
+  flex: 1 1 200px;
+}
+.al-tools-row label {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+}
+
+/* Bobina con polvo */
+.al-tools-stage {
+  margin: 36px 0 6px;
+  font-family: var(--font-al-serif), serif;
+  font-weight: 400;
+  font-size: 28px;
+}
+.al-brush {
+  margin-top: 6px;
+}
+.al-brush-stage {
+  position: relative;
+  aspect-ratio: 560 / 240;
+  overflow: hidden;
+  border: 1px solid #2a3b5e;
+  background: #0b1527;
+  box-shadow: 0 24px 60px rgba(8, 16, 30, 0.35);
+}
+.al-brush-coil,
+.al-brush-heat,
+.al-brush-dust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.al-brush-heat {
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 55%, rgba(255, 70, 30, 0.75), rgba(255, 70, 30, 0) 75%),
+    linear-gradient(rgba(255, 60, 20, 0.28), rgba(255, 60, 20, 0.28));
+  mix-blend-mode: screen;
+  transition: opacity 0.25s linear;
+  animation: al-brush-heat 2.4s ease-in-out infinite;
+}
+@keyframes al-brush-heat {
+  0%, 100% { filter: blur(0); }
+  50% { filter: blur(6px); }
+}
+.al-brush-dust {
+  cursor: grab;
+  touch-action: none;
+}
+.al-brush-stage[data-drawing] .al-brush-dust {
+  cursor: grabbing;
+}
+.al-brush-meter {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 0;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--al-faint);
+}
+.al-brush-meter strong {
+  min-width: 48px;
+  text-align: right;
+  font-size: 18px;
+  letter-spacing: 0;
+  color: var(--al-accent);
+}
+.al-brush-bar {
+  flex: 1;
+  height: 10px;
+  overflow: hidden;
+  background: rgba(120, 140, 185, 0.25);
+}
+.al-brush-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f26f21, #3bc98a);
+  transition: width 0.25s ease;
+}
+.al-tools-redo {
+  margin: 14px 0 0 24px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+.al-tools-result em {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-size: 14px;
+  color: var(--al-muted);
+}
+.al-tools-saved {
+  margin-top: 20px;
+  padding: 18px 22px;
+  border: 1px solid #3bc98a;
+  background: rgba(59, 201, 138, 0.1);
+  color: var(--al-text);
+  font-size: 18px;
+  animation: al-diagram-tagin 0.5s ease both;
+}
+
+@media (max-width: 860px) {
+  .al-tools-sym {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .al-diagram {
+    position: relative;
+    top: 0;
+    max-width: 300px;
+    margin: 24px auto 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-diagram-scan,
+  .al-diagram-ring,
+  .al-brush-heat,
+  .al-tools-card[data-pulse] {
+    animation: none;
+  }
+  .al-diagram-spot,
+  .al-diagram-tag,
+  .al-tools-steps li,
+  .al-tools-saved {
+    animation: none;
+  }
+}
+
+/* Herramientas: calor y guía paso a paso */
+.al-heat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--al-line-3);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--al-muted);
+}
+.al-heat-badge i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4ac28b;
+  transition: background 0.4s;
+}
+.al-heat-badge[data-heat="high"] i { background: #ff4a1e; box-shadow: 0 0 10px #ff4a1e; }
+.al-heat-badge[data-heat="mid"] i { background: #f2a21f; }
+.al-heat-badge strong { color: var(--al-text, #f4efe6); }
+.al-tools-guide { margin: 40px 0 28px; }
+.al-tools-guide h3 { margin: 0 0 8px; }
+.al-tools-chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 8px 0 0; padding: 0; }
+.al-tools-chips li { padding: 6px 12px; border: 1px solid var(--al-line-3); border-radius: 999px; font-size: 14px; }
+.al-tools-gsteps { list-style: none; margin: 16px 0; padding: 0; display: grid; gap: 10px; }
+.al-tools-gsteps > li { border: 1px solid var(--al-line-3); border-radius: 12px; background: var(--al-panel); }
+.al-tools-gsteps > li[data-open] { border-color: var(--al-accent); }
+.al-tools-gsteps > li > button {
+  display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px;
+  background: none; border: 0; color: inherit; text-align: left; cursor: pointer; font: inherit;
+}
+.al-tools-gsteps small { display: block; color: var(--al-faint); font-size: 12px; }
+.al-tools-gnum {
+  flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--al-line-3); font-weight: 600;
+}
+.al-tools-gsteps li[data-done] .al-tools-gnum { background: var(--al-accent); border-color: var(--al-accent); color: #08101e; }
+.al-tools-gbody { padding: 0 16px 16px 62px; display: grid; gap: 10px; justify-items: start; }
+.al-tools-gbody p { margin: 0; color: var(--al-muted); line-height: 1.6; }
+.al-tools-gcaution { border-left: 3px solid var(--al-accent); padding-left: 10px; }
+@media (max-width: 600px) { .al-tools-gbody { padding-left: 16px; } }

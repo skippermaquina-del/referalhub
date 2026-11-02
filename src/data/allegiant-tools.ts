@@ -37,6 +37,10 @@ type ToolsCopy = {
     callTitle: string;
     unplug: string;
     urgentTitle: string;
+    whereToLook: string;
+    progress: string;
+    tickHint: string;
+    allDone: string;
     list: Record<ApplianceId, Symptom[]>;
   };
   maintenance: {
@@ -46,6 +50,24 @@ type ToolsCopy = {
     list: Record<ApplianceId, MaintenanceTask[]>;
     proTitle: string;
     proText: string;
+    guide: {
+      title: string;
+      intro: string;
+      toolsTitle: string;
+      tools: string[];
+      step: string;
+      minutes: string;
+      cautionTitle: string;
+      markDone: string;
+      done: string;
+      next: string;
+      finish: string;
+      builtin: string;
+      steps: { title: string; text: string; caution?: string; min: number }[];
+    };
+    progress: string;
+    allDone: string;
+    startOver: string;
   };
   energy: {
     title: string;
@@ -54,8 +76,13 @@ type ToolsCopy = {
     types: { standard: string; builtin: string };
     age: string;
     ages: { new: string; mid: string; old: string };
-    coils: string;
-    coilsOpts: { recent: string; year: string; never: string };
+    months: string;
+    monthsUnit: string;
+    monthsHint: string;
+    pets: string;
+    petsOpts: { none: string; one: string; many: string };
+    heat: string;
+    heatLevels: { high: string; mid: string; ok: string };
     rate: string;
     rateHint: string;
     yearly: string;
@@ -63,6 +90,14 @@ type ToolsCopy = {
     extraNone: string;
     perYear: string;
     note: string;
+    stageTitle: string;
+    stageHint: string;
+    cleanBtn: string;
+    dustBtn: string;
+    dustLabel: string;
+    loadLabel: string;
+    savedTitle: string;
+    coilsAlt: string;
   };
   cta: { title: string; text: string; book: string; call: string };
 };
@@ -93,6 +128,10 @@ const en: ToolsCopy = {
     callTitle: "Call a technician if",
     unplug: "Unplug the appliance (or switch off its breaker) before touching anything inside or behind it.",
     urgentTitle: "Stop. Do this first",
+    whereToLook: "Where to look",
+    progress: "{n} of {m} checked",
+    tickHint: "Tick each step as you go.",
+    allDone: "All checked. Still not right? Vadim can take it from here.",
     list: {
       fridge: [
         {
@@ -309,6 +348,30 @@ const en: ToolsCopy = {
     },
     proTitle: "Prefer a professional to do it?",
     proText: "Vadim does a full maintenance visit for your kitchen and laundry appliances, with 20% off maintenance labor.",
+    guide: {
+      title: "Step by step: clean your refrigerator coils",
+      intro: "About 20 minutes. Tap a step, do it, and mark it complete.",
+      toolsTitle: "What you'll need",
+      tools: ["Coil brush", "Vacuum with a narrow crevice tool", "Flashlight", "Work gloves"],
+      step: "Step {n} of {m}",
+      minutes: "about {n} min",
+      cautionTitle: "Careful",
+      markDone: "Mark step complete",
+      done: "Done",
+      next: "Next step",
+      finish: "All steps done",
+      builtin: "Built-in models (Sub-Zero, Thermador, Viking…) may have the coils behind a lower grille or a top panel. Check your manual, and if you're not sure how it opens, call us instead of forcing it.",
+      steps: [
+        { title: "Disconnect the power", min: 2, text: "Unplug the refrigerator or switch off its breaker. The fans can start on their own.", caution: "Don't skip this one, even if you're only going to brush." },
+        { title: "Remove the grille", min: 3, text: "Most lower grilles pull off or release with a couple of screws. Set it aside and shine the flashlight in to see the coils." },
+        { title: "Brush along the fins", min: 10, text: "Brush gently, moving the brush in the same direction as the fins.", caution: "Don't force the brush across the fins. It can bend them and block the airflow." },
+        { title: "Vacuum the loosened dust", min: 5, text: "Use the narrow tool to pull out the lint you loosened, including the floor under the unit." , caution: "Keep the vacuum tip away from the fan blades and any wiring." },
+        { title: "Check and put it back", min: 3, text: "Look at the fan for lint, put the grille back and plug it in. Give it 24 hours to settle at its set temperature." },
+      ],
+    },
+    progress: "{n} of {m} done",
+    allDone: "All done. Come back on the schedule above.",
+    startOver: "Start over",
   },
   energy: {
     title: "What does your refrigerator cost to run?",
@@ -318,8 +381,13 @@ const en: ToolsCopy = {
     types: { standard: "Standard full-size", builtin: "Built-in (Sub-Zero, Thermador, Viking…)" },
     age: "Age",
     ages: { new: "Under 10 years", mid: "10–15 years", old: "Over 15 years" },
-    coils: "Coils last cleaned",
-    coilsOpts: { recent: "In the last year", year: "1–2 years ago", never: "Never / I don't know" },
+    months: "Months since the coils were last cleaned",
+    monthsUnit: "mo",
+    monthsHint: "30 or more means never or not sure.",
+    pets: "Pets that shed",
+    petsOpts: { none: "None", one: "1 pet", many: "2 or more" },
+    heat: "Heat at the coils",
+    heatLevels: { high: "High", mid: "Warm", ok: "Normal" },
     rate: "Electricity rate ($/kWh)",
     rateHint: "Check your LADWP or SCE bill. Many LA homes pay about $0.30.",
     yearly: "Estimated cost to run",
@@ -328,6 +396,14 @@ const en: ToolsCopy = {
     perYear: "/year",
     note:
       "Rough estimate only. Real usage depends on your model, settings, how often the door opens and the temperature in your kitchen. For your model's exact number, check the yellow EnergyGuide label or the manufacturer's specs.",
+    stageTitle: "Clean the coils yourself",
+    stageHint: "Drag across the dust to brush it away and watch the numbers drop.",
+    cleanBtn: "Clean them for me",
+    dustBtn: "Add the dust back",
+    dustLabel: "Dust removed",
+    loadLabel: "Extra energy from dust",
+    savedTitle: "A clean-coil habit could save about",
+    coilsAlt: "Refrigerator condenser coils covered in dust. Drag to brush the dust away.",
   },
   cta: {
     title: "Still not right?",
@@ -363,6 +439,10 @@ const es: ToolsCopy = {
     callTitle: "Llama a un técnico si",
     unplug: "Desconecta el aparato (o apaga su breaker) antes de tocar nada adentro o atrás.",
     urgentTitle: "Detente. Haz esto primero",
+    whereToLook: "Dónde mirar",
+    progress: "{n} de {m} revisados",
+    tickHint: "Marca cada paso a medida que lo haces.",
+    allDone: "Todo revisado. ¿Sigue sin funcionar bien? Vadim se encarga desde aquí.",
     list: {
       fridge: [
         {
@@ -579,6 +659,30 @@ const es: ToolsCopy = {
     },
     proTitle: "¿Prefieres que lo haga un profesional?",
     proText: "Vadim hace una visita completa de mantenimiento de tu cocina y lavandería, con 20% de descuento en la mano de obra de mantenimiento.",
+    guide: {
+      title: "Paso a paso: limpia las bobinas de tu refrigerador",
+      intro: "Unos 20 minutos. Toca un paso, hazlo y márcalo como completo.",
+      toolsTitle: "Lo que vas a necesitar",
+      tools: ["Cepillo para bobinas", "Aspiradora con boquilla angosta", "Linterna", "Guantes de trabajo"],
+      step: "Paso {n} de {m}",
+      minutes: "unos {n} min",
+      cautionTitle: "Ojo",
+      markDone: "Marcar paso completo",
+      done: "Hecho",
+      next: "Siguiente paso",
+      finish: "Todos los pasos hechos",
+      builtin: "En los modelos empotrados (Sub-Zero, Thermador, Viking…) las bobinas pueden estar tras una rejilla de abajo o un panel de arriba. Revisa tu manual y, si no estás seguro de cómo se abre, llámanos en vez de forzarlo.",
+      steps: [
+        { title: "Desconecta la corriente", min: 2, text: "Desenchufa el refrigerador o apaga su breaker. Los ventiladores pueden arrancar solos.", caution: "No te saltes este paso, aunque solo vayas a cepillar." },
+        { title: "Quita la rejilla", min: 3, text: "La mayoría de las rejillas de abajo se sacan tirando o con un par de tornillos. Déjala a un lado y alumbra con la linterna para ver las bobinas." },
+        { title: "Cepilla siguiendo las aletas", min: 10, text: "Cepilla con suavidad, moviendo el cepillo en la misma dirección que las aletas.", caution: "No fuerces el cepillo de lado a través de las aletas. Se pueden doblar y tapar el paso del aire." },
+        { title: "Aspira el polvo suelto", min: 5, text: "Usa la boquilla angosta para sacar la pelusa que soltaste, también la del piso bajo el aparato.", caution: "Mantén la boquilla lejos de las aspas del ventilador y de los cables." },
+        { title: "Revisa y vuelve a poner todo", min: 3, text: "Mira que el ventilador no tenga pelusa, pon la rejilla y enchufa. Dale 24 horas para estabilizarse en su temperatura." },
+      ],
+    },
+    progress: "{n} de {m} hechas",
+    allDone: "Todo hecho. Vuelve según el calendario de arriba.",
+    startOver: "Empezar de nuevo",
   },
   energy: {
     title: "¿Cuánto gasta tu refrigerador?",
@@ -588,8 +692,13 @@ const es: ToolsCopy = {
     types: { standard: "Estándar, tamaño completo", builtin: "Empotrado (Sub-Zero, Thermador, Viking…)" },
     age: "Antigüedad",
     ages: { new: "Menos de 10 años", mid: "10–15 años", old: "Más de 15 años" },
-    coils: "Última limpieza de bobinas",
-    coilsOpts: { recent: "En el último año", year: "Hace 1–2 años", never: "Nunca / No sé" },
+    months: "Meses desde la última limpieza de las bobinas",
+    monthsUnit: "m",
+    monthsHint: "30 o más significa nunca o no estoy seguro.",
+    pets: "Mascotas que sueltan pelo",
+    petsOpts: { none: "Ninguna", one: "1 mascota", many: "2 o más" },
+    heat: "Calor en las bobinas",
+    heatLevels: { high: "Alto", mid: "Tibio", ok: "Normal" },
     rate: "Tarifa de luz ($/kWh)",
     rateHint: "Revisa tu factura de LADWP o SCE. Muchas casas en Los Ángeles pagan cerca de $0.30.",
     yearly: "Costo estimado de funcionamiento",
@@ -598,6 +707,14 @@ const es: ToolsCopy = {
     perYear: "/año",
     note:
       "Es solo un cálculo aproximado. El consumo real depende del modelo, la configuración, cuántas veces se abre la puerta y la temperatura de tu cocina. Para el dato exacto de tu modelo, revisa la etiqueta amarilla EnergyGuide o las especificaciones del fabricante.",
+    stageTitle: "Limpia tú mismo las bobinas",
+    stageHint: "Arrastra sobre el polvo para quitarlo y mira cómo bajan los números.",
+    cleanBtn: "Límpialas por mí",
+    dustBtn: "Volver a poner el polvo",
+    dustLabel: "Polvo quitado",
+    loadLabel: "Energía extra por el polvo",
+    savedTitle: "Acostumbrarte a limpiarlas podría ahorrarte cerca de",
+    coilsAlt: "Bobinas del condensador del refrigerador cubiertas de polvo. Arrastra para quitar el polvo.",
   },
   cta: {
     title: "¿Sigue sin funcionar bien?",
@@ -618,6 +735,49 @@ export const toolsCopy: Record<Lang, ToolsCopy> = { en, es };
 export const energyModel = {
   baseKwh: { standard: 500, builtin: 700 },
   ageFactor: { new: 1, mid: 1.25, old: 1.6 },
-  coilsExtra: { recent: [0, 0], year: [0.05, 0.1], never: [0.1, 0.2] },
+  /** Extra consumo con las bobinas completamente sucias: rango, no una cifra exacta. */
+  dustExtra: { lo: 0.12, hi: 0.235 },
+  /** Meses que tardan las bobinas en llegar al máximo de polvo, y lo que suma cada mascota. */
+  monthsToFull: 30,
+  petDust: [0, 0.12, 0.22],
   defaultRate: 0.3,
 } as const;
+
+/** Nivel de polvo (0–1) según meses desde la última limpieza y mascotas (0, 1, 2+). */
+export const dustLevel = (months: number, pets: number) =>
+  Math.min(1, Math.max(0.05, months / energyModel.monthsToFull + energyModel.petDust[Math.min(2, pets)]));
+
+export type Spot = { x: number; y: number; part: Record<Lang, string> };
+
+/**
+ * Puntos del plano animado (viewBox 300x340) donde mirar para cada síntoma.
+ * Solo se muestran los que tienen entrada; el resto del síntoma se lee igual.
+ */
+export const diagramSpots: Record<ApplianceId, Record<string, Spot>> = {
+  fridge: {
+    warm: { x: 124, y: 306, part: { en: "Condenser coils behind the bottom grille", es: "Bobinas del condensador tras la rejilla de abajo" } },
+    leak: { x: 150, y: 196, part: { en: "Defrost drain on the freezer floor", es: "Desagüe de descongelación en el piso del congelador" } },
+    ice: { x: 187, y: 76, part: { en: "Ice maker", es: "Máquina de hielo" } },
+    noise: { x: 190, y: 306, part: { en: "Compressor and fan, at the bottom back", es: "Compresor y ventilador, atrás abajo" } },
+  },
+  dishwasher: {
+    dirty: { x: 150, y: 135, part: { en: "Spray arm holes", es: "Agujeros del brazo rociador" } },
+    water: { x: 150, y: 290, part: { en: "Filter and drain at the bottom", es: "Filtro y desagüe del fondo" } },
+    leak: { x: 46, y: 210, part: { en: "Door gasket", es: "Goma de la puerta" } },
+  },
+  washer: {
+    drain: { x: 150, y: 295, part: { en: "Pump filter panel, bottom front", es: "Tapa del filtro de la bomba, abajo al frente" } },
+    smell: { x: 150, y: 116, part: { en: "Door gasket folds", es: "Pliegues de la goma de la puerta" } },
+    shake: { x: 72, y: 320, part: { en: "Leveling feet", es: "Patas niveladoras" } },
+  },
+  dryer: {
+    slow: { x: 280, y: 57, part: { en: "Vent duct to the outside", es: "Ducto de ventilación hacia afuera" } },
+    noheat: { x: 150, y: 295, part: { en: "Heating element (behind the front panel)", es: "Resistencia (tras el panel frontal)" } },
+    burn: { x: 150, y: 190, part: { en: "Drum, lint and vent path", es: "Tambor, pelusa y ducto" } },
+  },
+  oven: {
+    heat: { x: 150, y: 236, part: { en: "Bake element or igniter", es: "Resistencia o encendedor del horno" } },
+    burner: { x: 82, y: 52, part: { en: "Burner cap and ports", es: "Tapa y orificios del quemador" } },
+    gas: { x: 246, y: 308, part: { en: "Gas connection at the back", es: "Conexión de gas atrás" } },
+  },
+};
