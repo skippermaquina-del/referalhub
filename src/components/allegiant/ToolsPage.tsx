@@ -7,6 +7,7 @@ import { ApplianceDiagram } from "./ApplianceDiagram";
 import { useBooking } from "./AllegiantShell";
 import { CoilBrush } from "./CoilBrush";
 import { KineticBackdrop } from "./KineticBackdrop";
+import { RefrigerationCycle } from "./RefrigerationCycle";
 
 type Tab = "symptoms" | "maintenance" | "energy";
 const APPLIANCES: ApplianceId[] = ["fridge", "dishwasher", "washer", "dryer", "oven"];
@@ -57,6 +58,10 @@ export function ToolsPage({ lang }: { lang: Lang }) {
         {tab === "symptoms" && <Symptoms lang={lang} />}
         {tab === "maintenance" && <Maintenance lang={lang} />}
         {tab === "energy" && <Energy lang={lang} />}
+      </section>
+
+      <section className="al-section al-tools-cycle">
+        <RefrigerationCycle lang={lang} />
       </section>
 
       <Cta lang={lang} />

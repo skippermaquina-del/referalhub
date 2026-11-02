@@ -99,6 +99,22 @@ type ToolsCopy = {
     savedTitle: string;
     coilsAlt: string;
   };
+  cycle: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    alt: string;
+    hotLabel: string;
+    coldLabel: string;
+    parts: { compressor: string; condenser: string; valve: string; evaporator: string };
+    steps: { name: string; text: string }[];
+    dirtyBtn: string;
+    cleanBtn: string;
+    dirtyNote: string;
+    cleanNote: string;
+    heatOut: string;
+    coldIn: string;
+  };
   cta: { title: string; text: string; book: string; call: string };
 };
 
@@ -404,6 +420,27 @@ const en: ToolsCopy = {
     loadLabel: "Extra energy from dust",
     savedTitle: "A clean-coil habit could save about",
     coilsAlt: "Refrigerator condenser coils covered in dust. Drag to brush the dust away.",
+  },
+  cycle: {
+    eyebrow: "How it works",
+    title: "A refrigerator doesn't make cold. It moves heat out.",
+    intro: "The refrigerant loops round and round: it picks up heat inside the fridge and drops it at the coils behind or under it. That's why those coils must be able to breathe.",
+    alt: "Animated diagram of the refrigeration cycle: compressor, condenser, expansion valve and evaporator connected in a loop.",
+    hotLabel: "hot side",
+    coldLabel: "cold side",
+    parts: { compressor: "Compressor", condenser: "Condenser coils", valve: "Expansion valve", evaporator: "Evaporator" },
+    steps: [
+      { name: "Evaporator", text: "The cold refrigerant soaks up heat from inside the fridge. The food stays cold; the refrigerant warms up." },
+      { name: "Compressor", text: "It squeezes the refrigerant, which raises its pressure and temperature so it can shed heat." },
+      { name: "Condenser coils", text: "The hot refrigerant gives its heat to the room air. This is the part that gets dusty." },
+      { name: "Expansion valve", text: "The pressure drops, the refrigerant turns cold again, and the loop starts over." },
+    ],
+    dirtyBtn: "Cover the coils with dust",
+    cleanBtn: "Clean the coils",
+    dirtyNote: "With dusty coils the heat can't leave easily. The compressor runs longer to make up for it, which uses more energy and wears it out sooner.",
+    cleanNote: "With clean coils the heat leaves freely and the compressor can rest.",
+    heatOut: "heat out",
+    coldIn: "heat in",
   },
   cta: {
     title: "Still not right?",
@@ -715,6 +752,27 @@ const es: ToolsCopy = {
     loadLabel: "Energía extra por el polvo",
     savedTitle: "Acostumbrarte a limpiarlas podría ahorrarte cerca de",
     coilsAlt: "Bobinas del condensador del refrigerador cubiertas de polvo. Arrastra para quitar el polvo.",
+  },
+  cycle: {
+    eyebrow: "Cómo funciona",
+    title: "Un refrigerador no fabrica frío. Saca el calor.",
+    intro: "El refrigerante da vueltas sin parar: recoge el calor de adentro y lo suelta en las bobinas de atrás o de abajo. Por eso esas bobinas tienen que poder respirar.",
+    alt: "Diagrama animado del ciclo de refrigeración: compresor, condensador, válvula de expansión y evaporador conectados en un circuito.",
+    hotLabel: "lado caliente",
+    coldLabel: "lado frío",
+    parts: { compressor: "Compresor", condenser: "Bobinas del condensador", valve: "Válvula de expansión", evaporator: "Evaporador" },
+    steps: [
+      { name: "Evaporador", text: "El refrigerante frío absorbe el calor del interior. La comida sigue fría; el refrigerante se calienta." },
+      { name: "Compresor", text: "Aprieta el refrigerante: sube su presión y su temperatura para poder soltar el calor." },
+      { name: "Bobinas del condensador", text: "El refrigerante caliente entrega su calor al aire de la cocina. Esta es la parte que se llena de polvo." },
+      { name: "Válvula de expansión", text: "Baja la presión, el refrigerante vuelve a enfriarse y el ciclo empieza otra vez." },
+    ],
+    dirtyBtn: "Cubrir las bobinas de polvo",
+    cleanBtn: "Limpiar las bobinas",
+    dirtyNote: "Con las bobinas sucias el calor no sale con facilidad. El compresor trabaja más tiempo para compensar, gasta más energía y se desgasta antes.",
+    cleanNote: "Con las bobinas limpias el calor sale libre y el compresor puede descansar.",
+    heatOut: "calor sale",
+    coldIn: "calor entra",
   },
   cta: {
     title: "¿Sigue sin funcionar bien?",

@@ -2317,3 +2317,96 @@ input:focus-visible + .al-tools-box {
 .al-k-host > .al-teaser {
   background: transparent;
 }
+
+/* Ciclo de refrigeración animado */
+.al-tools-cycle {
+  padding-top: 40px;
+}
+.al-cycle {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+.al-cycle-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 24px;
+}
+.al-cycle-head p {
+  color: var(--al-muted);
+  line-height: 1.7;
+}
+.al-cycle-fig {
+  margin: 0;
+  background: #08101e;
+  border-radius: 18px;
+  padding: 18px 12px 14px;
+  box-shadow: 0 24px 60px rgba(8, 16, 30, 0.25);
+}
+.al-cycle-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.al-cycle-fig figcaption {
+  color: #e1e6f0;
+  text-align: center;
+  padding: 10px 18px 4px;
+  line-height: 1.6;
+  min-height: 3.4em;
+}
+.al-cy-room-cold { fill: rgba(70, 150, 255, 0.1); stroke: rgba(111, 211, 255, 0.35); }
+.al-cy-room-hot { fill: rgba(255, 110, 50, 0.1); stroke: rgba(255, 122, 47, 0.4); transition: fill 0.5s; }
+.al-cycle[data-dirty] .al-cy-room-hot { fill: rgba(255, 60, 30, 0.26); }
+.al-cy-tag { font: 600 15px var(--font-al-sans), sans-serif; letter-spacing: 0.14em; text-transform: uppercase; text-anchor: middle; }
+.al-cy-tag-cold { fill: #6fd3ff; }
+.al-cy-tag-hot { fill: #ff9a5c; }
+.al-cy-label { font: 600 17px var(--font-al-sans), sans-serif; fill: #f4efe6; text-anchor: middle; }
+.al-cy-mini { font: 500 14px var(--font-al-sans), sans-serif; text-anchor: middle; }
+.al-cy-mini-hot { fill: #ff9a5c; }
+.al-cy-mini-cold { fill: #6fd3ff; }
+.al-cy-pipe { fill: none; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; opacity: 0.35; }
+.al-cy-pipe-hot { stroke: url(#al-cy-hot); }
+.al-cy-pipe-cold { stroke: url(#al-cy-cold); }
+.al-cy-flow { fill: none; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 2 22; animation: al-cy-flow 2s linear infinite; }
+.al-cy-flow-hot { stroke: #ffd1a8; }
+.al-cy-flow-cold { stroke: #d6f2ff; }
+@keyframes al-cy-flow { to { stroke-dashoffset: -96; } }
+.al-cy-dot-hot { fill: #ff5a2e; filter: drop-shadow(0 0 7px #ff5a2e); }
+.al-cy-dot-cold { fill: #6fd3ff; filter: drop-shadow(0 0 7px #6fd3ff); }
+.al-cycle[data-dirty] .al-cy-dot-hot { fill: #ff2a1e; }
+.al-cy-comp { fill: #16264a; stroke: #f26f21; stroke-width: 3; }
+.al-cy-comp-core { fill: none; stroke: #ffb27a; stroke-width: 3; animation: al-k-spin 2.2s linear infinite; }
+.al-cycle[data-dirty] .al-cy-comp-core { animation-duration: 0.9s; }
+.al-cycle[data-dirty] .al-cy-comp { stroke: #ff3d2e; filter: drop-shadow(0 0 12px rgba(255, 61, 46, 0.8)); }
+.al-cy-valve { fill: #16264a; stroke: #f4efe6; stroke-width: 3; stroke-linejoin: round; }
+.al-cy-valve-stem { stroke: #f4efe6; stroke-width: 3; }
+.al-cy-valve-knob { fill: #f26f21; }
+.al-cy-dust circle { fill: #8a8478; opacity: 0; transition: opacity 0.6s; }
+.al-cycle[data-dirty] .al-cy-dust circle { opacity: 0.8; }
+.al-cy-heat path, .al-cy-cool path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; animation: al-cy-pulse 1.8s ease-in-out infinite; }
+.al-cy-heat path { stroke: #ff9a5c; }
+.al-cy-cool path { stroke: #6fd3ff; }
+.al-cycle[data-dirty] .al-cy-heat path { opacity: 0.25; animation: none; }
+@keyframes al-cy-pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+.al-cycle-btn { display: block; margin: 20px auto 0; }
+.al-cycle-steps {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.al-cycle-steps li { display: flex; gap: 12px; align-items: flex-start; }
+.al-cycle-steps li > span {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--al-accent); color: #08101e; font-weight: 700;
+}
+.al-cycle-steps strong { display: block; margin-bottom: 4px; }
+.al-cycle-steps p { margin: 0; color: var(--al-muted); font-size: 15px; line-height: 1.55; }
+@media (max-width: 860px) { .al-cycle-steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .al-cycle-steps { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .al-cy-flow, .al-cy-comp-core, .al-cy-heat path, .al-cy-cool path { animation: none; }
+  .al-cy-dot { display: none; }
+}
