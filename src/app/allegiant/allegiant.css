@@ -2508,3 +2508,26 @@ input:focus-visible + .al-tools-box {
   margin-left: auto;
   margin-right: auto;
 }
+
+.al-work-job {
+  padding-top: 40px;
+  padding-bottom: 24px;
+}
+.al-work-videobox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.al-work-videobox .al-video-frame {
+  width: 100%;
+  max-width: 340px;
+}
+.al-work-privacy {
+  padding: 0 8%;
+}
+
+.al-work-privacy {
+  text-align: center;
+}
