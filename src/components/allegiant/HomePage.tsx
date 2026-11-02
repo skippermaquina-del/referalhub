@@ -284,6 +284,8 @@ export function HomePage({ lang }: { lang: Lang }) {
                 <a href={p.tour}>{t.nav.tour}</a>
                 <a href={p.about}>{t.nav.about}</a>
                 <a href={p.blog}>{t.nav.blog}</a>
+                <a href={p.tools}>{t.footer.tools}</a>
+                <a href={p.work}>{t.footer.work}</a>
                 <a href={business.reviewsUrl} target="_blank" rel="noopener noreferrer" style={{ color: "var(--al-accent)" }}>
                   {t.footer.google}
                 </a>

@@ -9,7 +9,19 @@ const RM = "(prefers-reduced-motion: reduce)";
  * muestra una miniatura borrosa): arranca en silencio y en bucle cuando entra
  * en pantalla y se pausa al salir. Con movimiento reducido no arranca solo.
  */
-export function ChannelVideo({ label, sound }: { label: string; sound: { on: string; off: string } }) {
+export function ChannelVideo({
+  label,
+  sound,
+  src = "/allegiant/video/short.mp4",
+  poster = "/allegiant/video/short-poster.jpg",
+  hasSound = true,
+}: {
+  label: string;
+  sound: { on: string; off: string };
+  src?: string;
+  poster?: string;
+  hasSound?: boolean;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
 
@@ -39,20 +51,39 @@ export function ChannelVideo({ label, sound }: { label: string; sound: { on: str
     <div className="al-video-frame">
       <video
         ref={ref}
-        src="/allegiant/video/short.mp4"
-        poster="/allegiant/video/short-poster.jpg"
+        src={src}
+        poster={poster}
         muted
         loop
         playsInline
         preload="none"
         aria-label={label}
       />
-      <button type="button" className="al-video-sound" onClick={toggleSound} aria-label={muted ? sound.on : sound.off}>
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f4efe6" strokeWidth="1.8" aria-hidden="true">
-          <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z" />
-          {muted ? <path d="M17 9 L22 14 M22 9 L17 14" /> : <path d="M17 8 Q20 12 17 16 M19.5 6 Q24 12 19.5 18" />}
-        </svg>
-      </button>
+      {hasSound && (
+        <button
+          type="button"
+          className="al-video-sound"
+          onClick={toggleSound}
+          aria-label={muted ? sound.on : sound.off}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="#f4efe6"
+            strokeWidth="1.8"
+            aria-hidden="true"
+          >
+            <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z" />
+            {muted ? (
+              <path d="M17 9 L22 14 M22 9 L17 14" />
+            ) : (
+              <path d="M17 8 Q20 12 17 16 M19.5 6 Q24 12 19.5 18" />
+            )}
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
