@@ -6,6 +6,7 @@ import { dustLevel, energyModel, toolsCopy, type ApplianceId } from "@/data/alle
 import { ApplianceDiagram } from "./ApplianceDiagram";
 import { useBooking } from "./AllegiantShell";
 import { CoilBrush } from "./CoilBrush";
+import { KineticBackdrop } from "./KineticBackdrop";
 
 type Tab = "symptoms" | "maintenance" | "energy";
 const APPLIANCES: ApplianceId[] = ["fridge", "dishwasher", "washer", "dryer", "oven"];
@@ -35,8 +36,9 @@ export function ToolsPage({ lang }: { lang: Lang }) {
   const [tab, setTab] = useState<Tab>("symptoms");
 
   return (
-    <>
-      <section className="al-section al-light al-tone-2 al-tools-hero">
+    <div className="al-light al-k-host">
+      <KineticBackdrop />
+      <section className="al-section al-tools-hero">
         <div className="al-eyebrow">{t.eyebrow}</div>
         <h1 className="al-h2">
           {t.h1a} <em>{t.h1b}</em>
@@ -51,14 +53,14 @@ export function ToolsPage({ lang }: { lang: Lang }) {
         </div>
       </section>
 
-      <section className="al-section al-light al-tools-body">
+      <section className="al-section al-tools-body">
         {tab === "symptoms" && <Symptoms lang={lang} />}
         {tab === "maintenance" && <Maintenance lang={lang} />}
         {tab === "energy" && <Energy lang={lang} />}
       </section>
 
       <Cta lang={lang} />
-    </>
+    </div>
   );
 }
 

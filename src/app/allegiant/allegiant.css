@@ -2234,3 +2234,86 @@ input:focus-visible + .al-tools-box {
 .al-tools-gbody p { margin: 0; color: var(--al-muted); line-height: 1.6; }
 .al-tools-gcaution { border-left: 3px solid var(--al-accent); padding-left: 10px; }
 @media (max-width: 600px) { .al-tools-gbody { padding-left: 16px; } }
+
+/* Máquina de movimiento perpetuo de fondo */
+.al-k-host {
+  position: relative;
+  overflow: hidden;
+  background: #fbf9f4;
+}
+.al-k-host > section {
+  position: relative;
+  z-index: 1;
+}
+.al-k {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  color: #1c2f58;
+}
+.al-k-sec {
+  flex: none;
+  width: max(100%, 980px);
+  height: auto;
+  opacity: 0.17;
+}
+.al-k-spin {
+  animation: al-k-spin 20s linear infinite;
+}
+@keyframes al-k-spin {
+  to { transform: rotate(360deg); }
+}
+.al-k-ball {
+  fill: #f26f21;
+  stroke: none;
+}
+.al-k-glow {
+  filter: drop-shadow(0 0 8px rgba(242, 111, 33, 0.9));
+}
+.al-k-swing-l {
+  animation: al-k-swing-l 2.2s ease-in-out infinite;
+}
+.al-k-swing-r {
+  animation: al-k-swing-r 2.2s ease-in-out infinite;
+}
+@keyframes al-k-swing-l {
+  0% { transform: rotate(-32deg); animation-timing-function: ease-in; }
+  25% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes al-k-swing-r {
+  0%, 50% { transform: rotate(0deg); }
+  75% { transform: rotate(32deg); animation-timing-function: ease-out; }
+  100% { transform: rotate(0deg); }
+}
+.al-k-front {
+  position: absolute;
+  z-index: 2;
+  top: 18%;
+  left: -230px;
+  width: 560px;
+  pointer-events: none;
+  color: #f26f21;
+  opacity: 0.09;
+  filter: blur(1.5px);
+}
+@media (max-width: 860px) {
+  .al-k-front { width: 380px; left: -190px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .al-k-spin,
+  .al-k-swing-l,
+  .al-k-swing-r {
+    animation: none;
+  }
+  .al-k animateMotion { display: none; }
+}
+
+.al-k-host > .al-teaser {
+  background: transparent;
+}
