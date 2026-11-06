@@ -11,11 +11,14 @@
  *    telefónico llevan "URGENT" en el asunto.
  * 3. Si `ALLEGIANT_LEADS_WEBHOOK_URL` está configurada, envía un aviso al webhook
  *    (compatible con Slack, Make, Zapier, etc.).
- * 4. Devuelve {ok: true} si la solicitud se guardó en la BD o llegó por correo.
+ * 4. Si la solicitud viene de una llamada de Jessica y Twilio está configurado
+ *    (ver `@/lib/allegiant-sms`), manda además un SMS al celular de Vadim.
+ * 5. Devuelve {ok: true} si la solicitud se guardó en la BD o llegó por correo o SMS.
  *    Si la BD falla, el correo avisa que no quedó en el panel.
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { phoneCallSms, textVadim } from "@/lib/allegiant-sms";
 
 const WEBHOOK_URL = process.env.ALLEGIANT_LEADS_WEBHOOK_URL;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -164,9 +167,26 @@ export async function POST(request: Request) {
     }
   }
 
+  // SMS a Vadim por cada solicitud que deja Jessica en una llamada.
+  let texted = false;
+  if (fromPhone) {
+    texted = await textVadim(
+      phoneCallSms({
+        name: lead.name,
+        phone: lead.phone,
+        appliance: lead.appliance,
+        brand: lead.brand,
+        zip: lead.zip,
+        time: lead.time,
+        notes,
+        urgent: lead.message.includes("URGENT."),
+      }),
+    );
+  }
+
   // Solo es un error si la solicitud no llegó a ningún lado.
-  if (!saved && !emailed) {
+  if (!saved && !emailed && !texted) {
     return Response.json({ ok: false, error: "database_error" }, { status: 500 });
   }
-  return Response.json({ ok: true, saved, emailed });
+  return Response.json({ ok: true, saved, emailed, texted });
 }
