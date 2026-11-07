@@ -99,9 +99,14 @@ export async function POST(request: Request) {
       continue;
     }
 
+    // A veces la ficha llega vacía (la llamada se corta o interrumpen a Jessica).
+    // Igual se guarda el número para que Vadim reciba el aviso y pueda devolver la llamada.
+    const empty = !field(a.name, 80) && !field(a.address, 200) && !field(a.appliance, 60);
+
     const urgent = a.urgency === "urgent";
     const note = [
       "[PHONE AGENT]",
+      empty ? "Details did not come through, call back." : null,
       urgent ? "URGENT." : null,
       a.customerType && a.customerType !== "residential" ? `Customer: ${str(a.customerType, 30)}.` : null,
       field(a.address, 200) ? `Address: ${field(a.address, 200)}.` : null,
@@ -119,7 +124,7 @@ export async function POST(request: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: str(a.name, 80),
+          name: str(a.name, 80) || "Phone caller",
           phone,
           appliance: field(a.appliance, 60),
           brand: field(a.brand, 60),
@@ -133,9 +138,11 @@ export async function POST(request: Request) {
 
     results.push({
       toolCallId: tool.id,
-      result: response.ok
-        ? "Saved. Tell the caller Vadim will call them back, thank them and end the call."
-        : "NOT SAVED because of a system error. Apologize, say Vadim will still follow up, and end the call politely.",
+      result: !response.ok
+        ? "NOT SAVED because of a system error. Apologize, say Vadim will still follow up, and end the call politely."
+        : empty
+          ? "Only the phone number was saved: the details did not come through. Call save_lead again now with every field you collected (name, appliance, address, urgency, language and the rest)."
+          : "Saved. Tell the caller Vadim will call them back, thank them and end the call.",
     });
   }
 
