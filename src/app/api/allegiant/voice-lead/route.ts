@@ -107,6 +107,8 @@ export async function POST(request: Request) {
       field(a.address, 200) ? `Address: ${field(a.address, 200)}.` : null,
       field(a.symptom, 250) ? `Problem: ${field(a.symptom, 250)}.` : null,
       a.offerMentioned === true ? "Mentioned the 20% offer." : null,
+      // Cómo nos conoció (Google, YouTube, recomendación...), si lo dijo.
+      field(a.source, 60) ? `Heard about us: ${field(a.source, 60)}.` : null,
       str(a.notes, 200) || null,
     ]
       .filter(Boolean)
