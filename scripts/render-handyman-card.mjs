@@ -15,7 +15,7 @@
 // and Chrome clamps small window sizes). Override the binary with CHROME_PATH.
 
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, rmSync, globSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import QRCode from "qrcode";
@@ -50,7 +50,7 @@ const PAGES = [
 function chromePath() {
   const candidates = [
     process.env.CHROME_PATH,
-    "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+    ...globSync("/opt/pw-browsers/chromium*/chrome-linux/chrome").sort().reverse(),
     "/usr/bin/google-chrome",
     "/usr/bin/chromium",
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
