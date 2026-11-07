@@ -37,6 +37,7 @@ const YT = {
   washer: "https://youtube.com/shorts/sB2_JuerxQA",
   dryer: "https://youtube.com/shorts/yLjWFJUj6iM",
   kenmore: "https://youtube.com/shorts/ohxK0PZt5EA",
+  fridge: "https://youtube.com/shorts/QDYl2X1mliA",
 };
 
 const en: WorkCopy = {
@@ -115,6 +116,7 @@ const en: WorkCopy = {
       videoLabel: "Short video of a real refrigerator service call",
       videoSrc: "/allegiant/video/fridge-short.mp4",
       poster: "/allegiant/video/fridge-short-poster.jpg",
+      youtube: YT.fridge,
       note: {
         title: "Two easy things to keep up",
         text: "Clean condenser coils let the heat out, so the compressor doesn't have to work as hard. The water filter is usually replaced about every six months, or when the filter light comes on; check your manual for your model.",
@@ -205,6 +207,7 @@ const es: WorkCopy = {
       videoLabel: "Video corto de un servicio real a un refrigerador",
       videoSrc: "/allegiant/video/fridge-short.mp4",
       poster: "/allegiant/video/fridge-short-poster.jpg",
+      youtube: YT.fridge,
       note: {
         title: "Dos cosas fáciles de mantener",
         text: "Con las bobinas del condensador limpias, el calor sale y el compresor trabaja menos. El filtro de agua se suele cambiar más o menos cada seis meses, o cuando se enciende la luz del filtro; revisa el manual de tu modelo.",
