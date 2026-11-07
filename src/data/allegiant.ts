@@ -17,7 +17,7 @@ export const business = {
    * perfil de Google Business esté verificado (ver `.env.example`). Mientras
    * tanto apuntan a una búsqueda, para que nunca sean un enlace roto.
    */
-  youtubeUrl: "https://www.youtube.com/channel/UCSnsOtm7you2qyHWN0erXRQ",
+  youtubeUrl: "https://www.youtube.com/@AllegiantAppliances",
   /** Short del canal que se muestra en la portada. */
   featuredVideoId: "P9RhLXpqo6Y",
   reviewsUrl:
