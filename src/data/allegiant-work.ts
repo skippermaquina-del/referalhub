@@ -35,7 +35,7 @@ const f = (n: number) => `/allegiant/work/fridge-${n}.jpg`;
 /** Shorts del canal. Ver business.youtubeUrl. */
 const YT = {
   washer: "https://youtube.com/shorts/sB2_JuerxQA",
-  dryer: "https://youtube.com/shorts/yLjWFJUj6iM",
+  dryer: "https://youtube.com/shorts/QM-UsOjmxT4",
   kenmore: "https://youtube.com/shorts/ohxK0PZt5EA",
   fridge: "https://youtube.com/shorts/QDYl2X1mliA",
 };
