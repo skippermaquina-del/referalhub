@@ -8,8 +8,8 @@ export type WorkJob = {
   videoLabel: string;
   videoSrc: string;
   poster: string;
-  /** Short en YouTube. */
-  youtube: string;
+  /** Short en YouTube (si ya está publicado). */
+  youtube?: string;
   note: { title: string; text: string };
   photos: WorkPhoto[];
 };
@@ -29,11 +29,15 @@ type WorkCopy = {
 
 const w = (n: number) => `/allegiant/work/job-${n}.jpg`;
 const d = (n: number) => `/allegiant/work/dryer-${n}.jpg`;
+const k = (n: number) => `/allegiant/work/kenmore-${n}.jpg`;
+const f = (n: number) => `/allegiant/work/fridge-${n}.jpg`;
 
 /** Shorts del canal. Ver business.youtubeUrl. */
 const YT = {
   washer: "https://youtube.com/shorts/sB2_JuerxQA",
-  dryer: "https://youtube.com/shorts/yLjWFJUj6iM",
+  dryer: "https://youtube.com/shorts/QM-UsOjmxT4",
+  kenmore: "https://youtube.com/shorts/ohxK0PZt5EA",
+  fridge: "https://youtube.com/shorts/QDYl2X1mliA",
 };
 
 const en: WorkCopy = {
@@ -88,6 +92,40 @@ const en: WorkCopy = {
         { src: d(1), alt: "The inside of a Samsung dryer with the drum roller and a duct packed with lint.", caption: "Inside the dryer: lint packed around the duct." },
         { src: d(2), alt: "Close-up of a dryer drum roller with a blue hub next to the drum shaft.", caption: "The drum roller, up close." },
         { src: d(3), alt: "Close-up of the dryer's drum shaft and a roller below it, covered in lint.", caption: "Close-up of the roller area." },
+      ],
+    },
+    {
+      id: "kenmore",
+      title: "Kenmore Elite washer: the drain pump",
+      videoLabel: "Short video of a real Kenmore washer repair",
+      videoSrc: "/allegiant/video/kenmore-short.mp4",
+      poster: "/allegiant/video/kenmore-short-poster.jpg",
+      youtube: YT.kenmore,
+      note: {
+        title: "Washer not draining?",
+        text: "On a front-load washer, the drain pump is one of the first parts we check when water stays in the drum. Sometimes it only needs cleaning; sometimes it needs replacing. Vadim tells you which before doing the work.",
+      },
+      photos: [
+        { src: k(1), alt: "Kenmore Elite front-load washer with the lower access panel removed.", caption: "Lower access panel off, ready to work on the pump." },
+        { src: k(2), alt: "A technician's hand holding a drain pump in front of the Kenmore washer, which is powered on.", caption: "The drain pump, out, with the washer powered on behind it." },
+      ],
+    },
+    {
+      id: "fridge",
+      title: "Samsung refrigerator: water filter and condenser",
+      videoLabel: "Short video of a real refrigerator service call",
+      videoSrc: "/allegiant/video/fridge-short.mp4",
+      poster: "/allegiant/video/fridge-short-poster.jpg",
+      youtube: YT.fridge,
+      note: {
+        title: "Two easy things to keep up",
+        text: "Clean condenser coils let the heat out, so the compressor doesn't have to work as hard. The water filter is usually replaced about every six months, or when the filter light comes on; check your manual for your model.",
+      },
+      photos: [
+        { src: f(1), alt: "Samsung refrigerator control panel showing 37°F for the fridge and 0°F for the freezer, with the filter light on.", caption: "Control panel: fridge at 37°F, freezer at 0°F, filter light on." },
+        { src: f(2), alt: "A technician checks the temperature inside a Samsung refrigerator with an infrared thermometer.", caption: "Checking the temperature inside." },
+        { src: f(3), alt: "The ice bin of a Samsung refrigerator, full of ice, set in a kitchen sink.", caption: "The ice bin." },
+        { src: f(4), alt: "Condenser coils and fan under a Samsung refrigerator with the cover off.", caption: "Condenser coils and fan, under the fridge." },
       ],
     },
   ],
@@ -145,6 +183,40 @@ const es: WorkCopy = {
         { src: d(1), alt: "El interior de una secadora Samsung con el rodillo del tambor y un ducto llenos de pelusa.", caption: "Dentro de la secadora: pelusa apelmazada alrededor del ducto." },
         { src: d(2), alt: "Primer plano de un rodillo del tambor de la secadora, con el centro azul, junto al eje del tambor.", caption: "El rodillo del tambor, de cerca." },
         { src: d(3), alt: "Primer plano del eje del tambor de la secadora y un rodillo debajo, cubiertos de pelusa.", caption: "Primer plano de la zona del rodillo." },
+      ],
+    },
+    {
+      id: "kenmore",
+      title: "Lavadora Kenmore Elite: la bomba de desagüe",
+      videoLabel: "Video corto de la reparación real de una lavadora Kenmore",
+      videoSrc: "/allegiant/video/kenmore-short.mp4",
+      poster: "/allegiant/video/kenmore-short-poster.jpg",
+      youtube: YT.kenmore,
+      note: {
+        title: "¿La lavadora no desagua?",
+        text: "En una lavadora de carga frontal, la bomba de desagüe es una de las primeras piezas que revisamos cuando el agua se queda en el tambor. A veces basta con limpiarla; otras hay que cambiarla. Vadim te dice cuál es el caso antes de hacer el trabajo.",
+      },
+      photos: [
+        { src: k(1), alt: "Lavadora Kenmore Elite de carga frontal con la tapa de acceso inferior quitada.", caption: "Sin la tapa de abajo, lista para trabajar en la bomba." },
+        { src: k(2), alt: "La mano de un técnico sostiene una bomba de desagüe delante de la lavadora Kenmore encendida.", caption: "La bomba de desagüe, fuera, con la lavadora encendida detrás." },
+      ],
+    },
+    {
+      id: "fridge",
+      title: "Refrigerador Samsung: filtro de agua y condensador",
+      videoLabel: "Video corto de un servicio real a un refrigerador",
+      videoSrc: "/allegiant/video/fridge-short.mp4",
+      poster: "/allegiant/video/fridge-short-poster.jpg",
+      youtube: YT.fridge,
+      note: {
+        title: "Dos cosas fáciles de mantener",
+        text: "Con las bobinas del condensador limpias, el calor sale y el compresor trabaja menos. El filtro de agua se suele cambiar más o menos cada seis meses, o cuando se enciende la luz del filtro; revisa el manual de tu modelo.",
+      },
+      photos: [
+        { src: f(1), alt: "Panel de control de un refrigerador Samsung con 37°F en el refrigerador y 0°F en el congelador, y la luz del filtro encendida.", caption: "Panel: refrigerador a 37°F, congelador a 0°F, luz del filtro encendida." },
+        { src: f(2), alt: "Un técnico mide la temperatura dentro de un refrigerador Samsung con un termómetro infrarrojo.", caption: "Midiendo la temperatura por dentro." },
+        { src: f(3), alt: "La bandeja de hielo de un refrigerador Samsung, llena de hielo, en el fregadero.", caption: "La bandeja del hielo." },
+        { src: f(4), alt: "Bobinas del condensador y ventilador debajo de un refrigerador Samsung, sin la tapa.", caption: "Bobinas del condensador y ventilador, debajo del refrigerador." },
       ],
     },
   ],
