@@ -2500,7 +2500,8 @@ input:focus-visible + .al-tools-box {
   .al-work-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 520px) {
-  .al-work-grid { grid-template-columns: 1fr; }
+  .al-work-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .al-work-grid figcaption { font-size: 13px; }
 }
 
 .al-work-gallery .al-tools-note {

@@ -43,14 +43,16 @@ export function WorkPage({ lang }: { lang: Lang }) {
               poster={job.poster}
               hasSound={false}
             />
-            <a
-              className="al-link"
-              href={job.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.watchYoutube}
-            </a>
+            {job.youtube && (
+              <a
+                className="al-link"
+                href={job.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.watchYoutube}
+              </a>
+            )}
           </div>
           <div className="al-work-grid">
             {job.photos.map((p) => (
