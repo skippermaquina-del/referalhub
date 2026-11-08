@@ -1,12 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { useState } from "react";
 
 type Lead = {
   id: string;
@@ -31,35 +25,45 @@ export function AdminPanel() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [sendingSms, setSendingSms] = useState(false);
 
-  // Admin code (hardcoded for MVP, should be env var)
-  const ADMIN_CODE = "1234";
+  // El código se comprueba en el servidor (ALLEGIANT_ADMIN_CODE); aquí solo se guarda mientras la página está abierta.
+  const [adminCode, setAdminCode] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (code === ADMIN_CODE) {
-      setAuthenticated(true);
-      setCode("");
-      fetchLeads();
-    } else {
-      alert("Código incorrecto");
+  const fetchLeads = async (codeToUse: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/allegiant/admin/leads", {
+        headers: { "x-admin-code": codeToUse },
+        cache: "no-store",
+      });
+      if (res.status === 401) {
+        alert("Código incorrecto");
+        return false;
+      }
+      if (res.status === 503) {
+        alert("El panel no está configurado en Vercel (ALLEGIANT_ADMIN_CODE o SUPABASE_SERVICE_ROLE_KEY).");
+        return false;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as { leads: Lead[] };
+      setLeads(data.leads);
+      return true;
+    } catch (err) {
+      console.error("Error fetching leads:", err);
+      alert("No se pudieron cargar las solicitudes. Prueba de nuevo.");
+      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchLeads = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .eq("status", "pending_approval")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setLeads(data || []);
-    } catch (err) {
-      console.error("Error fetching leads:", err);
-    } finally {
-      setLoading(false);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const entered = code.trim();
+    if (!entered) return;
+    if (await fetchLeads(entered)) {
+      setAdminCode(entered);
+      setAuthenticated(true);
+      setCode("");
     }
   };
 
@@ -67,12 +71,12 @@ export function AdminPanel() {
     const lead = leads.find((l) => l.id === leadId) ?? selectedLead;
     try {
       // Primero se guarda el estado: un fallo del SMS no debe bloquear la aprobación.
-      const { error } = await supabase
-        .from("leads")
-        .update({ status: newStatus })
-        .eq("id", leadId);
-
-      if (error) throw error;
+      const res = await fetch("/api/allegiant/admin/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "x-admin-code": adminCode },
+        body: JSON.stringify({ id: leadId, status: newStatus }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setLeads((prev) => prev.filter((l) => l.id !== leadId));
       if (selectedLead?.id === leadId) setSelectedLead(null);
     } catch (err) {
@@ -93,7 +97,7 @@ export function AdminPanel() {
     try {
       const smsResponse = await fetch("/api/allegiant/sms", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-admin-code": adminCode },
         body: JSON.stringify({
           leadName: lead.name,
           leadPhone: lead.phone,
