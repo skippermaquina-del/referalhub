@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
+import { adminAuthorized, adminDenied } from "@/lib/allegiant-admin";
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -7,6 +8,9 @@ const fromNumber = process.env.TWILIO_PHONE_NUMBER;
 const toNumber = process.env.TWILIO_VADIM_PHONE;
 
 export async function POST(req: NextRequest) {
+  // Solo el panel (con su código) puede mandar SMS: si no, cualquiera gastaría saldo de Twilio.
+  if (!adminAuthorized(req)) return adminDenied();
+
   // Validar credenciales
   if (!accountSid || !authToken || !fromNumber || !toNumber) {
     return NextResponse.json(
