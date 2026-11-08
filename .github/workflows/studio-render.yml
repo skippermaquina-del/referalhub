@@ -1,0 +1,57 @@
+name: Studio render
+
+# Arma los Shorts que se suben en /studio. Se dispara al subir (desde la web)
+# y, por si acaso, revisa la cola cada 10 minutos.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+
+concurrency:
+  group: studio-render
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/studio
+            src/data/studio-projects.ts
+            public/studio
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the queue
+        id: queue
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          n=$(curl -sf "$SUPABASE_URL/rest/v1/studio_jobs?select=id&status=eq.uploaded&limit=5" \
+            -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+            | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).length))")
+          echo "Jobs waiting: $n"
+          echo "count=$n" >> "$GITHUB_OUTPUT"
+
+      - name: Install ffmpeg and fonts
+        if: steps.queue.outputs.count != '0'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-inter libheif-examples imagemagick > /dev/null
+
+      - name: Render queued Shorts
+        if: steps.queue.outputs.count != '0'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/studio/render.mjs
