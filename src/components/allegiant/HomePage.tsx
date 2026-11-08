@@ -243,6 +243,10 @@ export function HomePage({ lang }: { lang: Lang }) {
             <div className="al-contact-actions">
               <a className="al-phone-btn" href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>
             </div>
+            <p className="al-contact-assistant">
+              {t.contact.assistant}{" "}
+              <a href={`tel:${business.assistantPhoneHref}`}>{business.assistantPhoneDisplay}</a>
+            </p>
           </section>
         </main>
 
@@ -266,6 +270,9 @@ export function HomePage({ lang }: { lang: Lang }) {
               <div className="al-footer-col-title">{t.footer.contact}</div>
               <div className="al-footer-links">
                 <a href={`tel:${business.phoneHref}`}>{business.phoneDisplay}</a>
+                <a href={`tel:${business.assistantPhoneHref}`}>
+                  {t.footer.assistant}: {business.assistantPhoneDisplay}
+                </a>
                 <span>{t.footer.where}</span>
                 <span>{t.footer.hours}</span>
                 {business.registrationNumber && (

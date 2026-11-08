@@ -12,6 +12,9 @@ export const business = {
   name: "Allegiant Appliances Inc",
   phoneDisplay: "+1 (323) 578-4010",
   phoneHref: "+13235784010",
+  /** Jessica, la asistente virtual: atiende las 24 horas y le pasa la solicitud a Vadim. */
+  assistantPhoneDisplay: "+1 (855) 517-1764",
+  assistantPhoneHref: "+18555171764",
   /**
    * Enlaces de Google. Se sobreescriben con variables de entorno cuando el
    * perfil de Google Business esté verificado (ver `.env.example`). Mientras
@@ -748,11 +751,16 @@ export const copy = {
       ],
     },
     areas: { eyebrow: "Service areas", h2: "From the hills to the coast, and beyond." },
-    contact: { eyebrow: "By appointment", h2: "Let us take care of it." },
+    contact: {
+      eyebrow: "By appointment",
+      h2: "Let us take care of it.",
+      assistant: "Outside business hours? Jessica, our virtual assistant, answers 24/7:",
+    },
     footer: {
       blurb: "Expert repair and maintenance for fine appliances and everyday homes, across Greater Los Angeles.",
       contact: "Contact",
       where: "Serving Greater Los Angeles",
+      assistant: "24/7 assistant",
       hours: "Monday–Friday, 9am–7pm · Saturday by special request",
       explore: "Explore",
       google: "View us on Google →",
@@ -902,11 +910,16 @@ export const copy = {
       ],
     },
     areas: { eyebrow: "Zonas de servicio", h2: "De las colinas a la costa, y más allá." },
-    contact: { eyebrow: "Con cita previa", h2: "Permítanos encargarnos." },
+    contact: {
+      eyebrow: "Con cita previa",
+      h2: "Permítanos encargarnos.",
+      assistant: "¿Fuera de horario? Jessica, nuestra asistente virtual, atiende las 24 horas:",
+    },
     footer: {
       blurb: "Reparación y mantenimiento expertos para electrodomésticos finos y hogares de todos los días, en todo el Gran Los Ángeles.",
       contact: "Contacto",
       where: "Servicio en el Gran Los Ángeles",
+      assistant: "Asistente 24 h",
       hours: "Lunes a viernes, 9 a. m.–7 p. m. · Sábado por solicitud especial",
       explore: "Explorar",
       google: "Vernos en Google →",

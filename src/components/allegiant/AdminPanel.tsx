@@ -171,7 +171,7 @@ export function AdminPanel() {
         Solicitudes pendientes: <strong>{leads.length}</strong>
       </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
         {/* Lista de solicitudes */}
         <div>
           <h2>Pendientes de aprobación</h2>
@@ -181,25 +181,48 @@ export function AdminPanel() {
             <p style={{ color: "#666" }}>No hay solicitudes pendientes</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {leads.map((lead) => (
-                <div
-                  key={lead.id}
-                  onClick={() => setSelectedLead(lead)}
-                  style={{
-                    padding: "12px",
-                    border: selectedLead?.id === lead.id ? "2px solid #f97316" : "1px solid #ddd",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    backgroundColor: selectedLead?.id === lead.id ? "#fff8f3" : "white",
-                  }}
-                >
-                  <div style={{ fontWeight: "bold" }}>{lead.name}</div>
-                  <div style={{ fontSize: "14px", color: "#666" }}>{lead.phone}</div>
-                  <div style={{ fontSize: "12px", color: "#999" }}>
-                    {new Date(lead.created_at).toLocaleDateString("es-AR")}
+              {leads.map((lead) => {
+                const fromPhone = lead.message?.startsWith("[PHONE AGENT]");
+                const note = (lead.message ?? "").replace(/^\[(PHONE AGENT|SMS OK)\]\s*/, "");
+                const device = [lead.appliance, lead.brand].filter((v) => v && v !== "not given").join(" · ");
+                return (
+                  <div
+                    key={lead.id}
+                    onClick={() => setSelectedLead(lead)}
+                    style={{
+                      padding: "14px",
+                      border: selectedLead?.id === lead.id ? "2px solid #f97316" : "1px solid #ddd",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      backgroundColor: selectedLead?.id === lead.id ? "#fff8f3" : "white",
+                      color: "#1f2937",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", alignItems: "baseline" }}>
+                      <span style={{ fontWeight: 700, fontSize: "17px", color: "#1c2f58" }}>{lead.name}</span>
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          padding: "2px 8px",
+                          borderRadius: "10px",
+                          backgroundColor: fromPhone ? "#e0e7ff" : "#fef3c7",
+                          color: fromPhone ? "#1e3a8a" : "#92400e",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {fromPhone ? "Llamada (Jessica)" : "Formulario web"}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "14px", color: "#4b5563", marginTop: "4px" }}>
+                      {lead.phone} · {new Date(lead.created_at).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })}
+                    </div>
+                    {device && (
+                      <div style={{ fontSize: "15px", fontWeight: 600, marginTop: "6px", textTransform: "capitalize" }}>{device}</div>
+                    )}
+                    {note && <div style={{ fontSize: "14px", lineHeight: 1.5, marginTop: "4px" }}>{note}</div>}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
