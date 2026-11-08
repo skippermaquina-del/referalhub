@@ -64,6 +64,9 @@ function parseToolCall(tc: Json): { id: string; name: string; args: Json } {
   return { id: str(tc.id, 80), name: str(fn.name ?? tc.name, 60), args: (args ?? {}) as Json };
 }
 
+// Llamadas que ya mandaron una ficha vacía (en memoria; basta para cortar reintentos seguidos).
+const emptyCalls = new Set<string>();
+
 export async function POST(request: Request) {
   if (!authorized(request)) {
     return Response.json({ error: "unauthorized" }, { status: SECRET ? 401 : 503 });
@@ -102,6 +105,19 @@ export async function POST(request: Request) {
     // A veces la ficha llega vacía (la llamada se corta o interrumpen a Jessica).
     // Igual se guarda el número para que Vadim reciba el aviso y pueda devolver la llamada.
     const empty = !field(a.name, 80) && !field(a.address, 200) && !field(a.appliance, 60);
+    // Si Jessica repite la ficha vacía en la misma llamada, no se manda otro SMS.
+    const callId = str(call?.id, 80);
+    if (empty && callId && emptyCalls.has(callId)) {
+      results.push({
+        toolCallId: tool.id,
+        result: "Already saved. Do not call save_lead again. Tell the caller Vadim will call them back, thank them and end the call.",
+      });
+      continue;
+    }
+    if (empty && callId) {
+      if (emptyCalls.size > 500) emptyCalls.clear();
+      emptyCalls.add(callId);
+    }
 
     const urgent = a.urgency === "urgent";
     const note = [
@@ -141,7 +157,7 @@ export async function POST(request: Request) {
       result: !response.ok
         ? "NOT SAVED because of a system error. Apologize, say Vadim will still follow up, and end the call politely."
         : empty
-          ? "Only the phone number was saved: the details did not come through. Call save_lead again now with every field you collected (name, appliance, address, urgency, language and the rest)."
+          ? "Saved the phone number. Do not call save_lead again. Tell the caller Vadim will call them back, thank them and end the call."
           : "Saved. Tell the caller Vadim will call them back, thank them and end the call.",
     });
   }
