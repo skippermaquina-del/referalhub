@@ -12,7 +12,9 @@
  * Reglas del video:
  *   - Fotos: 3 s cada una con un acercamiento lento.
  *   - Videos: hasta 6 s cada uno, sin el audio original.
- *   - La nota aparece arriba en el primer plano.
+ *   - La nota se reparte en subtítulos grandes, una frase por plano.
+ *   - Logo arriba y franja con teléfono y web abajo en todos los planos.
+ *   - Transiciones con movimiento y música del proyecto.
  *   - Al final, 3,5 s de tarjeta con logo, nombre, teléfono y web del negocio.
  *   - Como máximo 10 archivos, para que el Short quede corto.
  */
@@ -104,62 +106,115 @@ function escapePath(p) {
   return p.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
 }
 
-function captionFilter(captionFile, project) {
-  if (!captionFile) return "";
-  const box = project.primary.replace("#", "0x");
-  return (
-    `,drawtext=fontfile='${escapePath(FONT_BOLD)}':textfile='${escapePath(captionFile)}':` +
-    `fontsize=62:fontcolor=white:line_spacing=14:x=(w-text_w)/2:y=190:` +
-    `box=1:boxcolor=${box}@0.88:boxborderw=34`
-  );
+const hex = (c) => c.replace("#", "0x");
+const TRANSITION = 0.35;
+const TRANSITIONS = ["slideleft", "smoothup", "circleopen", "wipeleft", "slideup", "radial"];
+const BAR_H = 210;
+
+/** Divide la nota en frases cortas: una por plano. */
+export function captionChunks(note) {
+  const sentences = note
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.replace(/[.]+$/, "").trim())
+    .filter(Boolean);
+  const chunks = [];
+  for (const s of sentences) {
+    const words = s.split(" ");
+    if (s.length <= 40) {
+      chunks.push(s);
+      continue;
+    }
+    for (let i = 0; i < words.length; i += 6) chunks.push(words.slice(i, i + 6).join(" "));
+  }
+  return chunks;
 }
 
-function fades(d) {
-  return `,fade=t=in:st=0:d=0.25,fade=t=out:st=${(d - 0.25).toFixed(2)}:d=0.25`;
+/** Texto en un archivo (drawtext lo lee de ahí para no pelear con comillas y dos puntos). */
+function textFile(work, name, text) {
+  const f = join(work, `${name}.txt`);
+  writeFileSync(f, text);
+  return escapePath(f);
+}
+
+/**
+ * Lo que va encima de cada plano: logo y nombre arriba, subtítulo grande, y la
+ * franja de abajo con teléfono y web. Entrada: [0:v] ya en 1080x1920; [1:v] = logo.
+ */
+function overlayGraph(project, work, i, caption) {
+  const bold = escapePath(FONT_BOLD);
+  const medium = escapePath(FONT_MEDIUM);
+  const parts = [
+    `[1:v]scale=118:-1[lg]`,
+    `[0:v][lg]overlay=40:56`,
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, `name-${i}`, project.name)}':fontsize=44:fontcolor=white:x=176:y=96:shadowcolor=black@0.7:shadowx=2:shadowy=2`,
+    `drawbox=x=0:y=${H - BAR_H}:w=${W}:h=${BAR_H}:color=${hex(project.primary)}@0.92:t=fill`,
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, `phone-${i}`, project.phone)}':fontsize=74:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=${H - BAR_H + 30}`,
+    `drawtext=fontfile='${medium}':textfile='${textFile(work, `web-${i}`, project.website)}':fontsize=38:fontcolor=white:x=(w-text_w)/2:y=${H - BAR_H + 130}`,
+  ];
+  if (caption) {
+    parts.push(
+      `drawtext=fontfile='${bold}':textfile='${textFile(work, `cap-${i}`, wrap(caption, 18, 3))}':fontsize=78:fontcolor=white:text_align=C:` +
+        `borderw=7:bordercolor=black@0.85:line_spacing=10:x=(w-text_w)/2:y=${H - BAR_H - 70}-text_h:` +
+        `alpha='min(1,t/0.25)'`,
+    );
+  }
+  return parts.join(",");
 }
 
 const ENCODE = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", String(FPS), "-an"];
 
-function photoSegment(src, out, captionFile, project) {
+/** Movimiento de las fotos: acercar, alejar o desplazar, alternando. */
+function photoMotion(i, frames) {
+  const centerX = "iw/2-(iw/zoom/2)";
+  const centerY = "ih/2-(ih/zoom/2)";
+  switch (i % 3) {
+    case 0:
+      return `zoompan=z='min(zoom+0.0011,1.15)':d=${frames}:x='${centerX}':y='${centerY}'`;
+    case 1:
+      return `zoompan=z='if(eq(on,1),1.15,max(zoom-0.0011,1.0))':d=${frames}:x='${centerX}':y='${centerY}'`;
+    default:
+      return `zoompan=z=1.12:d=${frames}:x='(iw-iw/zoom)*on/${frames}':y='${centerY}'`;
+  }
+}
+
+function photoSegment(src, out, i, project, work, caption) {
   const d = PHOTO_SECONDS;
-  const frames = d * FPS;
-  const vf =
+  const frames = Math.round(d * FPS);
+  const base =
     `scale=${W * 1.2}:${H * 1.2}:force_original_aspect_ratio=increase,crop=${W * 1.2}:${H * 1.2},` +
-    `zoompan=z='min(zoom+0.0009,1.12)':d=${frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=${W}x${H}:fps=${FPS},` +
-    `setsar=1` +
-    captionFilter(captionFile, project) +
-    fades(d);
-  run("ffmpeg", ["-y", "-i", src, "-vf", vf, "-t", String(d), ...ENCODE, out]);
+    `${photoMotion(i, frames)}:s=${W}x${H}:fps=${FPS},setsar=1`;
+  const graph = `[0:v]${base}[b];` + overlayGraph(project, work, i, caption).replace("[0:v]", "[b]");
+  run("ffmpeg", ["-y", "-i", src, "-i", join(ROOT, "public", project.logo), "-filter_complex", graph, "-t", String(d), ...ENCODE, out]);
   return d;
 }
 
-function videoSegment(src, out, captionFile, project) {
+function videoSegment(src, out, i, project, work, caption) {
   const total = duration(src);
-  const d = Math.max(1, Math.min(VIDEO_MAX_SECONDS, total || VIDEO_MAX_SECONDS));
-  const vf =
-    `scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},fps=${FPS},setsar=1` +
-    captionFilter(captionFile, project) +
-    fades(d);
-  run("ffmpeg", ["-y", "-i", src, "-t", d.toFixed(2), "-vf", vf, ...ENCODE, out]);
+  const d = Math.max(1.5, Math.min(VIDEO_MAX_SECONDS, total || VIDEO_MAX_SECONDS));
+  const start = total > d + 1 ? Math.min(1, (total - d) / 2) : 0; // salta el primer segundo, que suele ser movido
+  const base = `scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},fps=${FPS},setsar=1`;
+  const graph = `[0:v]${base}[b];` + overlayGraph(project, work, i, caption).replace("[0:v]", "[b]");
+  run("ffmpeg", [
+    "-y", "-ss", start.toFixed(2), "-i", src, "-i", join(ROOT, "public", project.logo),
+    "-filter_complex", graph, "-t", d.toFixed(2), ...ENCODE, out,
+  ]);
   return d;
 }
 
 function endCard(project, out, work) {
   const d = END_SECONDS;
   const logo = join(ROOT, "public", project.logo);
-  const text = (name, s) => {
-    const f = join(work, `end-${name}.txt`);
-    writeFileSync(f, s);
-    return escapePath(f);
-  };
-  const accent = project.accent.replace("#", "0x");
+  const bold = escapePath(FONT_BOLD);
+  const medium = escapePath(FONT_MEDIUM);
   const vf =
     `[1:v]scale=440:-1[logo];[0:v][logo]overlay=(W-w)/2:330,` +
-    `drawtext=fontfile='${escapePath(FONT_BOLD)}':textfile='${text("name", project.name)}':fontsize=80:fontcolor=white:x=(w-text_w)/2:y=880,` +
-    `drawtext=fontfile='${escapePath(FONT_MEDIUM)}':textfile='${text("tag", project.tagline)}':fontsize=40:fontcolor=0xd5dbe7:x=(w-text_w)/2:y=1000,` +
-    `drawtext=fontfile='${escapePath(FONT_BOLD)}':textfile='${text("phone", project.phone)}':fontsize=96:fontcolor=${accent}:x=(w-text_w)/2:y=1210,` +
-    `drawtext=fontfile='${escapePath(FONT_MEDIUM)}':textfile='${text("web", project.website)}':fontsize=46:fontcolor=white:x=(w-text_w)/2:y=1360,` +
-    `fade=t=in:st=0:d=0.3`;
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, "end-name", project.name)}':fontsize=80:fontcolor=white:x=(w-text_w)/2:y=880,` +
+    `drawtext=fontfile='${medium}':textfile='${textFile(work, "end-tag", project.tagline)}':fontsize=40:fontcolor=0xd5dbe7:x=(w-text_w)/2:y=1000,` +
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, "end-cta", project.cta)}':fontsize=52:fontcolor=white:x=(w-text_w)/2:y=1150,` +
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, "end-phone", project.phone)}':fontsize=104:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=1240,` +
+    `drawtext=fontfile='${medium}':textfile='${textFile(work, "end-web", project.website)}':fontsize=46:fontcolor=white:x=(w-text_w)/2:y=1400`;
   run("ffmpeg", [
     "-y",
     "-f", "lavfi", "-i", `color=c=${project.primary}:s=${W}x${H}:d=${d}:r=${FPS}`,
@@ -172,40 +227,80 @@ function endCard(project, out, work) {
   return d;
 }
 
+/** Elige una pista de música del proyecto (la misma para el mismo trabajo). */
+function pickMusic(project, seed) {
+  const list = (project.music || []).map((m) => join(ROOT, "public", m)).filter((m) => existsSync(m));
+  if (!list.length) return null;
+  let h = 0;
+  for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return list[h % list.length];
+}
+
 /** Arma el Short completo. Devuelve la duración en segundos. */
-export function renderShort({ project, note, files, out }) {
+export function renderShort({ project, note, files, out, seed = note }) {
   if (!existsSync(FONT_BOLD)) throw new Error(`Font not found: ${FONT_BOLD}`);
   if (!files.length) throw new Error("No files to render");
   const work = mkdtempSync(join(tmpdir(), "studio-"));
   try {
     const items = files.slice(0, MAX_ITEMS);
-    const captionText = wrap(note);
-    const captionFile = captionText ? join(work, "caption.txt") : null;
-    if (captionFile) writeFileSync(captionFile, captionText);
+    const chunks = captionChunks(note);
+    const fillers = project.captions || [];
+    const captionFor = (i) =>
+      i < chunks.length ? chunks[i] : fillers.length ? fillers[(i - chunks.length) % fillers.length] : "";
 
     const segments = [];
-    let total = 0;
+    const durations = [];
     items.forEach((file, i) => {
       const seg = join(work, `seg-${String(i).padStart(2, "0")}.mp4`);
-      const cap = i === 0 ? captionFile : null;
-      total += isVideo(file)
-        ? videoSegment(file, seg, cap, project)
-        : photoSegment(normalizePhoto(file, work, i), seg, cap, project);
+      durations.push(
+        isVideo(file)
+          ? videoSegment(file, seg, i, project, work, captionFor(i))
+          : photoSegment(normalizePhoto(file, work, i), seg, i, project, work, captionFor(i)),
+      );
       segments.push(seg);
     });
     const end = join(work, "seg-end.mp4");
-    total += endCard(project, end, work);
+    durations.push(endCard(project, end, work));
     segments.push(end);
 
-    const list = join(work, "list.txt");
-    writeFileSync(list, segments.map((s) => `file '${s}'`).join("\n"));
+    // Une los planos con transiciones (xfade) en vez de cortes a negro.
+    const inputs = segments.flatMap((s) => ["-i", s]);
+    const filters = [];
+    let last = "[0:v]";
+    let offset = 0;
+    for (let k = 1; k < segments.length; k++) {
+      offset += durations[k - 1] - TRANSITION;
+      const label = k === segments.length - 1 ? "[vout]" : `[x${k}]`;
+      const tr = TRANSITIONS[(k - 1) % TRANSITIONS.length];
+      filters.push(`${last}[${k}:v]xfade=transition=${tr}:duration=${TRANSITION}:offset=${offset.toFixed(3)}${label}`);
+      last = label;
+    }
+    const total = durations.reduce((a, b) => a + b, 0) - TRANSITION * (segments.length - 1);
+    if (segments.length === 1) filters.push("[0:v]copy[vout]");
+
+    // Música: se repite si hace falta, volumen parejo y salida suave al final.
+    const music = pickMusic(project, seed);
+    const audioIdx = segments.length;
+    const audioIn = music
+      ? ["-stream_loop", "-1", "-i", music]
+      : ["-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo"];
+    if (music) {
+      filters.push(
+        `[${audioIdx}:a]atrim=0:${total.toFixed(2)},asetpts=PTS-STARTPTS,loudnorm=I=-16:TP=-1.5:LRA=11,` +
+          `afade=t=in:st=0:d=0.5,afade=t=out:st=${Math.max(0, total - 1.5).toFixed(2)}:d=1.5[aout]`,
+      );
+    }
+
     run("ffmpeg", [
       "-y",
-      "-f", "concat", "-safe", "0", "-i", list,
-      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
-      "-map", "0:v", "-map", "1:a", "-shortest",
-      "-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-pix_fmt", "yuv420p",
-      "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
+      ...inputs,
+      ...audioIn,
+      "-filter_complex", filters.join(";"),
+      "-map", "[vout]",
+      "-map", music ? "[aout]" : `${audioIdx}:a`,
+      "-t", total.toFixed(2),
+      "-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-pix_fmt", "yuv420p", "-r", String(FPS),
+      "-c:a", "aac", "-b:a", "160k", "-ar", "44100", "-movflags", "+faststart",
       out,
     ]);
     return total;
@@ -270,7 +365,7 @@ async function processQueue() {
       }
 
       const out = join(work, "short.mp4");
-      const seconds = renderShort({ project, note: job.note, files: local, out });
+      const seconds = renderShort({ project, note: job.note, files: local, out, seed: job.id });
       const videoPath = `renders/${job.project}/${job.id}.mp4`;
       await supabase(`/storage/v1/object/${BUCKET}/${videoPath}`, {
         method: "POST",
