@@ -28,6 +28,15 @@ export type StudioProject = {
   /** Texto fijo al final de cada descripción (YouTube, Instagram, TikTok). */
   descriptionFooter: string;
   hashtags: string[];
+  /** Llamada a la acción en la tarjeta final, encima del teléfono. */
+  cta: string;
+  /**
+   * Subtítulos de relleno para los planos que sobran cuando la nota es corta.
+   * Solo cosas ciertas del negocio, nada inventado sobre el trabajo.
+   */
+  captions: string[];
+  /** Pistas de música (rutas dentro de `public/`). Se elige una por video. */
+  music: string[];
 };
 
 export const studioProjects: Record<string, StudioProject> = {
@@ -44,5 +53,12 @@ export const studioProjects: Record<string, StudioProject> = {
     descriptionFooter:
       "Allegiant Appliances: luxury appliance repair in Los Angeles. Call (323) 578-4010 or book at allegiantappliance.com",
     hashtags: ["#shorts", "#appliancerepair", "#losangeles"],
+    cta: "Need a repair? Call Vadim",
+    captions: ["Real job in Los Angeles", "Luxury appliance repair", "$85 diagnostic, applied to the repair"],
+    music: [
+      "studio/allegiant/music/pulse-horizon.mp3",
+      "studio/allegiant/music/midnight-circuit.mp3",
+      "studio/allegiant/music/innovation-unveiled.mp3",
+    ],
   },
 };
