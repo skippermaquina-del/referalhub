@@ -110,6 +110,11 @@ const hex = (c) => c.replace("#", "0x");
 const TRANSITION = 0.35;
 const TRANSITIONS = ["slideleft", "smoothup", "circleopen", "wipeleft", "slideup", "radial"];
 const BAR_H = 210;
+/**
+ * TikTok, Reels y Shorts tapan los ~500 px de abajo con el nombre, los hashtags y
+ * la música, así que la franja con teléfono y web va por encima de esa zona.
+ */
+const BAR_Y = H - 500 - BAR_H;
 
 /** Divide la nota en frases cortas: una por plano. */
 export function captionChunks(note) {
@@ -149,14 +154,14 @@ function overlayGraph(project, work, i, caption) {
     `[1:v]scale=118:-1[lg]`,
     `[0:v][lg]overlay=40:56`,
     `drawtext=fontfile='${bold}':textfile='${textFile(work, `name-${i}`, project.name)}':fontsize=44:fontcolor=white:x=176:y=96:shadowcolor=black@0.7:shadowx=2:shadowy=2`,
-    `drawbox=x=0:y=${H - BAR_H}:w=${W}:h=${BAR_H}:color=${hex(project.primary)}@0.92:t=fill`,
-    `drawtext=fontfile='${bold}':textfile='${textFile(work, `phone-${i}`, project.phone)}':fontsize=74:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=${H - BAR_H + 30}`,
-    `drawtext=fontfile='${medium}':textfile='${textFile(work, `web-${i}`, project.website)}':fontsize=38:fontcolor=white:x=(w-text_w)/2:y=${H - BAR_H + 130}`,
+    `drawbox=x=0:y=${BAR_Y}:w=${W}:h=${BAR_H}:color=${hex(project.primary)}@0.92:t=fill`,
+    `drawtext=fontfile='${bold}':textfile='${textFile(work, `phone-${i}`, project.phone)}':fontsize=74:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=${BAR_Y + 30}`,
+    `drawtext=fontfile='${medium}':textfile='${textFile(work, `web-${i}`, project.website)}':fontsize=38:fontcolor=white:x=(w-text_w)/2:y=${BAR_Y + 130}`,
   ];
   if (caption) {
     parts.push(
       `drawtext=fontfile='${bold}':textfile='${textFile(work, `cap-${i}`, wrap(caption, 18, 3))}':fontsize=78:fontcolor=white:text_align=C:` +
-        `borderw=7:bordercolor=black@0.85:line_spacing=10:x=(w-text_w)/2:y=${H - BAR_H - 70}-text_h:` +
+        `borderw=7:bordercolor=black@0.85:line_spacing=10:x=(w-text_w)/2:y=${BAR_Y - 70}-text_h:` +
         `alpha='min(1,t/0.25)'`,
     );
   }
