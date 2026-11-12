@@ -678,6 +678,10 @@ html:has(.allegiant) {
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
 }
+.al-video-frame--wide {
+  max-width: none;
+  aspect-ratio: 16 / 9;
+}
 .al-video-frame video {
   display: block;
   width: 100%;
