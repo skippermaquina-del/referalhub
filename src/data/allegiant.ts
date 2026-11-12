@@ -733,7 +733,7 @@ export const copy = {
       /** Video de presentación (16:9) con trabajos reales; también en YouTube. */
       src: "/allegiant/video/portada-en.mp4",
       poster: "/allegiant/video/portada-en-poster.jpg",
-      youtubeId: "6We2D0lKBHo",
+      youtubeId: "ImG74hmof7w",
       wide: true,
     },
     tourTeaser: {
