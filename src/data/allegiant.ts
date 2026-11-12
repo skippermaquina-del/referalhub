@@ -21,6 +21,7 @@ export const business = {
    * tanto apuntan a una búsqueda, para que nunca sean un enlace roto.
    */
   youtubeUrl: "https://www.youtube.com/@AllegiantAppliances",
+  tiktokUrl: "https://www.tiktok.com/@allegiantappliances",
   reviewsUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_REVIEWS_URL ??
     "https://share.google/dUAHoST79DXRbFNId",
@@ -768,6 +769,7 @@ export const copy = {
       explore: "Explore",
       google: "View us on Google →",
       youtube: "Watch us on YouTube →",
+      tiktok: "Follow us on TikTok →",
       tools: "Homeowner tools",
       work: "Real jobs",
       mid: "Residential & Commercial · Licensed & Insured",
@@ -931,6 +933,7 @@ export const copy = {
       explore: "Explorar",
       google: "Vernos en Google →",
       youtube: "Vernos en YouTube →",
+      tiktok: "Síguenos en TikTok →",
       tools: "Herramientas para tu casa",
       work: "Trabajos reales",
       mid: "Residencial y comercial · Con licencia y seguro",
