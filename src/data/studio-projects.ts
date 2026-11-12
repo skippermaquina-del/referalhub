@@ -59,6 +59,9 @@ export const studioProjects: Record<string, StudioProject> = {
       "studio/allegiant/music/pulse-horizon.mp3",
       "studio/allegiant/music/midnight-circuit.mp3",
       "studio/allegiant/music/innovation-unveiled.mp3",
+      "studio/allegiant/music/three-am-kitchen-light.mp3",
+      "studio/allegiant/music/same-old-blues.mp3",
+      "studio/allegiant/music/dust-on-my-boots.mp3",
     ],
   },
 };

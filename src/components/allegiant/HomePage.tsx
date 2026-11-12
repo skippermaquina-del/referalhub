@@ -136,7 +136,7 @@ export function HomePage({ lang }: { lang: Lang }) {
           <ScanGallery lang={lang} />
 
           <section className="al-section al-grid12 al-teaser al-video">
-            <div style={{ gridColumn: "1 / span 6" }}>
+            <div style={{ gridColumn: t.video.wide ? "1 / span 4" : "1 / span 6" }}>
               <div className="al-eyebrow">{t.video.eyebrow}</div>
               <h2>
                 {t.video.h2a} <em>{t.video.h2b}</em>
@@ -144,12 +144,18 @@ export function HomePage({ lang }: { lang: Lang }) {
               <p style={{ margin: "28px 0 40px", fontSize: 20, lineHeight: 1.8, color: "var(--al-muted)" }}>
                 {t.video.p}
               </p>
-              <a className="al-btn-line" href={`https://youtu.be/${business.featuredVideoId}`} target="_blank" rel="noopener noreferrer">
+              <a className="al-btn-line" href={`https://youtu.be/${t.video.youtubeId}`} target="_blank" rel="noopener noreferrer">
                 {t.video.cta}
               </a>
             </div>
-            <div style={{ gridColumn: "8 / span 5" }}>
-              <ChannelVideo label={t.video.title} sound={t.video.sound} />
+            <div style={{ gridColumn: t.video.wide ? "6 / span 7" : "8 / span 5" }}>
+              <ChannelVideo
+                label={t.video.title}
+                sound={t.video.sound}
+                src={t.video.src}
+                poster={t.video.poster}
+                wide={t.video.wide}
+              />
             </div>
           </section>
 

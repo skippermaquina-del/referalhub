@@ -15,12 +15,15 @@ export function ChannelVideo({
   src = "/allegiant/video/short.mp4",
   poster = "/allegiant/video/short-poster.jpg",
   hasSound = true,
+  wide = false,
 }: {
   label: string;
   sound: { on: string; off: string };
   src?: string;
   poster?: string;
   hasSound?: boolean;
+  /** Video horizontal (16:9) en vez de vertical. */
+  wide?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
@@ -48,7 +51,7 @@ export function ChannelVideo({
   }
 
   return (
-    <div className="al-video-frame">
+    <div className={wide ? "al-video-frame al-video-frame--wide" : "al-video-frame"}>
       <video
         ref={ref}
         src={src}

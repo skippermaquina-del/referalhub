@@ -21,8 +21,6 @@ export const business = {
    * tanto apuntan a una búsqueda, para que nunca sean un enlace roto.
    */
   youtubeUrl: "https://www.youtube.com/@AllegiantAppliances",
-  /** Short del canal que se muestra en la portada. */
-  featuredVideoId: "P9RhLXpqo6Y",
   reviewsUrl:
     process.env.NEXT_PUBLIC_ALLEGIANT_REVIEWS_URL ??
     "https://share.google/dUAHoST79DXRbFNId",
@@ -732,6 +730,11 @@ export const copy = {
       cta: "Watch on YouTube",
       title: "Allegiant Appliances video",
       sound: { on: "Turn sound on", off: "Turn sound off" },
+      /** Video de presentación (16:9) con trabajos reales; también en YouTube. */
+      src: "/allegiant/video/portada-en.mp4",
+      poster: "/allegiant/video/portada-en-poster.jpg",
+      youtubeId: "6We2D0lKBHo",
+      wide: true,
     },
     tourTeaser: {
       eyebrow: "Home tour",
@@ -891,6 +894,10 @@ export const copy = {
       cta: "Ver en YouTube",
       title: "Video de Allegiant Appliances",
       sound: { on: "Activar sonido", off: "Quitar sonido" },
+      src: "/allegiant/video/short.mp4",
+      poster: "/allegiant/video/short-poster.jpg",
+      youtubeId: "P9RhLXpqo6Y",
+      wide: false,
     },
     tourTeaser: {
       eyebrow: "Recorrido",
