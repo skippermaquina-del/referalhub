@@ -1,7 +1,9 @@
 /**
  * Trabajos del Estudio.
  * GET: los últimos del proyecto, con un enlace temporal al video cuando está listo.
- * POST { note, files: [{ path, type }] }: crea un trabajo y pide que se arme el video.
+ * POST { note, prompt?, keepAudio?, files: [{ path, type }] }: crea un trabajo y pide que se arme el video.
+ *   keepAudio: deja el audio original de los videos (por ejemplo, cuando Vadim habla).
+ *   prompt: instrucciones libres; Claude las convierte en opciones al armar el video.
  */
 
 import { STUDIO_BUCKET, studioConfigured, studioDb, studioDenied, studioProject, triggerRender } from "@/lib/studio";
@@ -12,7 +14,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await studioDb()
     .from("studio_jobs")
-    .select("id, note, status, video_path, title, description, error, created_at, files")
+    .select("id, note, prompt, keep_audio, status, video_path, title, description, error, created_at, files")
     .eq("project", project.slug)
     .order("created_at", { ascending: false })
     .limit(20);
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
   const project = studioProject(request);
   if (!studioConfigured() || !project) return studioDenied();
 
-  let body: { note?: unknown; files?: unknown };
+  let body: { note?: unknown; prompt?: unknown; keepAudio?: unknown; files?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -48,6 +50,8 @@ export async function POST(request: Request) {
   }
 
   const note = typeof body.note === "string" ? body.note.trim().slice(0, 300) : "";
+  const prompt = typeof body.prompt === "string" ? body.prompt.trim().slice(0, 1000) : "";
+  const keepAudio = body.keepAudio === true;
   const prefix = `uploads/${project.slug}/`;
   const files = (Array.isArray(body.files) ? body.files : [])
     .filter(
@@ -60,7 +64,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await studioDb()
     .from("studio_jobs")
-    .insert({ project: project.slug, note, files, status: "uploaded" })
+    .insert({ project: project.slug, note, prompt, keep_audio: keepAudio, files, status: "uploaded" })
     .select("id")
     .single();
   if (error || !data) {

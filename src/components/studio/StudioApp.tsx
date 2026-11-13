@@ -7,6 +7,8 @@ type Project = { slug: string; name: string; primary: string; accent: string; lo
 type Job = {
   id: string;
   note: string;
+  prompt: string;
+  keep_audio: boolean;
   status: "uploaded" | "rendering" | "ready" | "failed" | "sent" | "published" | "rejected";
   title: string | null;
   description: string | null;
@@ -32,6 +34,11 @@ const T = {
     pickHint: "Up to 10 files, 50 MB each. Short clips work best.",
     note: "What does it show?",
     notePh: "e.g. Sub-Zero fridge not cooling. Replaced the fan motor.",
+    keepAudio: "Keep the original sound",
+    keepAudioHint: "For videos where someone talks. No music or captions over the clip; music only on the closing card.",
+    prompt: "Instructions (optional)",
+    promptPh: "e.g. Title in Spanish. No captions. Mention the Frigidaire brand.",
+    keptAudio: "Original sound",
     send: "Make the Short",
     sending: "Uploading…",
     tooBig: "too large (max 50 MB)",
@@ -58,6 +65,11 @@ const T = {
     pickHint: "Hasta 10 archivos de 50 MB cada uno. Mejor clips cortos.",
     note: "¿Qué se ve?",
     notePh: "Ej.: Heladera Sub-Zero que no enfría. Se cambió el motor del ventilador.",
+    keepAudio: "Mantener el audio original",
+    keepAudioHint: "Para videos donde alguien habla. Sin música ni subtítulos sobre el video; música solo en la tarjeta final.",
+    prompt: "Instrucciones (opcional)",
+    promptPh: "Ej.: Título en español. Sin subtítulos. Mencionar la marca Frigidaire.",
+    keptAudio: "Audio original",
     send: "Armar el Short",
     sending: "Subiendo…",
     tooBig: "muy pesado (máx. 50 MB)",
@@ -84,6 +96,11 @@ const T = {
     pickHint: "До 10 файлов, до 50 МБ каждый. Лучше короткие ролики.",
     note: "Что на видео?",
     notePh: "Напр.: холодильник Sub-Zero не холодит. Заменил мотор вентилятора.",
+    keepAudio: "Оставить оригинальный звук",
+    keepAudioHint: "Для видео, где кто-то говорит. Без музыки и субтитров поверх видео; музыка только на финальной заставке.",
+    prompt: "Инструкции (необязательно)",
+    promptPh: "Напр.: заголовок на испанском. Без субтитров. Упомянуть бренд Frigidaire.",
+    keptAudio: "Оригинальный звук",
     send: "Сделать Short",
     sending: "Загрузка…",
     tooBig: "слишком большой (макс. 50 МБ)",
@@ -131,6 +148,8 @@ export function StudioApp() {
   const [loginError, setLoginError] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [note, setNote] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [keepAudio, setKeepAudio] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -209,11 +228,13 @@ export function StudioApp() {
       const res = await fetch("/api/studio/jobs", {
         method: "POST",
         headers: headers(code),
-        body: JSON.stringify({ note, files: uploaded }),
+        body: JSON.stringify({ note, prompt, keepAudio, files: uploaded }),
       });
       if (!res.ok) throw new Error(`jobs ${res.status}`);
       setFiles([]);
       setNote("");
+      setPrompt("");
+      setKeepAudio(false);
       setMessage(t.sent);
       await loadJobs();
     } catch (err) {
@@ -343,6 +364,30 @@ export function StudioApp() {
             style={{ ...styles.input, resize: "vertical", fontFamily: "inherit" }}
           />
 
+          <label style={{ display: "flex", gap: 10, alignItems: "flex-start", margin: "14px 0 0", color: "#0f172a", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={keepAudio}
+              onChange={(e) => setKeepAudio(e.target.checked)}
+              style={{ width: 20, height: 20, marginTop: 2, accentColor: accent, flexShrink: 0 }}
+            />
+            <span>
+              <strong>{t.keepAudio}</strong>
+              <br />
+              <span style={{ fontSize: 13, color: "#64748b" }}>{t.keepAudioHint}</span>
+            </span>
+          </label>
+
+          <label style={{ display: "block", fontWeight: 600, margin: "14px 0 6px", color: "#0f172a" }}>{t.prompt}</label>
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder={t.promptPh}
+            maxLength={1000}
+            rows={2}
+            style={{ ...styles.input, resize: "vertical", fontFamily: "inherit" }}
+          />
+
           <button
             type="button"
             onClick={() => void submit()}
@@ -375,6 +420,13 @@ export function StudioApp() {
               </span>
             </div>
             {job.note && <p style={{ margin: "8px 0", color: "#0f172a" }}>{job.note}</p>}
+            {(job.keep_audio || job.prompt) && (
+              <p style={{ margin: "4px 0 8px", fontSize: 13, color: "#475569" }}>
+                {job.keep_audio && <span>🎙️ {t.keptAudio}</span>}
+                {job.keep_audio && job.prompt && " · "}
+                {job.prompt && <span>✍️ {job.prompt}</span>}
+              </p>
+            )}
             {job.status === "failed" && job.error && (
               <p style={{ fontSize: 12, color: "#991b1b", wordBreak: "break-word" }}>{job.error.slice(-200)}</p>
             )}
