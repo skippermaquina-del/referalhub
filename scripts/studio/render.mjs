@@ -7,7 +7,7 @@
  *   "studio", arma un video vertical 1080x1920 y lo sube a renders/<id>.mp4.
  *
  * Modo local (para probar sin Supabase):
- *   node scripts/studio/render.mjs --local <proyecto> "<nota>" <salida.mp4> <archivo1> [archivo2 ...]
+ *   node scripts/studio/render.mjs --local [--keep-audio] [--prompt "<instrucciones>"] <proyecto> "<nota>" <salida.mp4> <archivo1> [archivo2 ...]
  *
  * Reglas del video:
  *   - Fotos: 3 s cada una con un acercamiento lento.
@@ -17,6 +17,12 @@
  *   - Transiciones con movimiento y música del proyecto.
  *   - Al final, 3,5 s de tarjeta con logo, nombre, teléfono y web del negocio.
  *   - Como máximo 10 archivos, para que el Short quede corto.
+ *
+ * Con "mantener el audio original" (keep_audio), los videos van completos (hasta
+ * 90 s cada uno) con su sonido, solo con el logo arriba: sin música, subtítulos ni
+ * franja encima. Cortes directos entre planos y música solo en la tarjeta final.
+ *
+ * Las instrucciones libres (prompt) las interpreta Claude: ver plan.mjs.
  */
 
 import { execFileSync } from "node:child_process";
@@ -24,6 +30,7 @@ import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync } from "no
 import { tmpdir } from "node:os";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { planFromPrompt } from "./plan.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const { studioProjects } = await import(join(ROOT, "src/data/studio-projects.ts"));
@@ -33,7 +40,9 @@ const H = 1920;
 const FPS = 30;
 const PHOTO_SECONDS = 3;
 const VIDEO_MAX_SECONDS = 6;
+const TALK_MAX_SECONDS = 90;
 const END_SECONDS = 3.5;
+const END_TALK_SECONDS = 5;
 const MAX_ITEMS = 10;
 const FONT_DIR = process.env.STUDIO_FONT_DIR || "/usr/share/fonts/opentype/inter";
 const FONT_BOLD = join(FONT_DIR, "Inter-Bold.otf");
@@ -147,13 +156,17 @@ function textFile(work, name, text) {
  * Lo que va encima de cada plano: logo y nombre arriba, subtítulo grande, y la
  * franja de abajo con teléfono y web. Entrada: [0:v] ya en 1080x1920; [1:v] = logo.
  */
-function overlayGraph(project, work, i, caption) {
+function overlayGraph(project, work, i, caption, { logoOnly = false } = {}) {
   const bold = escapePath(FONT_BOLD);
   const medium = escapePath(FONT_MEDIUM);
-  const parts = [
+  const top = [
     `[1:v]scale=118:-1[lg]`,
     `[0:v][lg]overlay=40:56`,
     `drawtext=fontfile='${bold}':textfile='${textFile(work, `name-${i}`, project.name)}':fontsize=44:fontcolor=white:x=176:y=96:shadowcolor=black@0.7:shadowx=2:shadowy=2`,
+  ];
+  if (logoOnly) return top.join(",");
+  const parts = [
+    ...top,
     `drawbox=x=0:y=${BAR_Y}:w=${W}:h=${BAR_H}:color=${hex(project.primary)}@0.92:t=fill`,
     `drawtext=fontfile='${bold}':textfile='${textFile(work, `phone-${i}`, project.phone)}':fontsize=74:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=${BAR_Y + 30}`,
     `drawtext=fontfile='${medium}':textfile='${textFile(work, `web-${i}`, project.website)}':fontsize=38:fontcolor=white:x=(w-text_w)/2:y=${BAR_Y + 130}`,
@@ -168,7 +181,15 @@ function overlayGraph(project, work, i, caption) {
   return parts.join(",");
 }
 
-const ENCODE = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", String(FPS), "-an"];
+const VIDEO_ENC = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", String(FPS)];
+const ENCODE = [...VIDEO_ENC, "-an"];
+/** Con audio: mismo formato en todos los planos para poder unirlos con concat. */
+const ENCODE_AV = [...VIDEO_ENC, "-c:a", "aac", "-b:a", "160k", "-ar", "44100", "-ac", "2"];
+const SILENCE = ["-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo"];
+
+function hasAudio(file) {
+  return run("ffprobe", ["-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", file]).trim() !== "";
+}
 
 /** Movimiento de las fotos: acercar, alejar o desplazar, alternando. */
 function photoMotion(i, frames) {
@@ -184,14 +205,19 @@ function photoMotion(i, frames) {
   }
 }
 
-function photoSegment(src, out, i, project, work, caption) {
+function photoSegment(src, out, i, project, work, caption, withAudio = false) {
   const d = PHOTO_SECONDS;
   const frames = Math.round(d * FPS);
   const base =
     `scale=${W * 1.2}:${H * 1.2}:force_original_aspect_ratio=increase,crop=${W * 1.2}:${H * 1.2},` +
     `${photoMotion(i, frames)}:s=${W}x${H}:fps=${FPS},setsar=1`;
   const graph = `[0:v]${base}[b];` + overlayGraph(project, work, i, caption).replace("[0:v]", "[b]");
-  run("ffmpeg", ["-y", "-i", src, "-i", join(ROOT, "public", project.logo), "-filter_complex", graph, "-t", String(d), ...ENCODE, out]);
+  const audio = withAudio ? [...SILENCE] : [];
+  const maps = withAudio ? ["-map", "[v]", "-map", "2:a"] : ["-map", "[v]"];
+  run("ffmpeg", [
+    "-y", "-i", src, "-i", join(ROOT, "public", project.logo), ...audio,
+    "-filter_complex", graph + "[v]", ...maps, "-t", String(d), ...(withAudio ? ENCODE_AV : ENCODE), out,
+  ]);
   return d;
 }
 
@@ -208,8 +234,33 @@ function videoSegment(src, out, i, project, work, caption) {
   return d;
 }
 
-function endCard(project, out, work) {
-  const d = END_SECONDS;
+/**
+ * Video con su sonido (alguien habla): completo, encajado sobre un fondo borroso
+ * del mismo video para no recortar nada, con el logo arriba y el volumen parejo.
+ */
+function talkSegment(src, out, i, project, work) {
+  const total = duration(src);
+  const d = Math.max(1, Math.min(TALK_MAX_SECONDS, total || TALK_MAX_SECONDS));
+  const sound = hasAudio(src);
+  const graph =
+    `[0:v]split[a][b];` +
+    `[a]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},boxblur=30:2,eq=brightness=-0.08[bg];` +
+    `[b]scale=${W}:${H}:force_original_aspect_ratio=decrease[fg];` +
+    `[bg][fg]overlay=(W-w)/2:(H-h)/2,fps=${FPS},setsar=1[c];` +
+    overlayGraph(project, work, i, "", { logoOnly: true }).replace("[0:v]", "[c]") +
+    "[v];" +
+    (sound
+      ? `[0:a]aresample=44100,loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=out:st=${Math.max(0, d - 0.4).toFixed(2)}:d=0.4[aout]`
+      : `[2:a]anull[aout]`);
+  run("ffmpeg", [
+    "-y", "-i", src, "-i", join(ROOT, "public", project.logo), ...(sound ? [] : SILENCE),
+    "-filter_complex", graph, "-map", "[v]", "-map", "[aout]", "-t", d.toFixed(2), ...ENCODE_AV, out,
+  ]);
+  return d;
+}
+
+function endCard(project, out, work, music = null) {
+  const d = music === null ? END_SECONDS : END_TALK_SECONDS;
   const logo = join(ROOT, "public", project.logo);
   const bold = escapePath(FONT_BOLD);
   const medium = escapePath(FONT_MEDIUM);
@@ -220,13 +271,32 @@ function endCard(project, out, work) {
     `drawtext=fontfile='${bold}':textfile='${textFile(work, "end-cta", project.cta)}':fontsize=52:fontcolor=white:x=(w-text_w)/2:y=1150,` +
     `drawtext=fontfile='${bold}':textfile='${textFile(work, "end-phone", project.phone)}':fontsize=104:fontcolor=${hex(project.accent)}:x=(w-text_w)/2:y=1240,` +
     `drawtext=fontfile='${medium}':textfile='${textFile(work, "end-web", project.website)}':fontsize=46:fontcolor=white:x=(w-text_w)/2:y=1400`;
+  if (music === null) {
+    run("ffmpeg", [
+      "-y",
+      "-f", "lavfi", "-i", `color=c=${project.primary}:s=${W}x${H}:d=${d}:r=${FPS}`,
+      "-i", logo,
+      "-filter_complex", vf,
+      "-t", String(d),
+      ...ENCODE,
+      out,
+    ]);
+    return d;
+  }
+  // Con audio propio (modo "audio original"): entra con un fundido y lleva la música.
+  const audioIn = music ? ["-stream_loop", "-1", "-i", music] : SILENCE;
+  const af = music
+    ? `[2:a]atrim=0:${d},asetpts=PTS-STARTPTS,aresample=44100,loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=in:st=0:d=0.4,afade=t=out:st=${(d - 1.5).toFixed(2)}:d=1.5[aout]`
+    : `[2:a]anull[aout]`;
   run("ffmpeg", [
     "-y",
     "-f", "lavfi", "-i", `color=c=${project.primary}:s=${W}x${H}:d=${d}:r=${FPS}`,
     "-i", logo,
-    "-filter_complex", vf,
+    ...audioIn,
+    "-filter_complex", `${vf},fade=t=in:st=0:d=0.4[v];${af}`,
+    "-map", "[v]", "-map", "[aout]",
     "-t", String(d),
-    ...ENCODE,
+    ...ENCODE_AV,
     out,
   ]);
   return d;
@@ -242,16 +312,20 @@ function pickMusic(project, seed) {
 }
 
 /** Arma el Short completo. Devuelve la duración en segundos. */
-export function renderShort({ project, note, files, out, seed = note }) {
+export function renderShort({ project, note, files, out, seed = note, keepAudio = false, music: withMusic = true, captions: customCaptions = null }) {
   if (!existsSync(FONT_BOLD)) throw new Error(`Font not found: ${FONT_BOLD}`);
   if (!files.length) throw new Error("No files to render");
   const work = mkdtempSync(join(tmpdir(), "studio-"));
   try {
     const items = files.slice(0, MAX_ITEMS);
-    const chunks = captionChunks(note);
-    const fillers = project.captions || [];
+    // customCaptions: [] = sin subtítulos; una lista = un subtítulo por plano.
+    const chunks = customCaptions ?? captionChunks(note);
+    const fillers = customCaptions ? [] : project.captions || [];
     const captionFor = (i) =>
       i < chunks.length ? chunks[i] : fillers.length ? fillers[(i - chunks.length) % fillers.length] : "";
+    const music = withMusic ? pickMusic(project, seed) : null;
+
+    if (keepAudio) return renderWithSound({ project, items, out, work, captionFor, music });
 
     const segments = [];
     const durations = [];
@@ -284,7 +358,6 @@ export function renderShort({ project, note, files, out, seed = note }) {
     if (segments.length === 1) filters.push("[0:v]copy[vout]");
 
     // Música: se repite si hace falta, volumen parejo y salida suave al final.
-    const music = pickMusic(project, seed);
     const audioIdx = segments.length;
     const audioIn = music
       ? ["-stream_loop", "-1", "-i", music]
@@ -314,12 +387,45 @@ export function renderShort({ project, note, files, out, seed = note }) {
   }
 }
 
+/**
+ * Modo "audio original": cada plano lleva su propio sonido (los videos, el suyo;
+ * las fotos, silencio; la tarjeta final, la música) y se unen con cortes directos.
+ */
+function renderWithSound({ project, items, out, work, captionFor, music }) {
+  const segments = [];
+  let total = 0;
+  items.forEach((file, i) => {
+    const seg = join(work, `seg-${String(i).padStart(2, "0")}.mp4`);
+    total += isVideo(file)
+      ? talkSegment(file, seg, i, project, work)
+      : photoSegment(normalizePhoto(file, work, i), seg, i, project, work, captionFor(i), true);
+    segments.push(seg);
+  });
+  const end = join(work, "seg-end.mp4");
+  total += endCard(project, end, work, music ?? false);
+  segments.push(end);
+
+  const n = segments.length;
+  const streams = segments.map((_, k) => `[${k}:v][${k}:a]`).join("");
+  run("ffmpeg", [
+    "-y",
+    ...segments.flatMap((s) => ["-i", s]),
+    "-filter_complex", `${streams}concat=n=${n}:v=1:a=1[v][a]`,
+    "-map", "[v]", "-map", "[a]",
+    "-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-pix_fmt", "yuv420p", "-r", String(FPS),
+    "-c:a", "aac", "-b:a", "160k", "-ar", "44100", "-movflags", "+faststart",
+    out,
+  ]);
+  return total;
+}
+
 /** Título y descripción listos para YouTube, Instagram y TikTok (sin inventar nada: sale de la nota). */
-export function captions(project, note) {
+export function captions(project, note, plan = null) {
   const clean = note.replace(/\s+/g, " ").trim();
   const first = (clean.split(/(?<=[.!?])\s/)[0] || clean).slice(0, 70).trim();
-  const title = (first ? `${first} | ${project.name}` : `${project.name} | ${project.tagline}`).slice(0, 100);
-  const description = [clean, project.descriptionFooter, project.hashtags.join(" ")].filter(Boolean).join("\n\n");
+  const title = plan?.title || (first ? `${first} | ${project.name}` : `${project.name} | ${project.tagline}`).slice(0, 100);
+  const tags = [...new Set([...project.hashtags, ...(plan?.extraHashtags || [])])];
+  const description = [plan?.descriptionBody || clean, project.descriptionFooter, tags.join(" ")].filter(Boolean).join("\n\n");
   return { title, description };
 }
 
@@ -369,15 +475,32 @@ async function processQueue() {
         local.push(dest);
       }
 
+      const plan = await planFromPrompt({
+        project,
+        note: job.note,
+        prompt: job.prompt,
+        keepAudio: job.keep_audio === true,
+        files: local.map((f) => ({ video: isVideo(f) })),
+      });
+      if (plan) console.log("Plan from instructions:", JSON.stringify(plan));
       const out = join(work, "short.mp4");
-      const seconds = renderShort({ project, note: job.note, files: local, out, seed: job.id });
+      const seconds = renderShort({
+        project,
+        note: job.note,
+        files: local,
+        out,
+        seed: job.id,
+        keepAudio: plan?.keepAudio ?? job.keep_audio === true,
+        music: plan?.music ?? true,
+        captions: plan?.captions ?? null,
+      });
       const videoPath = `renders/${job.project}/${job.id}.mp4`;
       await supabase(`/storage/v1/object/${BUCKET}/${videoPath}`, {
         method: "POST",
         headers: { "Content-Type": "video/mp4", "x-upsert": "true" },
         body: readFileSync(out),
       });
-      const { title, description } = captions(project, job.note);
+      const { title, description } = captions(project, job.note, plan);
       await updateJob(job.id, { status: "ready", video_path: videoPath, title, description, error: null });
       console.log(`✓ ${job.id} (${seconds.toFixed(1)} s)`);
     } catch (err) {
@@ -394,12 +517,29 @@ async function processQueue() {
 
 const args = process.argv.slice(2);
 if (args[0] === "--local") {
-  const [, slug, note, out, ...files] = args;
+  // Opciones: --keep-audio, --prompt "<instrucciones>" (este último necesita ANTHROPIC_API_KEY).
+  const rest = args.slice(1);
+  const flag = (name) => {
+    const i = rest.indexOf(name);
+    if (i === -1) return undefined;
+    const [, value] = rest.splice(i, name === "--prompt" ? 2 : 1);
+    return value ?? true;
+  };
+  const keepAudio = flag("--keep-audio") === true;
+  const prompt = flag("--prompt") || "";
+  const [slug, note, out, ...files] = rest;
   const project = studioProjects[slug];
   if (!project) throw new Error(`Unknown project "${slug}"`);
-  const seconds = renderShort({ project, note, files, out });
+  const plan = await planFromPrompt({ project, note, prompt, keepAudio, files: files.map((f) => ({ video: isVideo(f) })) });
+  if (plan) console.log("Plan:", plan);
+  const seconds = renderShort({
+    project, note, files, out,
+    keepAudio: plan?.keepAudio ?? keepAudio,
+    music: plan?.music ?? true,
+    captions: plan?.captions ?? null,
+  });
   console.log(`Wrote ${out} (${seconds.toFixed(1)} s)`);
-  console.log(captions(project, note));
+  console.log(captions(project, note, plan));
 } else if (args.length === 0) {
   await processQueue();
 }
