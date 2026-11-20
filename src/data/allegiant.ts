@@ -616,9 +616,26 @@ export const serviceAreas = [
   "Malibu",
 ];
 
-export const heroImages = [
+/**
+ * Ambientes de la portada, en orden. `video` (opcional) es un recorrido de cámara
+ * que se reproduce encima de la foto: `wide` en pantallas horizontales y `tall`
+ * (con su primer cuadro en `tallPoster`) en verticales.
+ */
+export const heroImages: {
+  src: string;
+  alt: { en: string; es: string };
+  video?: { wide: string; tall: string; tallPoster: string };
+}[] = [
+  {
+    src: "/allegiant/kitchen-wide.jpg",
+    alt: { en: "Luxury kitchen with built-in refrigeration", es: "Cocina de lujo con refrigeración empotrada" },
+    video: {
+      wide: "/allegiant/video/kitchen-dolly-wide.mp4",
+      tall: "/allegiant/video/kitchen-dolly-tall.mp4",
+      tallPoster: "/allegiant/video/kitchen-dolly-tall.jpg",
+    },
+  },
   { src: "/allegiant/kitchen-island.jpg", alt: { en: "Luxury kitchen with a marble island", es: "Cocina de lujo con isla de mármol" } },
-  { src: "/allegiant/kitchen-wide.jpg", alt: { en: "Luxury kitchen with built-in refrigeration", es: "Cocina de lujo con refrigeración empotrada" } },
   { src: "/allegiant/laundry.jpg", alt: { en: "Luxury laundry room", es: "Lavandería de lujo" } },
 ];
 
@@ -678,7 +695,7 @@ export const copy = {
       p: "From luxury estates to family homes across Los Angeles. Over five years of trusted repair and maintenance in the neighborhood. Residential and commercial, licensed and insured.",
       cta: "Request a visit",
       tour: "Tour the home",
-      rooms: ["The Island", "The Kitchen", "The Laundry"],
+      rooms: ["The Kitchen", "The Island", "The Laundry"],
     },
     trust: {
       years: "Years serving the neighborhood",
@@ -843,7 +860,7 @@ export const copy = {
       p: "De las residencias de lujo a los hogares de familia en todo Los Ángeles. Más de cinco años de reparación y mantenimiento de confianza en el barrio. Residencial y comercial, con licencia y seguro.",
       cta: "Solicitar visita",
       tour: "Recorre la casa",
-      rooms: ["La Isla", "La Cocina", "La Lavandería"],
+      rooms: ["La Cocina", "La Isla", "La Lavandería"],
     },
     trust: {
       years: "Años sirviendo al barrio",

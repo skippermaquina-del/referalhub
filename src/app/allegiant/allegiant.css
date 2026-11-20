@@ -2548,3 +2548,15 @@ input:focus-visible + .al-tools-box {
 .al-work-privacy {
   text-align: center;
 }
+
+/* Recorrido en video de la portada: encima de su foto, sin el zoom lento de las fotos. */
+.al-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+.al-hero-video[data-active] {
+  transform: none;
+}
