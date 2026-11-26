@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+  SUPERHMAN — Facebook cover, ILUSTRADA. 1640 x 624 px.
+
+  La variante cálida: fondo papel en vez de tinta, herramientas dibujadas y
+  bulones hexagonales sueltos. Todo el dibujo usa el mismo vocabulario
+  geométrico del monograma (rectángulos y hexágonos), así que la ilustración
+  sale de la marca en vez de estar pegada encima.
+
+  Dos reglas de composición que no conviene romper al editar:
+
+  1. Las herramientas viven SOLO en los tercios de afuera (x < 340 y x > 1300).
+     El centro queda de papel limpio para que el emblema y el texto respiren.
+  2. El celular recorta los costados y deja más o menos el centro de 1100px,
+     así que lo que se pierde ahí es textura, nunca información. En escritorio
+     Facebook encima la foto de perfil redonda abajo a la izquierda: esa
+     esquina queda sin nada importante.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — Facebook cover ilustrada</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{
+    --paper:#F7F2EA; --ink:#0E1116; --hero:#FF5C1A;
+    --tool:#FFB68A; --muted:#8A8178;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:100vw;height:100vh;background:var(--paper);color:var(--ink);
+    position:relative;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .art{position:absolute;inset:0;width:100%;height:100%}
+  .safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:6vh}
+  .emblem{width:44vh;height:44vh;flex:none;display:block}
+  .word{
+    font-size:14vh;font-weight:800;font-stretch:106%;
+    letter-spacing:.045em;line-height:.9;text-indent:.045em;white-space:nowrap;
+  }
+  .word b{color:var(--hero);font-weight:800}
+  .tagline{
+    margin-top:1.6vh;font-size:3.5vh;font-weight:700;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--muted);text-indent:.26em;white-space:nowrap;
+  }
+  .rule{width:12vh;height:1.2vh;background:var(--hero);border-radius:1vh;margin:3.2vh 0 2.8vh}
+  .phone{
+    font-size:8.6vh;font-weight:800;letter-spacing:-.01em;line-height:1;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .zone{
+    margin-top:1.6vh;font-size:3.1vh;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);text-indent:.18em;white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== ilustración de fondo: sangra por los cuatro lados ===== -->
+  <svg class="art" viewBox="0 0 1640 624" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <!-- cada herramienta vive en una caja de 120 x 420, mango abajo, cabeza arriba -->
+      <g id="t-hammer">
+        <rect x="48" y="150" width="24" height="272" rx="12"/>
+        <rect x="14" y="74" width="92" height="76" rx="8"/>
+        <!-- la uña: el vértice de adentro hace la muesca -->
+        <path d="M14 74 L-18 84 L-4 116 L-18 148 L14 150 Z"/>
+      </g>
+      <g id="t-wrench">
+        <rect x="48" y="176" width="24" height="246" rx="12"/>
+        <!-- boca hexagonal abierta: hexágono exterior, hueco interior y la
+             ranura de arriba, las tres resueltas con evenodd -->
+        <path fill-rule="evenodd"
+              d="M60 56 L108 84 L108 140 L60 168 L12 140 L12 84 Z
+                 M60 82 L86 97 L86 127 L60 142 L34 127 L34 97 Z
+                 M46 40 H74 V84 H46 Z"/>
+      </g>
+      <g id="t-driver">
+        <rect x="36" y="46" width="48" height="140" rx="20"/>
+        <rect x="52" y="186" width="16" height="180"/>
+        <polygon points="46,366 74,366 70,422 50,422"/>
+      </g>
+      <g id="t-roller">
+        <rect x="48" y="210" width="24" height="212" rx="12"/>
+        <rect x="48" y="150" width="24" height="64" rx="12"/>
+        <rect x="56" y="140" width="56" height="20" rx="10"/>
+        <rect x="84" y="44" width="52" height="100" rx="16"/>
+      </g>
+      <polygon id="bolt" points="0,-1 .866,-.5 .866,.5 0,1 -.866,.5 -.866,-.5"/>
+    </defs>
+
+    <!-- herramientas: solo en los tercios de afuera -->
+    <g fill="var(--tool)">
+      <use href="#t-hammer" transform="translate(56 24)    rotate(-16 60 210) scale(1.12)"/>
+      <use href="#t-wrench" transform="translate(-40 286)  rotate(27 60 210)  scale(.98)"/>
+      <use href="#t-driver" transform="translate(214 -88)  rotate(17 60 210)  scale(.94)"/>
+      <use href="#t-roller" transform="translate(148 318)  rotate(-11 60 210) scale(.9)"/>
+
+      <use href="#t-wrench" transform="translate(1396 236) rotate(-23 60 210) scale(1.04)"/>
+      <use href="#t-hammer" transform="translate(1536 -44) rotate(15 60 210)  scale(1)"/>
+      <use href="#t-driver" transform="translate(1322 312) rotate(-34 60 210) scale(.9)"/>
+      <use href="#t-roller" transform="translate(1474 -124) rotate(19 60 210) scale(.84)"/>
+    </g>
+
+    <!-- bulones sueltos: el hexágono del monograma, repetido -->
+    <g fill="var(--hero)" opacity=".2">
+      <use href="#bolt" transform="translate(336 76)   scale(31)"/>
+      <use href="#bolt" transform="translate(1306 524) scale(40)"/>
+      <use href="#bolt" transform="translate(126 544)  scale(25)"/>
+      <use href="#bolt" transform="translate(1598 296) scale(33)"/>
+      <use href="#bolt" transform="translate(1428 104) scale(21)"/>
+      <use href="#bolt" transform="translate(44 176)   scale(19)"/>
+    </g>
+    <!-- uno muy suave arriba a la derecha, para que ese lado no quede plano -->
+    <g fill="var(--hero)" opacity=".07">
+      <use href="#bolt" transform="translate(1180 -6) scale(58)"/>
+    </g>
+  </svg>
+
+  <!-- ===== emblema + texto ===== -->
+  <div class="safe">
+    <svg class="emblem" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="196" fill="var(--hero)"/>
+      <svg x="107" y="107" width="186" height="186" viewBox="0 0 100 100">
+        <path fill="#FFFFFF" fill-rule="evenodd"
+              d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+      </svg>
+    </svg>
+
+    <div>
+      <div class="word">SUPER<b>H</b>MAN</div>
+      <div class="tagline">Every home needs a hero</div>
+      <div class="rule"></div>
+      <!-- ==== EDIT ME: phone + zone ==== -->
+      <div class="phone">(645) 221-9200</div>
+      <div class="zone">Broward &middot; Dade &middot; Boca Raton</div>
+    </div>
+  </div>
+</body>
+</html>

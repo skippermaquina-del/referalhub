@@ -28,8 +28,10 @@ const CARD_W_MM = 94.9; // 3.5 in trim + 3 mm bleed each side
 const CARD_H_MM = 56.8; // 2 in   trim + 3 mm bleed each side
 const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
-// Square brand assets rendered one-to-one: [file, pixel size]
-const SQUARES = [["avatar.html", 2048]];
+// Brand assets rendered one-to-one at a fixed pixel size: [file, width, height].
+// Height defaults to width, so a square only needs the one number.
+const IMAGES = [["avatar.html", 2048], ["fb-cover.html", 1640, 624],
+                ["fb-cover-ilustrada.html", 1640, 624]];
 // Posters printed whole AND sliced across sheets: the same artwork becomes
 // the cheap tiled version to put up today and the file a sign shop plots later.
 const POSTERS = [{
@@ -273,21 +275,21 @@ try {
     log.push(`A4  superhman-${stem}-A4-tiles.pdf (${poster.cols} x ${poster.rows} hojas, 1 PDF)`);
   }
 
-  for (const [file, px] of SQUARES) {
+  for (const [file, w, h = w] of IMAGES) {
     if (!existsSync(join(designDir, file))) continue;
     await cdp.send("Emulation.setDeviceMetricsOverride", {
-      width: px, height: px, deviceScaleFactor: 1, mobile: false,
+      width: w, height: h, deviceScaleFactor: 1, mobile: false,
     });
     await open(cdp, join(designDir, file));
     const { data } = await cdp.send("Page.captureScreenshot", {
       format: "png",
       captureBeyondViewport: true,
-      clip: { x: 0, y: 0, width: px, height: px, scale: 1 },
+      clip: { x: 0, y: 0, width: w, height: h, scale: 1 },
     });
     const out = file.replace(/\.html$/, ".png");
     writeFileSync(join(outDir, out), Buffer.from(data, "base64"));
     await cdp.send("Emulation.clearDeviceMetricsOverride");
-    log.push(`IMG ${out} (${px} x ${px})`);
+    log.push(`IMG ${out} (${w} x ${h})`);
   }
 } finally {
   cdp.close();
