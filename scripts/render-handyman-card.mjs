@@ -30,7 +30,8 @@ const CSS_PX_PER_MM = 96 / 25.4;
 const DPI = 300;
 // Brand assets rendered one-to-one at a fixed pixel size: [file, width, height].
 // Height defaults to width, so a square only needs the one number.
-const IMAGES = [["avatar.html", 2048], ["fb-cover.html", 1640, 624]];
+const IMAGES = [["avatar.html", 2048], ["fb-cover.html", 1640, 624],
+                ["fb-cover-ilustrada.html", 1640, 624]];
 // Posters printed whole AND sliced across sheets: the same artwork becomes
 // the cheap tiled version to put up today and the file a sign shop plots later.
 const POSTERS = [{
