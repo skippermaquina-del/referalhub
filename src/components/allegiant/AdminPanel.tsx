@@ -17,7 +17,11 @@ type Lead = {
   created_at: string;
 };
 
-export function AdminPanel() {
+/**
+ * Panel de solicitudes. `tenant` decide de qué negocio son: el servidor solo
+ * devuelve, y solo deja tocar, las de ese inquilino.
+ */
+export function AdminPanel({ tenant = "allegiant" }: { tenant?: string }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [code, setCode] = useState("");
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -25,13 +29,13 @@ export function AdminPanel() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [sendingSms, setSendingSms] = useState(false);
 
-  // El código se comprueba en el servidor (ALLEGIANT_ADMIN_CODE); aquí solo se guarda mientras la página está abierta.
+  // El código se comprueba en el servidor (<INQUILINO>_ADMIN_CODE); aquí solo se guarda mientras la página está abierta.
   const [adminCode, setAdminCode] = useState("");
 
   const fetchLeads = async (codeToUse: string): Promise<boolean> => {
     setLoading(true);
     try {
-      const res = await fetch("/api/allegiant/admin/leads", {
+      const res = await fetch(`/api/t/${tenant}/admin/leads`, {
         headers: { "x-admin-code": codeToUse },
         cache: "no-store",
       });
@@ -71,7 +75,7 @@ export function AdminPanel() {
     const lead = leads.find((l) => l.id === leadId) ?? selectedLead;
     try {
       // Primero se guarda el estado: un fallo del SMS no debe bloquear la aprobación.
-      const res = await fetch("/api/allegiant/admin/leads", {
+      const res = await fetch(`/api/t/${tenant}/admin/leads`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-admin-code": adminCode },
         body: JSON.stringify({ id: leadId, status: newStatus }),
@@ -95,16 +99,12 @@ export function AdminPanel() {
 
     setSendingSms(true);
     try {
-      const smsResponse = await fetch("/api/allegiant/sms", {
+      // Solo el id: el texto del mensaje lo arma el servidor con lo que
+      // hay en la base, no con lo que diga el navegador.
+      const smsResponse = await fetch(`/api/t/${tenant}/sms`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-admin-code": adminCode },
-        body: JSON.stringify({
-          leadName: lead.name,
-          leadPhone: lead.phone,
-          appliance: lead.appliance,
-          brand: lead.brand,
-          message: lead.message,
-        }),
+        body: JSON.stringify({ id: lead.id }),
       });
 
       if (!smsResponse.ok) {

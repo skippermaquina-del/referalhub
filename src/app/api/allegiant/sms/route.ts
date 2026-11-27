@@ -1,59 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import twilio from "twilio";
-import { adminAuthorized, adminDenied } from "@/lib/allegiant-admin";
+/**
+ * SMS al dueño desde el panel de Allegiant. URL histórica, conservada.
+ * Solo el panel (con su código) puede dispararlo: si no, cualquiera gastaría
+ * saldo de Twilio.
+ */
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const fromNumber = process.env.TWILIO_PHONE_NUMBER;
-const toNumber = process.env.TWILIO_VADIM_PHONE;
+import { adminAuthorized, adminConfigured, adminDenied } from "@/lib/admin";
+import { sendLeadSms } from "@/lib/admin-sms";
+import { getTenant } from "@/lib/tenants";
 
-export async function POST(req: NextRequest) {
-  // Solo el panel (con su código) puede mandar SMS: si no, cualquiera gastaría saldo de Twilio.
-  if (!adminAuthorized(req)) return adminDenied();
+const tenant = getTenant("allegiant")!;
 
-  // Validar credenciales
-  if (!accountSid || !authToken || !fromNumber || !toNumber) {
-    return NextResponse.json(
-      { error: "Twilio credentials not configured" },
-      { status: 500 }
-    );
-  }
-
-  try {
-    const { leadName, leadPhone, appliance, brand, message: leadMessage } = await req.json();
-
-    if (!leadName || !leadPhone) {
-      return NextResponse.json(
-        { error: "Missing required fields: leadName, leadPhone" },
-        { status: 400 }
-      );
-    }
-
-    const client = twilio(accountSid, authToken);
-
-    // Construir mensaje SMS
-    const smsBody = `New lead: ${leadName} (${leadPhone})
-Appliance: ${appliance || "Not specified"}
-Brand: ${brand || "Not specified"}
-${leadMessage ? `Note: ${leadMessage.substring(0, 100)}...` : ""}`;
-
-    // Enviar SMS a Vadim
-    const message = await client.messages.create({
-      body: smsBody,
-      from: fromNumber,
-      to: toNumber,
-    });
-
-    return NextResponse.json({
-      ok: true,
-      messageSid: message.sid,
-      status: message.status,
-    });
-  } catch (error) {
-    console.error("SMS Error:", error);
-    return NextResponse.json(
-      { error: "Failed to send SMS", details: String(error) },
-      { status: 500 }
-    );
-  }
+export async function POST(request: Request) {
+  if (!adminConfigured(tenant) || !adminAuthorized(tenant, request)) return adminDenied(tenant);
+  return sendLeadSms(tenant, request);
 }
