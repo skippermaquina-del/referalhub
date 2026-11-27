@@ -1,0 +1,171 @@
+/*
+  SuperHman — estilos del sitio.
+
+  Los colores y la tipografía son los mismos de la tarjeta, la van y el volante
+  de puerta: tinta #0E1116, naranja #FF5C1A y Archivo. Si alguno cambia acá,
+  deja de coincidir con el material impreso.
+
+  Tema único a propósito: es una pieza de marca, no una aplicación.
+*/
+
+.sh {
+  --sh-paper: #faf7f3;
+  --sh-surface: #ffffff;
+  --sh-ink: #0e1116;
+  --sh-hero: #ff5c1a;
+  /* El naranja de marca no llega a contraste suficiente sobre papel para
+     texto chico: esta variante es la que se usa cuando el naranja es letra. */
+  --sh-hero-ink: #c23a05;
+  --sh-muted: #6b6560;
+  --sh-line: #e6e0d9;
+  --sh-ok: #0c6b5e;
+
+  background: var(--sh-paper);
+  color: var(--sh-ink);
+  font-family: var(--font-sh-sans), system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.sh *,
+.sh *::before,
+.sh *::after { box-sizing: border-box; }
+
+.sh-wrap {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+.sh h1, .sh h2, .sh h3 { margin: 0; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.sh p { margin: 0; }
+.sh a { color: inherit; }
+
+/* ---- cabecera ---- */
+.sh-top { display: flex; align-items: center; gap: 0.7rem; padding-block: 1.3rem; flex-wrap: wrap; }
+.sh-mark { width: 30px; height: 30px; color: var(--sh-hero); flex: none; }
+.sh-brand { font-weight: 800; font-size: 1.05rem; letter-spacing: 0.12em; }
+.sh-brand i { font-style: normal; color: var(--sh-hero); }
+.sh-top nav { margin-left: auto; display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
+.sh-top nav a { text-decoration: none; color: var(--sh-muted); }
+.sh-top nav a:hover { color: var(--sh-ink); }
+.sh-callbtn {
+  background: var(--sh-ink); color: #fff !important; padding: 0.45rem 0.95rem;
+  border-radius: 4px; font-weight: 700; font-size: 0.88rem; white-space: nowrap;
+}
+/* En teléfono la marca y el teléfono no entran en una línea: la navegación
+   baja a su propio renglón en vez de empujar la página hacia el costado. */
+@media (max-width: 520px) {
+  .sh-top nav { margin-left: 0; width: 100%; justify-content: space-between; }
+}
+
+/* ---- hero ---- */
+.sh-hero { padding-block: 2.5rem 3.2rem; border-top: 2px solid var(--sh-ink); }
+.sh-hero h1 { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 800; max-width: 16ch; }
+.sh-hero h1 em { font-style: normal; color: var(--sh-hero-ink); }
+.sh-lead { margin-top: 1.2rem; font-size: clamp(1.05rem, 2.4vw, 1.25rem); color: var(--sh-muted); max-width: 46ch; }
+.sh-cta { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.4rem; }
+.sh-btn {
+  display: inline-block; background: var(--sh-hero); color: #fff; text-decoration: none;
+  font-weight: 800; font-size: 1.02rem; padding: 0.85rem 1.6rem; border-radius: 4px;
+}
+.sh-btn:hover { background: var(--sh-hero-ink); }
+.sh-cta small { color: var(--sh-muted); font-size: 0.95rem; }
+.sh-cta small a { font-weight: 700; color: var(--sh-ink); text-decoration: none; border-bottom: 2px solid var(--sh-hero); white-space: nowrap; }
+
+/* ---- secciones ---- */
+.sh-sec { padding-block: 2.8rem; border-top: 1px solid var(--sh-line); }
+.sh-sec > h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 700; }
+.sh-eyebrow {
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--sh-hero-ink); margin-bottom: 0.7rem;
+}
+
+/* ---- precios ---- */
+.sh-prices { list-style: none; padding: 0; margin: 1.4rem 0 0; }
+.sh-prices li {
+  display: flex; align-items: baseline; gap: 1rem;
+  padding: 0.85rem 0; border-bottom: 1px solid var(--sh-line);
+}
+.sh-prices b { font-weight: 600; font-size: 1.02rem; min-width: 0; }
+.sh-prices span {
+  margin-left: auto; font-weight: 800; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sh-prices span i { font-style: normal; font-weight: 500; color: var(--sh-muted); font-size: 0.85rem; }
+.sh-note { margin-top: 1rem; color: var(--sh-muted); font-size: 0.95rem; }
+
+/* ---- pasos ---- */
+.sh-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; margin-top: 1.5rem; }
+@media (max-width: 760px) { .sh-steps { grid-template-columns: 1fr; gap: 1.3rem; } }
+.sh-step { min-width: 0; }
+.sh-step .n { font-weight: 800; font-size: 0.78rem; color: var(--sh-hero-ink); letter-spacing: 0.08em; }
+.sh-step h3 { margin-top: 0.4rem; font-size: 1.05rem; font-weight: 700; }
+.sh-step p { margin-top: 0.4rem; color: var(--sh-muted); font-size: 0.95rem; }
+
+/* ---- confianza ---- */
+.sh-trust { display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; margin-top: 1.4rem; font-weight: 600; font-size: 0.95rem; }
+.sh-trust span { display: flex; align-items: center; gap: 0.55rem; }
+.sh-trust span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sh-hero); flex: none; }
+
+/* ---- formulario ---- */
+.sh-form-sec { background: var(--sh-ink); color: #f2efec; border-radius: 6px; padding: 2rem 1.6rem; margin-block: 3rem; }
+.sh-form-sec h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 700; color: #fff; }
+.sh-form-intro p { margin-top: 0.7rem; color: #bdb8b3; }
+.sh-form { margin-top: 1.5rem; display: grid; gap: 0.9rem; max-width: 34rem; }
+/* En escritorio el texto va a la izquierda y el formulario a la derecha: en una
+   sola columna el recuadro oscuro queda medio vacío. */
+@media (min-width: 860px) {
+  .sh-form-sec {
+    display: grid; grid-template-columns: 1fr 1.05fr; gap: 3rem;
+    align-items: start; padding: 2.6rem 2.2rem;
+  }
+  .sh-form { margin-top: 0; max-width: none; }
+}
+.sh-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+@media (max-width: 560px) { .sh-row { grid-template-columns: 1fr; } }
+.sh-field { display: grid; gap: 0.35rem; min-width: 0; }
+.sh-field label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #a8a29c; }
+.sh-field input, .sh-field select, .sh-field textarea {
+  font: inherit; font-size: 1rem; color: #fff; background: #1b1f25;
+  border: 1px solid #333942; border-radius: 4px; padding: 0.65rem 0.75rem; width: 100%;
+}
+.sh-field textarea { resize: vertical; }
+.sh-field input:focus-visible, .sh-field select:focus-visible, .sh-field textarea:focus-visible {
+  outline: 2px solid var(--sh-hero); outline-offset: 1px; border-color: var(--sh-hero);
+}
+.sh-check { display: flex; gap: 0.65rem; align-items: flex-start; font-size: 0.82rem; color: #bdb8b3; line-height: 1.5; }
+.sh-check input { margin-top: 0.25rem; width: 1rem; height: 1rem; accent-color: var(--sh-hero); flex: none; }
+.sh-consent { font-size: 0.8rem; color: #96918c; line-height: 1.55; }
+.sh-consent a { color: #d6d1cc; }
+.sh-submit {
+  font: inherit; font-weight: 800; font-size: 1.02rem; color: #fff; background: var(--sh-hero);
+  border: 0; border-radius: 4px; padding: 0.85rem 1.4rem; cursor: pointer;
+}
+.sh-submit:hover:not(:disabled) { background: #e04e10; }
+.sh-submit:disabled { opacity: 0.6; cursor: default; }
+.sh-form-msg { font-size: 0.95rem; font-weight: 600; }
+.sh-form-msg.ok { color: #7fe3c4; }
+.sh-form-msg.bad { color: #ffb08a; }
+.sh-or { font-size: 0.95rem; color: #bdb8b3; }
+.sh-or a { font-weight: 700; color: #fff; border-bottom: 2px solid var(--sh-hero); text-decoration: none; white-space: nowrap; }
+/* Campo trampa: fuera de pantalla, nunca visible ni enfocable. */
+.sh-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---- pie ---- */
+.sh-foot { border-top: 2px solid var(--sh-ink); padding-block: 1.6rem 3rem; font-size: 0.9rem; color: var(--sh-muted); display: grid; gap: 0.7rem; }
+.sh-foot a { color: var(--sh-ink); }
+.sh-foot strong { color: var(--sh-ink); }
+
+/* ---- páginas legales ---- */
+.sh-legal { padding-block: 2rem 4rem; max-width: 44rem; }
+.sh-legal h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 800; }
+.sh-legal .upd { margin-top: 0.6rem; color: var(--sh-muted); font-size: 0.9rem; }
+.sh-legal > p.intro { margin-top: 1.2rem; font-size: 1.05rem; }
+.sh-legal section { margin-top: 2rem; }
+.sh-legal section h2 { font-size: 1.15rem; font-weight: 700; }
+.sh-legal section p { margin-top: 0.8rem; color: #3a3630; }
+
+@media (prefers-reduced-motion: reduce) { .sh * { animation: none !important; transition: none !important; } }
