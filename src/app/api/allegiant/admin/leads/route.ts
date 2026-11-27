@@ -1,49 +1,20 @@
 /**
- * Solicitudes para el panel de Allegiant.
- * GET: las pendientes de aprobación. PATCH { id, status }: aprobar o rechazar.
- * Ambas exigen el código del panel (ver `@/lib/allegiant-admin`).
+ * Solicitudes del panel de Allegiant. URL histórica, conservada.
+ * La lógica vive en `@/lib/admin-leads`, acotada al inquilino.
  */
 
-import { adminAuthorized, adminConfigured, adminDb, adminDenied } from "@/lib/allegiant-admin";
+import { adminAuthorized, adminConfigured, adminDenied } from "@/lib/admin";
+import { listPendingLeads, updateLeadStatus } from "@/lib/admin-leads";
+import { getTenant } from "@/lib/tenants";
 
-const STATUSES = new Set(["confirmed", "declined"]);
+const tenant = getTenant("allegiant")!;
 
 export async function GET(request: Request) {
-  if (!adminConfigured() || !adminAuthorized(request)) return adminDenied();
-
-  const { data, error } = await adminDb()
-    .from("leads")
-    .select("*")
-    .eq("status", "pending_approval")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("[allegiant admin] list failed", error);
-    return Response.json({ error: "database_error" }, { status: 500 });
-  }
-  return Response.json({ leads: data ?? [] });
+  if (!adminConfigured(tenant) || !adminAuthorized(tenant, request)) return adminDenied(tenant);
+  return listPendingLeads(tenant);
 }
 
 export async function PATCH(request: Request) {
-  if (!adminConfigured() || !adminAuthorized(request)) return adminDenied();
-
-  let body: { id?: unknown; status?: unknown };
-  try {
-    body = await request.json();
-  } catch {
-    return Response.json({ error: "invalid_json" }, { status: 400 });
-  }
-
-  const id = typeof body.id === "string" ? body.id : "";
-  const status = typeof body.status === "string" ? body.status : "";
-  if (!id || !STATUSES.has(status)) {
-    return Response.json({ error: "invalid_fields" }, { status: 400 });
-  }
-
-  const { error } = await adminDb().from("leads").update({ status }).eq("id", id);
-  if (error) {
-    console.error("[allegiant admin] update failed", error);
-    return Response.json({ error: "database_error" }, { status: 500 });
-  }
-  return Response.json({ ok: true });
+  if (!adminConfigured(tenant) || !adminAuthorized(tenant, request)) return adminDenied(tenant);
+  return updateLeadStatus(tenant, request);
 }

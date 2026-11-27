@@ -53,12 +53,17 @@ function clean(value: unknown, max: number): string {
 }
 
 /**
- * La columna `tenant` todavía puede no existir en la base.
+ * Reintento sin la columna `tenant`.
  *
- * Mientras no corra la migración, el insert con `tenant` falla con 42703 /
- * PGRST204 y se reintenta sin esa columna, para que ninguna solicitud se
- * pierda durante el despliegue. Cuando la columna exista en producción, este
- * reintento se puede borrar.
+ * La migración `add_tenant_to_leads` ya corrió, así que la columna existe. El
+ * reintento queda por una sola razón: PostgREST cachea el esquema, y en la
+ * ventana entre un cambio de DDL y la recarga de ese caché un insert con una
+ * columna nueva puede fallar con PGRST204. Antes que perder la solicitud de un
+ * cliente, se guarda sin la etiqueta.
+ *
+ * Se puede borrar una vez que se vea en producción un lead guardado con su
+ * inquilino. Si este aviso aparece en los logs después de eso, el problema es
+ * el caché de PostgREST, no la migración.
  */
 function missingTenantColumn(error: { code?: string; message?: string } | null): boolean {
   if (!error) return false;
