@@ -130,9 +130,7 @@ const TENANTS: Record<TenantId, Tenant> = {
     serviceArea: "Broward, Miami-Dade and Boca Raton",
     hours: "Monday to Saturday, 8am to 6pm.",
     itemLabel: "Job",
-    // Todavía sin número propio en Vapi: hasta que lo tenga, no se rutean
-    // llamadas a este inquilino.
-    agentPhone: null,
+    agentPhone: "+18888970636",
     adminUrl: "https://allegiantappliance.com/superhman/admin",
   },
 };
@@ -186,6 +184,16 @@ export function tenantEnv(tenant: Tenant, key: string, legacy?: string): string 
 export function ownerPhone(tenant: Tenant): string | undefined {
   return tenantEnv(tenant, "OWNER_PHONE", tenant.id === "allegiant" ? "TWILIO_VADIM_PHONE" : undefined);
 }
+
+/**
+ * El asistente plantilla de Vapi: uno solo, con el prompt lleno de `{{...}}`.
+ *
+ * No es un secreto, es un identificador, así que vive acá y no en una variable
+ * de entorno: un paso menos de configuración. `<INQUILINO>_VAPI_ASSISTANT_ID` o
+ * `VAPI_ASSISTANT_ID` lo pisan si hace falta — por ejemplo para probar un
+ * asistente nuevo sin tocar el código.
+ */
+export const TEMPLATE_ASSISTANT_ID = "1d7a8f41-259c-4b82-8f5e-1b5e1e2de753";
 
 /** Secreto del webhook de voz. Si el inquilino no tiene el suyo, usa el compartido. */
 export function vapiSecret(tenant: Tenant): string | undefined {

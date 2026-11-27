@@ -19,7 +19,13 @@
  */
 
 import { timingSafeEqual } from "node:crypto";
-import { CONSENT_LINE, tenantByAgentPhone, tenantEnv, type Tenant } from "@/lib/tenants";
+import {
+  CONSENT_LINE,
+  TEMPLATE_ASSISTANT_ID,
+  tenantByAgentPhone,
+  tenantEnv,
+  type Tenant,
+} from "@/lib/tenants";
 
 const SECRET = process.env.VAPI_WEBHOOK_SECRET;
 
@@ -91,12 +97,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "This number is not in service. Please check the number and try again." });
   }
 
-  // El asistente propio del inquilino si lo tiene; si no, la plantilla compartida.
-  const assistantId = tenantEnv(tenant, "VAPI_ASSISTANT_ID", "VAPI_ASSISTANT_ID");
-  if (!assistantId) {
-    console.error(`[${tenant.id}] no VAPI_ASSISTANT_ID configured`);
-    return Response.json({ error: "We are unable to take your call right now. Please try again shortly." });
-  }
+  // El asistente propio del inquilino si lo tiene configurado; si no, la plantilla.
+  const assistantId =
+    tenantEnv(tenant, "VAPI_ASSISTANT_ID", "VAPI_ASSISTANT_ID") ?? TEMPLATE_ASSISTANT_ID;
 
   return Response.json({
     assistantId,
