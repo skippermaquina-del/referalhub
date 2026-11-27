@@ -130,9 +130,7 @@ const TENANTS: Record<TenantId, Tenant> = {
     serviceArea: "Broward, Miami-Dade and Boca Raton",
     hours: "Monday to Saturday, 8am to 6pm.",
     itemLabel: "Job",
-    // Todavía sin número propio en Vapi: hasta que lo tenga, no se rutean
-    // llamadas a este inquilino.
-    agentPhone: null,
+    agentPhone: "+18888970636",
     adminUrl: "https://allegiantappliance.com/superhman/admin",
   },
 };

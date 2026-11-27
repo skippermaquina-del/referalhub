@@ -18,7 +18,7 @@
 
 import { timingSafeEqual } from "node:crypto";
 import { handleLead } from "@/lib/leads";
-import { vapiSecret, type Tenant } from "@/lib/tenants";
+import { tenantByAgentPhone, vapiSecret, type Tenant } from "@/lib/tenants";
 
 type Json = Record<string, unknown>;
 
@@ -71,19 +71,71 @@ function parseToolCall(tc: Json): { id: string; name: string; args: Json } {
 // reintentos seguidos). El id de llamada es único entre inquilinos.
 const emptyCalls = new Set<string>();
 
+/**
+ * Entrada por inquilino fijo: la URL ya dice de quién es la llamada y se
+ * autoriza con el secreto de ese inquilino.
+ */
 export async function handleVoiceLead(tenant: Tenant, request: Request): Promise<Response> {
   const secret = vapiSecret(tenant);
   if (!authorized(request, secret)) {
     return Response.json({ error: "unauthorized" }, { status: secret ? 401 : 503 });
   }
 
-  let body: Json;
-  try {
-    body = await request.json();
-  } catch {
-    return Response.json({ error: "invalid_json" }, { status: 400 });
+  const body = await readJson(request);
+  if (!body) return Response.json({ error: "invalid_json" }, { status: 400 });
+  return processVoiceLead(tenant, body);
+}
+
+/**
+ * Entrada compartida: una sola URL para todos los inquilinos.
+ *
+ * Hace falta porque la herramienta `save_lead` vive en el asistente plantilla
+ * y su URL no se puede cambiar por override. Así que el inquilino se resuelve
+ * igual que en `assistant-request`: por el número al que llamaron.
+ *
+ * Se autoriza con el secreto de plataforma, porque todavía no se sabe de qué
+ * inquilino es la llamada en el momento de autorizar.
+ */
+export async function handleSharedVoiceLead(request: Request): Promise<Response> {
+  const secret = process.env.VAPI_WEBHOOK_SECRET;
+  if (!authorized(request, secret)) {
+    return Response.json({ error: "unauthorized" }, { status: secret ? 401 : 503 });
   }
 
+  const body = await readJson(request);
+  if (!body) return Response.json({ error: "invalid_json" }, { status: 400 });
+
+  const message = (body.message ?? body) as Json;
+  const call = message.call as Json | undefined;
+  const dialed =
+    (message.phoneNumber as Json | undefined)?.number ?? (call?.phoneNumber as Json | undefined)?.number;
+  const tenant = tenantByAgentPhone(dialed);
+
+  if (!tenant) {
+    console.warn(`[vapi] save_lead from an unrouted number: ${str(dialed, 30) || "(unknown)"}`);
+    // El agente lee esto y no se queda mudo esperando.
+    return Response.json({
+      results: [
+        {
+          toolCallId: "",
+          result: "NOT SAVED because of a configuration error. Apologize, ask the caller to try again later, and end the call politely.",
+        },
+      ],
+    });
+  }
+
+  return processVoiceLead(tenant, body);
+}
+
+async function readJson(request: Request): Promise<Json | null> {
+  try {
+    return (await request.json()) as Json;
+  } catch {
+    return null;
+  }
+}
+
+async function processVoiceLead(tenant: Tenant, body: Json): Promise<Response> {
   const message = (body.message ?? body) as Json;
   const call = message.call as Json | undefined;
   const toolCalls = ((message.toolCallList ?? message.toolCalls ?? []) as Json[]).map(parseToolCall);
