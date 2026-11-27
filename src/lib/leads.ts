@@ -59,16 +59,21 @@ function clean(value: unknown, max: number): string {
  * reintento queda por una sola razón: PostgREST cachea el esquema, y en la
  * ventana entre un cambio de DDL y la recarga de ese caché un insert con una
  * columna nueva puede fallar con PGRST204. Antes que perder la solicitud de un
- * cliente, se guarda sin la etiqueta.
+ * cliente, se guarda con la forma vieja de la fila.
  *
- * Se puede borrar una vez que se vea en producción un lead guardado con su
- * inquilino. Si este aviso aparece en los logs después de eso, el problema es
- * el caché de PostgREST, no la migración.
+ * El reintento no pierde el consentimiento de SMS: lo vuelve a codificar como
+ * el prefijo "[SMS OK]" en la nota, que es donde vivía antes de que existiera
+ * la columna. Un dato sin su forma nueva es mejor que un dato perdido.
+ *
+ * Se puede borrar una vez que se vea en producción un lead guardado con sus
+ * columnas nuevas. Si este aviso aparece en los logs después de eso, el
+ * problema es el caché de PostgREST, no la migración.
  */
-function missingTenantColumn(error: { code?: string; message?: string } | null): boolean {
+function missingColumn(error: { code?: string; message?: string } | null): boolean {
   if (!error) return false;
   if (error.code === "42703" || error.code === "PGRST204") return true;
-  return /tenant/i.test(error.message ?? "") && /column|schema cache/i.test(error.message ?? "");
+  const m = error.message ?? "";
+  return /tenant|sms_consent/i.test(m) && /column|schema cache/i.test(m);
 }
 
 export async function handleLead(tenant: Tenant, request: Request): Promise<Response> {
@@ -99,8 +104,8 @@ export async function handleLead(tenant: Tenant, request: Request): Promise<Resp
   });
   const lang = body.lang === "es" ? "es" : "en";
   // Casilla opcional del formulario. Sin ella solo se llama, nunca se escribe por SMS.
+  // Se guarda en su propia columna, no incrustada en el texto de la nota.
   const smsOk = body.smsConsent === "yes";
-  if (smsOk) lead.message = `[SMS OK] ${lead.message}`.trim().slice(0, limits.message);
 
   const digits = lead.phone.replace(/\D/g, "");
   if (!lead.name || digits.length < 7) {
@@ -119,16 +124,30 @@ export async function handleLead(tenant: Tenant, request: Request): Promise<Resp
     message: lead.message || null,
     lang,
     status: "pending_approval",
+    sms_consent: smsOk,
+    // Cuándo lo aceptó. Es el dato que pide una operadora cuando hay que
+    // demostrar el consentimiento, así que se guarda al momento de recibirlo.
+    sms_consent_at: smsOk ? new Date().toISOString() : null,
   };
+
+  /** La forma vieja de la fila, por si las columnas nuevas todavía no se ven. */
+  const legacyRow = (() => {
+    const { sms_consent, sms_consent_at, ...rest } = row;
+    void sms_consent;
+    void sms_consent_at;
+    return smsOk
+      ? { ...rest, message: `[SMS OK] ${rest.message ?? ""}`.trim().slice(0, limits.message) }
+      : rest;
+  })();
 
   let saved = false;
   const supabase = db();
   if (supabase) {
     try {
       let { error: dbError } = await supabase.from("leads").insert({ ...row, tenant: tenant.id });
-      if (missingTenantColumn(dbError)) {
-        console.warn(`[${tenant.id}] leads.tenant missing; inserting without it`);
-        ({ error: dbError } = await supabase.from("leads").insert(row));
+      if (missingColumn(dbError)) {
+        console.warn(`[${tenant.id}] new lead columns not visible yet; inserting the legacy shape`);
+        ({ error: dbError } = await supabase.from("leads").insert(legacyRow));
       }
       if (dbError) console.error(`[${tenant.id}] database insert failed`, dbError);
       else saved = true;

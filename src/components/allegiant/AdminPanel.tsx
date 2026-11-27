@@ -15,7 +15,19 @@ type Lead = {
   lang: string;
   notes: string | null;
   created_at: string;
+  /** Marcó la casilla opcional de mensajes de texto. */
+  sms_consent?: boolean | null;
 };
+
+/**
+ * Antes de que existiera la columna, el consentimiento se guardaba como el
+ * prefijo "[SMS OK]" en la nota. Las filas viejas se rellenaron en la
+ * migración, pero el reintento del servidor todavía puede escribir con la
+ * forma vieja si PostgREST no ve la columna, así que se miran las dos.
+ */
+function acceptedTexts(lead: Lead): boolean {
+  return lead.sms_consent === true || lead.message?.startsWith("[SMS OK]") === true;
+}
 
 /**
  * Panel de solicitudes. `tenant` decide de qué negocio son: el servidor solo
@@ -92,7 +104,7 @@ export function AdminPanel({ tenant = "allegiant" }: { tenant?: string }) {
     if (newStatus !== "confirmed" || !lead) return;
 
     // Solo se escribe por SMS a quien marcó la casilla opcional del formulario.
-    if (!lead.message?.startsWith("[SMS OK]")) {
+    if (!acceptedTexts(lead)) {
       alert(`Lead aprobado. ${lead.name} no aceptó mensajes de texto: llámalo al ${lead.phone}.`);
       return;
     }
