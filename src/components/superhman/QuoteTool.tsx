@@ -320,11 +320,15 @@ export function QuoteTool() {
 
       {/* La foto. No cotiza: describe, cuenta y dice qué preguntar. */}
       <div className="q-foto">
+        {/* Sin `capture`. Con ese atributo el telefono va derecho a la camara
+            y no deja elegir del rollo, que es el caso mas comun: la foto la
+            mando el cliente por WhatsApp. Sin el, iOS muestra su propio menu
+            con "Fototeca", "Tomar foto" y "Elegir archivo", que son las tres
+            que hacen falta. */}
         <input
           ref={fileInput}
           type="file"
           accept="image/*"
-          capture="environment"
           hidden
           onChange={(e) => {
             const f = e.target.files?.[0];
@@ -358,6 +362,7 @@ export function QuoteTool() {
         ) : (
           <button type="button" className="q-foto-add" onClick={() => fileInput.current?.click()}>
             Agregar foto del trabajo
+            <small>Sacala ahora o elegí la que te mandó el cliente</small>
           </button>
         )}
       </div>
