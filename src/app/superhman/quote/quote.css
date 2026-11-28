@@ -91,6 +91,8 @@
   color: var(--sh-muted);
 }
 .q-foto-add:hover { border-color: var(--sh-hero); color: var(--sh-hero-ink); }
+.q-foto-add { display: grid; gap: 0.25rem; justify-items: center; }
+.q-foto-add small { font-size: 0.82rem; font-weight: 500; text-transform: none; letter-spacing: 0; color: #a9a29a; }
 .q-foto-hay { display: flex; gap: 0.8rem; align-items: flex-start; }
 .q-foto-hay img {
   width: 96px; height: 96px; object-fit: cover; flex: none;
