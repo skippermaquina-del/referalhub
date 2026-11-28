@@ -14,7 +14,7 @@
 
 import { timingSafeEqual } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { tenantEnv, type Tenant } from "@/lib/tenants";
+import { getTenant, tenantEnv, type Tenant } from "@/lib/tenants";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -53,4 +53,21 @@ export function adminDb(): SupabaseClient {
     });
   }
   return db;
+}
+
+/**
+ * Portero común de las rutas `/api/t/[tenant]/...` de panel.
+ *
+ * Devuelve el inquilino si el código vale, o la respuesta que hay que
+ * contestar si no. Así cada ruta queda en una línea y ninguna se olvida de
+ * mirar el código.
+ */
+export async function adminGate(
+  request: Request,
+  params: Promise<{ tenant: string }>,
+): Promise<Tenant | Response> {
+  const tenant = getTenant((await params).tenant);
+  if (!tenant) return Response.json({ error: "unknown_tenant" }, { status: 404 });
+  if (!adminConfigured(tenant) || !adminAuthorized(tenant, request)) return adminDenied(tenant);
+  return tenant;
 }

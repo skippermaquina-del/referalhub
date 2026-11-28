@@ -33,6 +33,16 @@ export type Option = {
    * cotizador no deja copiar un mensaje con precio para el cliente.
    */
   block?: true;
+  /**
+   * Una foto alcanza para contestar esto. Es la lista blanca de lo que la IA
+   * puede llegar a sugerir, y se respeta en el servidor, no en el prompt.
+   *
+   * El tipo de pared no está marcado a propósito: pintados, el drywall y el
+   * bloque se ven idénticos, y esa opción es la que más mueve el precio. Una
+   * IA igual va a contestar algo, porque siempre contesta algo. Eso se
+   * pregunta.
+   */
+  fromPhoto?: true;
 };
 
 export type Choice = {
@@ -94,9 +104,9 @@ export const JOBS: Job[] = [
         id: "tamano",
         label: "Tamaño del TV",
         options: [
-          { id: "s", label: "Hasta 50\"", delta: 0 },
-          { id: "m", label: "50 a 65\"", delta: 25 },
-          { id: "l", label: "Más de 65\"", delta: 60, warn: "Arriba de 65\" suele hacer falta otra persona para levantarlo." },
+          { id: "s", fromPhoto: true, label: "Hasta 50\"", delta: 0 },
+          { id: "m", fromPhoto: true, label: "50 a 65\"", delta: 25 },
+          { id: "l", fromPhoto: true, label: "Más de 65\"", delta: 60, warn: "Arriba de 65\" suele hacer falta otra persona para levantarlo." },
         ],
       },
       PARED,
@@ -114,8 +124,8 @@ export const JOBS: Job[] = [
         multiple: true,
         options: [
           { id: "cables", label: "Esconder cables HDMI en la pared", delta: 90 },
-          { id: "chimenea", label: "Arriba de la chimenea", delta: 70, warn: "Casi siempre es concreto y queda alto: confirmá el tipo de pared." },
-          { id: "soundbar", label: "Barra de sonido también", delta: 45 },
+          { id: "chimenea", fromPhoto: true, label: "Arriba de la chimenea", delta: 70, warn: "Casi siempre es concreto y queda alto: confirmá el tipo de pared." },
+          { id: "soundbar", fromPhoto: true, label: "Barra de sonido también", delta: 45 },
           { id: "tomacorriente", block: true, label: "Mover el tomacorriente adentro de la pared", delta: 0, warn: "NO. Eso es trabajo eléctrico con licencia (Cap. 489). Pasale un electricista." },
         ],
       },
@@ -132,9 +142,9 @@ export const JOBS: Job[] = [
         id: "tamano",
         label: "Tamaño del agujero",
         options: [
-          { id: "s", label: "Chico, hasta 15 cm", delta: 0 },
-          { id: "m", label: "Mediano, hasta 40 cm", delta: 35 },
-          { id: "l", label: "Grande, necesita refuerzo atrás", delta: 80 },
+          { id: "s", fromPhoto: true, label: "Chico, hasta 15 cm", delta: 0 },
+          { id: "m", fromPhoto: true, label: "Mediano, hasta 40 cm", delta: 35 },
+          { id: "l", fromPhoto: true, label: "Grande, necesita refuerzo atrás", delta: 80 },
         ],
       },
       {
@@ -150,9 +160,9 @@ export const JOBS: Job[] = [
         id: "textura",
         label: "Textura",
         options: [
-          { id: "lisa", label: "Lisa", delta: 0 },
-          { id: "knockdown", label: "Knockdown o naranja", delta: 30 },
-          { id: "popcorn", block: true, label: "Popcorn en el techo", delta: 45, warn: "Si la casa es anterior a 1980, el popcorn puede tener asbesto. No lo lijes ni lo raspes: mandalo a analizar." },
+          { id: "lisa", fromPhoto: true, label: "Lisa", delta: 0 },
+          { id: "knockdown", fromPhoto: true, label: "Knockdown o naranja", delta: 30 },
+          { id: "popcorn", fromPhoto: true, block: true, label: "Popcorn en el techo", delta: 45, warn: "Si la casa es anterior a 1980, el popcorn puede tener asbesto. No lo lijes ni lo raspes: mandalo a analizar." },
         ],
       },
     ],
@@ -170,16 +180,16 @@ export const JOBS: Job[] = [
           { id: "ajuste", label: "Ajustar bisagras o cepillar", delta: 0 },
           { id: "herrajes", label: "Cambiar picaporte o cerradura", delta: 35 },
           { id: "recolgar", label: "Descolgar y volver a colgar", delta: 60 },
-          { id: "marco", label: "El marco está fuera de escuadra", delta: 95, warn: "Marco torcido puede ser asentamiento de la casa. Mirá bien antes de prometer que cierra." },
+          { id: "marco", fromPhoto: true, label: "El marco está fuera de escuadra", delta: 95, warn: "Marco torcido puede ser asentamiento de la casa. Mirá bien antes de prometer que cierra." },
         ],
       },
       {
         id: "tipo",
         label: "Tipo de puerta",
         options: [
-          { id: "interior", label: "Interior", delta: 0 },
-          { id: "exterior", label: "Exterior", delta: 40 },
-          { id: "corrediza", label: "Corrediza de vidrio", delta: 70, warn: "Las corredizas pesan muchísimo. No la levantes solo." },
+          { id: "interior", fromPhoto: true, label: "Interior", delta: 0 },
+          { id: "exterior", fromPhoto: true, label: "Exterior", delta: 40 },
+          { id: "corrediza", fromPhoto: true, label: "Corrediza de vidrio", delta: 70, warn: "Las corredizas pesan muchísimo. No la levantes solo." },
         ],
       },
     ],
@@ -195,9 +205,9 @@ export const JOBS: Job[] = [
         id: "complejidad",
         label: "Qué es",
         options: [
-          { id: "simple", label: "Mesa de luz, silla, estantería chica", delta: 0 },
-          { id: "medio", label: "Cómoda, escritorio, cama", delta: 40 },
-          { id: "grande", label: "Placard, ropero, modular grande", delta: 110, warn: "Un ropero grande puede llevar medio día. Cotizá por tiempo, no por pieza." },
+          { id: "simple", fromPhoto: true, label: "Mesa de luz, silla, estantería chica", delta: 0 },
+          { id: "medio", fromPhoto: true, label: "Cómoda, escritorio, cama", delta: 40 },
+          { id: "grande", fromPhoto: true, label: "Placard, ropero, modular grande", delta: 110, warn: "Un ropero grande puede llevar medio día. Cotizá por tiempo, no por pieza." },
         ],
       },
       {
@@ -223,9 +233,9 @@ export const JOBS: Job[] = [
         id: "que",
         label: "Qué es",
         options: [
-          { id: "liviano", label: "Cuadro, espejo chico, cortina", delta: 0 },
-          { id: "estante", label: "Estante flotante", delta: 20 },
-          { id: "pesado", label: "Espejo grande o estante cargado", delta: 45, warn: "Arriba de 25 kg tiene que ir a montante o anclaje de carga. No confíes en el tarugo de plástico." },
+          { id: "liviano", fromPhoto: true, label: "Cuadro, espejo chico, cortina", delta: 0 },
+          { id: "estante", fromPhoto: true, label: "Estante flotante", delta: 20 },
+          { id: "pesado", fromPhoto: true, label: "Espejo grande o estante cargado", delta: 45, warn: "Arriba de 25 kg tiene que ir a montante o anclaje de carga. No confíes en el tarugo de plástico." },
         ],
       },
     ],
@@ -366,4 +376,19 @@ export function mensaje(job: Job, r: Resultado, lang: Lang): string {
     return `Здравствуйте! Вот цена.\n\n${q}${nombre}: $${r.total}\n\nВключая работу и мелкие материалы. Если на месте окажется больше работы, чем видно на фото, я сначала скажу вам и мы обсудим — ничего не делаю без согласования.\n\nПодойдёт, если приеду на этой неделе?`;
   }
   return `Hi, here's the price.\n\n${q}${nombre}: $${r.total}\n\nThat covers the work and small materials. If it turns out bigger than the photo showed, I'll tell you and we agree on it before I start — I never add to the bill without asking first.\n\nDoes this week work for you?`;
+}
+
+/**
+ * ¿Puede la IA sugerir esta opción mirando una foto?
+ *
+ * Busca la opción de verdad dentro del trabajo, en vez de confiar en una
+ * lista de ids sueltos: los ids se repiten entre trabajos ("s", "m" y "l"
+ * están en el tamaño del TV y en el del agujero), así que una lista plana
+ * dejaría pasar una sugerencia del trabajo equivocado.
+ *
+ * Los globales (zona, acceso, urgencia) nunca entran: no están en la foto.
+ */
+export function puedeSugerir(job: Job, choiceId: string, optionId: string): boolean {
+  const choice = job.choices.find((c) => c.id === choiceId);
+  return Boolean(choice?.options.find((o) => o.id === optionId)?.fromPhoto);
 }

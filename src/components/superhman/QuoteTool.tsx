@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import {
   GLOBALES,
   JOBS,
@@ -21,6 +22,10 @@ import {
  * Cada cotización se guarda. No es por prolijidad: son los datos con los que
  * después se le pueden poner precios reales a una calculadora pública, en vez
  * de inventarlos.
+ *
+ * La foto no cotiza. Describe, cuenta, avisa y dice qué preguntar; lo que
+ * sugiere son botones que hay que tocar. Una sugerencia equivocada cuesta
+ * cero porque está a la vista.
  */
 
 const LANGS: { id: Lang; label: string }[] = [
@@ -28,6 +33,19 @@ const LANGS: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
   { id: "ru", label: "Русский" },
 ];
+
+type Lectura = {
+  resumen: string;
+  piezas: number | null;
+  preguntar: string[];
+  alertas: string[];
+  sugerencias: { choice: string; option: string }[];
+};
+
+const supabase =
+  process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ? createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    : null;
 
 /** Opciones por defecto: la primera de cada grupo de una sola elección. */
 function porDefecto(job: Job): Seleccion {
@@ -37,6 +55,35 @@ function porDefecto(job: Job): Seleccion {
     else sel[c.id] = [];
   }
   return sel;
+}
+
+/**
+ * Achica la foto antes de subirla. Un teléfono saca 4 MB; 1600 px al lado
+ * largo pesa unos 300 KB, sube en un parpadeo con datos móviles y la IA ve
+ * exactamente lo mismo. Si el navegador no puede abrirla (pasa con HEIC fuera
+ * de Safari), se sube tal cual y el servidor se arregla.
+ */
+async function achicar(file: File): Promise<{ cuerpo: Blob; tipo: string }> {
+  const MAX = 1600;
+  const crudo = { cuerpo: file as Blob, tipo: file.type || "image/jpeg" };
+  try {
+    const bitmap = await createImageBitmap(file);
+    const escala = Math.min(1, MAX / Math.max(bitmap.width, bitmap.height));
+    if (escala === 1 && file.size < 1_500_000) return crudo;
+
+    const lienzo = document.createElement("canvas");
+    lienzo.width = Math.round(bitmap.width * escala);
+    lienzo.height = Math.round(bitmap.height * escala);
+    const ctx = lienzo.getContext("2d");
+    if (!ctx) return crudo;
+    ctx.drawImage(bitmap, 0, 0, lienzo.width, lienzo.height);
+    bitmap.close();
+
+    const blob = await new Promise<Blob | null>((r) => lienzo.toBlob(r, "image/jpeg", 0.85));
+    return blob ? { cuerpo: blob, tipo: "image/jpeg" } : crudo;
+  } catch {
+    return crudo;
+  }
 }
 
 export function QuoteTool() {
@@ -50,9 +97,20 @@ export function QuoteTool() {
   const [guardando, setGuardando] = useState(false);
   const [guardado, setGuardado] = useState<"no" | "si" | "error">("no");
 
+  const [descripcion, setDescripcion] = useState("");
+  const [vista, setVista] = useState<string | null>(null);
+  const [photoPath, setPhotoPath] = useState<string | null>(null);
+  const [fase, setFase] = useState<
+    "nada" | "subiendo" | "leyendo" | "lista" | "error" | "sinalmacen"
+  >("nada");
+  const [lectura, setLectura] = useState<Lectura | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+
   const job = useMemo(() => JOBS.find((j) => j.id === jobId)!, [jobId]);
   const r = useMemo(() => cotizar(job, sel, cantidad), [job, sel, cantidad]);
   const texto = useMemo(() => mensaje(job, r, lang), [job, r, lang]);
+
+  const headers = () => ({ "Content-Type": "application/json", "x-admin-code": code });
 
   function elegirJob(id: string) {
     const j = JOBS.find((x) => x.id === id)!;
@@ -64,6 +122,9 @@ export function QuoteTool() {
       for (const c of GLOBALES) base[c.id] = prev[c.id] ?? base[c.id];
       return base;
     });
+    // La lectura era de otro trabajo: sus sugerencias ya no aplican.
+    setLectura(null);
+    if (photoPath) setFase("lista");
     setGuardado("no");
   }
 
@@ -86,6 +147,23 @@ export function QuoteTool() {
     return Array.isArray(v) ? v.includes(optionId) : v === optionId;
   };
 
+  /**
+   * Sugerencias que todavía valen: las ya aplicadas se van, y con ellas el
+   * bloque entero si no queda ninguna. Antes el título quedaba colgado sin
+   * nada debajo apenas tocabas la última.
+   */
+  const pendientes = useMemo(
+    () => (lectura?.sugerencias ?? []).filter((s) => !marcado(s.choice, s.option)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lectura, sel],
+  );
+  const proponeCantidad = Boolean(lectura?.piezas && lectura.piezas !== cantidad);
+
+  const etiqueta = (choiceId: string, optionId: string) => {
+    const c = job.choices.find((x) => x.id === choiceId);
+    return c?.options.find((o) => o.id === optionId)?.label ?? optionId;
+  };
+
   async function copiar() {
     try {
       await navigator.clipboard.writeText(texto);
@@ -96,17 +174,79 @@ export function QuoteTool() {
     }
   }
 
+  async function subirFoto(file: File) {
+    // Sin cliente de Supabase no hay a dónde subirla. Pasa si falta una
+    // variable en Vercel; antes esto no hacía nada y no decía nada.
+    if (!supabase) {
+      setVista(URL.createObjectURL(file));
+      setFase("sinalmacen");
+      return;
+    }
+    setFase("subiendo");
+    setLectura(null);
+    setPhotoPath(null);
+    setVista(URL.createObjectURL(file));
+    setGuardado("no");
+    try {
+      const { cuerpo, tipo } = await achicar(file);
+      const res = await fetch(`/api/t/superhman/quotes/photo`, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ type: tipo, size: cuerpo.size }),
+      });
+      if (!res.ok) throw new Error(`photo ${res.status}`);
+      const { path, token } = (await res.json()) as { path: string; token: string };
+
+      const { error } = await supabase.storage
+        .from("quotes")
+        .uploadToSignedUrl(path, token, cuerpo, { contentType: tipo });
+      if (error) throw error;
+
+      setPhotoPath(path);
+      await leer(path);
+    } catch {
+      setFase("error");
+    }
+  }
+
+  async function leer(path: string) {
+    setFase("leyendo");
+    try {
+      const res = await fetch(`/api/t/superhman/quotes/analyze`, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ path, job: job.id }),
+      });
+      if (!res.ok) throw new Error(`analyze ${res.status}`);
+      setLectura((await res.json()) as Lectura);
+      setFase("lista");
+    } catch {
+      setFase("error");
+    }
+  }
+
+  function sacarFoto() {
+    setVista(null);
+    setPhotoPath(null);
+    setLectura(null);
+    setFase("nada");
+    if (fileInput.current) fileInput.current.value = "";
+  }
+
   async function guardar() {
     setGuardando(true);
     try {
-      const res = await fetch("/api/t/superhman/quotes", {
+      const res = await fetch(`/api/t/superhman/quotes`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-code": code },
+        headers: headers(),
         body: JSON.stringify({
           job: job.id,
           quantity: r.cantidad,
           options: sel,
           total: r.total,
+          description: descripcion,
+          photo_path: photoPath,
+          photo_read: lectura,
         }),
       });
       setGuardado(res.ok ? "si" : "error");
@@ -160,6 +300,116 @@ export function QuoteTool() {
           </button>
         ))}
       </div>
+
+      {/* Lo que pidió el cliente, con sus palabras. Dentro de seis meses es
+          esto, y no las opciones, lo que explica por qué el número fue ese. */}
+      <div className="q-desc">
+        <label htmlFor="q-d">Qué pidió el cliente</label>
+        <textarea
+          id="q-d"
+          rows={3}
+          value={descripcion}
+          onChange={(e) => {
+            setDescripcion(e.target.value);
+            setGuardado("no");
+          }}
+          placeholder="Lo que te dijo, tal cual. Dirección, piso, a qué hora puede."
+        />
+      </div>
+
+      {/* La foto. No cotiza: describe, cuenta y dice qué preguntar. */}
+      <div className="q-foto">
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          hidden
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void subirFoto(f);
+          }}
+        />
+        {vista ? (
+          <div className="q-foto-hay">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={vista} alt="Foto del trabajo" />
+            <div>
+              <p className="q-estado">
+                {fase === "subiendo" && "Subiendo…"}
+                {fase === "leyendo" && "Mirando la foto…"}
+                {fase === "error" && "No se pudo leer. La foto quedó guardada igual."}
+                {fase === "sinalmacen" && "No hay dónde guardarla: falta configurar el almacén."}
+                {fase === "lista" && (lectura ? "Leída" : "Guardada")}
+              </p>
+              <div className="q-foto-btns">
+                {photoPath && fase !== "leyendo" && (
+                  <button type="button" onClick={() => void leer(photoPath)}>
+                    {lectura ? "Leer de nuevo" : "Leer la foto"}
+                  </button>
+                )}
+                <button type="button" onClick={sacarFoto}>
+                  Sacarla
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <button type="button" className="q-foto-add" onClick={() => fileInput.current?.click()}>
+            Agregar foto del trabajo
+          </button>
+        )}
+      </div>
+
+      {lectura && (
+        <div className="q-lectura">
+          {lectura.resumen && <p className="q-resumen">{lectura.resumen}</p>}
+
+          {lectura.alertas.length > 0 && (
+            <ul className="q-ojo">
+              {lectura.alertas.map((a) => (
+                <li key={a}>{a}</li>
+              ))}
+            </ul>
+          )}
+
+          {lectura.preguntar.length > 0 && (
+            <div className="q-preguntar">
+              <h3>Preguntale al cliente</h3>
+              <ul>
+                {lectura.preguntar.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {(pendientes.length > 0 || proponeCantidad) && (
+            <div className="q-sug">
+              <h3>¿Es esto? Tocá para aplicarlo</h3>
+              <div className="q-sug-btns">
+                {proponeCantidad && (
+                  <button type="button" onClick={() => setCantidad(lectura.piezas!)}>
+                    {lectura.piezas} {job.perUnit?.label.toLowerCase() ?? "piezas"}
+                  </button>
+                )}
+                {pendientes.map((s) => (
+                    <button
+                      key={`${s.choice}-${s.option}`}
+                      type="button"
+                      onClick={() => {
+                        const c = job.choices.find((x) => x.id === s.choice);
+                        set(s.choice, s.option, Boolean(c?.multiple));
+                      }}
+                    >
+                      {etiqueta(s.choice, s.option)}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {job.perUnit && (
         <div className="q-qty">
