@@ -1,0 +1,142 @@
+/*
+  Cotizador interno.
+
+  Hoja aparte de `superhman.css` a propósito: eso es la marca, esto es una
+  herramienta de trabajo. Se usa con el teléfono en una mano, parado en la
+  puerta de un cliente o mirando una foto que acaba de llegar por WhatsApp,
+  así que acá manda el dedo gordo: botones grandes, texto que se lee con sol,
+  y el precio siempre visible sin tener que buscarlo.
+*/
+
+.q, .q-gate {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 1.1rem max(16px, env(safe-area-inset-left, 0px)) 7.5rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+/* ---- puerta ---- */
+.q-gate { padding-block: 4rem; align-content: start; }
+.q-gate h1 { font-size: 1.7rem; font-weight: 800; }
+.q-gate p { color: var(--sh-muted); margin-top: -0.6rem; }
+.q-gate input {
+  font: inherit; font-size: 1.05rem; padding: 0.8rem 0.9rem; width: 100%;
+  border: 2px solid var(--sh-line); border-radius: 6px; background: #fff; color: var(--sh-ink);
+}
+.q-gate input:focus-visible { outline: 2px solid var(--sh-hero); outline-offset: 1px; border-color: var(--sh-hero); }
+.q-gate button {
+  font: inherit; font-weight: 800; font-size: 1.05rem; color: #fff; background: var(--sh-ink);
+  border: 0; border-radius: 6px; padding: 0.85rem; cursor: pointer; min-height: 48px;
+}
+
+/* ---- encabezado ---- */
+.q-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+.q-top h1 { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.01em; }
+.q-top span { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sh-hero-ink); }
+
+/* ---- botones de opción (trabajos, opciones, idiomas) ---- */
+.q-jobs, .q-opts, .q-langs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.q-jobs button, .q-opts button, .q-langs button {
+  font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  color: var(--sh-ink); background: #fff; border: 2px solid var(--sh-line);
+  border-radius: 6px; padding: 0.6rem 0.8rem; min-height: 46px;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.q-jobs button:hover, .q-opts button:hover, .q-langs button:hover { border-color: #cfc7bd; }
+.q-jobs button.on, .q-opts button.on, .q-langs button.on {
+  background: var(--sh-ink); border-color: var(--sh-ink); color: #fff;
+}
+.q-opts button i { font-style: normal; font-size: 0.8rem; font-weight: 700; color: var(--sh-hero-ink); }
+.q-opts button.on i { color: #ffb08a; }
+.q-jobs button { flex: 1 1 8.5rem; justify-content: center; text-align: center; }
+
+/* ---- cantidad ---- */
+.q-qty { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  background: #fff; border: 2px solid var(--sh-line); border-radius: 6px; padding: 0.5rem 0.5rem 0.5rem 0.9rem; }
+.q-qty label { font-weight: 700; font-size: 0.95rem; }
+.q-qty > div { display: flex; align-items: center; gap: 0.25rem; }
+.q-qty button {
+  font: inherit; font-size: 1.5rem; line-height: 1; font-weight: 700; cursor: pointer;
+  width: 46px; height: 46px; border: 2px solid var(--sh-line); border-radius: 6px;
+  background: #fff; color: var(--sh-ink);
+}
+.q-qty output { font-size: 1.25rem; font-weight: 800; min-width: 2.2rem; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* ---- grupos ---- */
+.q-group { border: 0; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+.q-group legend {
+  padding: 0; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--sh-muted);
+}
+
+/* ---- precio ---- */
+.q-total {
+  background: var(--sh-ink); color: #fff; border-radius: 8px; padding: 1rem 1.1rem;
+  display: grid; gap: 0.85rem;
+}
+.q-amount { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.q-amount span { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9aa2ad; }
+.q-amount strong { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.q-break { list-style: none; margin: 0; padding: 0.85rem 0 0; border-top: 1px solid #2a3038; display: grid; gap: 0.4rem; }
+.q-break li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.88rem; color: #c6ccd4; }
+.q-break li b { font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.q-break li.q-min span, .q-break li.q-min b { color: #ffb08a; }
+
+/* ---- avisos ---- */
+.q-warn { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.q-warn li {
+  background: #fff4ed; border: 2px solid var(--sh-hero); border-left-width: 6px; border-radius: 6px;
+  padding: 0.7rem 0.85rem; font-size: 0.92rem; font-weight: 600; color: #7a2b00; line-height: 1.5;
+}
+
+/* ---- mensaje al cliente ---- */
+.q-msg { display: grid; gap: 0.5rem; }
+.q-langs { align-items: center; }
+.q-msg textarea {
+  font: inherit; font-size: 0.95rem; line-height: 1.55; width: 100%; resize: vertical;
+  background: #fff; color: var(--sh-ink); border: 2px solid var(--sh-line); border-radius: 6px; padding: 0.8rem 0.9rem;
+}
+
+/* ---- guardar ---- */
+.q-save { display: grid; gap: 0.5rem; justify-items: start; }
+.q-save button {
+  font: inherit; font-weight: 800; font-size: 1rem; color: #fff; background: var(--sh-ink);
+  border: 0; border-radius: 6px; padding: 0.8rem 1.3rem; cursor: pointer; min-height: 48px;
+}
+.q-save button:disabled { opacity: 0.55; cursor: default; }
+.q-save .ok { font-size: 0.85rem; color: var(--sh-ok); font-weight: 600; }
+.q-save .bad { font-size: 0.85rem; color: #a32d00; font-weight: 600; }
+
+/* ---- barra fija ----
+   El precio y el copiar quedan siempre al alcance del pulgar, aunque estés
+   arriba de todo tocando opciones. En un trabajo que no hay que tomar, la
+   barra cambia de cara: no muestra precio y no deja copiar. */
+.q-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--sh-ink); color: #fff;
+  border-top: 3px solid var(--sh-hero);
+  padding: 0.7rem max(16px, env(safe-area-inset-left, 0px));
+  padding-bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.q-bar > strong { font-size: 1.8rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.q-bar button {
+  font: inherit; font-weight: 800; font-size: 1rem; color: #fff; background: var(--sh-hero);
+  border: 0; border-radius: 6px; padding: 0.7rem 1.2rem; cursor: pointer; min-height: 48px;
+}
+.q-bar button:hover { background: #e04e10; }
+.q-bar.blocked { background: #7a2b00; border-top-color: #ffb08a; }
+.q-bar.blocked > strong { font-size: 1.15rem; letter-spacing: 0.01em; }
+.q-bar.blocked button { background: #ffb08a; color: #3d1500; }
+.q-bar.blocked button:hover { background: #ffc4a8; }
+
+@media (min-width: 40rem) {
+  .q-bar { max-width: 34rem; margin: 0 auto; border-radius: 8px 8px 0 0; border-inline: 1px solid #2a3038; }
+}
+
+@media (min-width: 40rem) {
+  .q { gap: 1.25rem; }
+  .q-amount strong { font-size: 3rem; }
+}
