@@ -63,6 +63,9 @@ export async function saveQuote(tenant: Tenant, request: Request): Promise<Respo
   const delCliente = Number(dado.total);
   const descuadre = Number.isFinite(delCliente) && delCliente !== r.total;
 
+  const texto = (v: unknown, max: number) =>
+    typeof v === "string" && v.trim() ? v.trim().slice(0, max) : null;
+
   const { data, error } = await adminDb()
     .from("quotes")
     .insert({
@@ -71,6 +74,13 @@ export async function saveQuote(tenant: Tenant, request: Request): Promise<Respo
       quantity: cantidad,
       options,
       total: r.total,
+      // Lo que pidió el cliente con sus palabras. Dentro de seis meses es
+      // esto, y no las opciones, lo que explica por qué el número fue ese.
+      description: texto(dado.description, 4000),
+      photo_path: texto(dado.photo_path, 500),
+      // Lo que leyó la IA va aparte de lo que dijo el cliente: una cosa es un
+      // hecho y la otra una suposición, y conviene no mezclarlas.
+      photo_read: dado.photo_read && typeof dado.photo_read === "object" ? dado.photo_read : null,
       notes: descuadre ? `el telefono mostro $${delCliente}` : null,
     })
     .select("id")

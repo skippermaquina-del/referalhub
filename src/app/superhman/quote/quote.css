@@ -71,6 +71,68 @@
   letter-spacing: 0.07em; color: var(--sh-muted);
 }
 
+/* ---- lo que pidio el cliente ---- */
+.q-desc { display: grid; gap: 0.4rem; }
+.q-desc label, .q-foto-add, .q-lectura h3 {
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--sh-muted);
+}
+.q-desc textarea {
+  font: inherit; font-size: 0.98rem; line-height: 1.5; width: 100%; resize: vertical;
+  background: #fff; color: var(--sh-ink); border: 2px solid var(--sh-line);
+  border-radius: 6px; padding: 0.7rem 0.8rem;
+}
+.q-desc textarea::placeholder { color: #a9a29a; }
+
+/* ---- la foto ---- */
+.q-foto-add {
+  width: 100%; font-family: inherit; cursor: pointer; min-height: 52px;
+  background: #fff; border: 2px dashed #cfc7bd; border-radius: 6px; padding: 0.9rem;
+  color: var(--sh-muted);
+}
+.q-foto-add:hover { border-color: var(--sh-hero); color: var(--sh-hero-ink); }
+.q-foto-hay { display: flex; gap: 0.8rem; align-items: flex-start; }
+.q-foto-hay img {
+  width: 96px; height: 96px; object-fit: cover; flex: none;
+  border-radius: 6px; border: 2px solid var(--sh-line); background: #fff;
+}
+.q-foto-hay > div { display: grid; gap: 0.5rem; min-width: 0; }
+.q-estado { font-size: 0.9rem; color: var(--sh-muted); }
+.q-foto-btns { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.q-foto-btns button {
+  font: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; min-height: 40px;
+  background: #fff; color: var(--sh-ink); border: 2px solid var(--sh-line);
+  border-radius: 6px; padding: 0.4rem 0.75rem;
+}
+.q-foto-btns button:hover { border-color: #cfc7bd; }
+
+/* ---- lo que leyo de la foto ----
+   Deliberadamente no se parece al recuadro del precio: es una suposicion de
+   una maquina, no un numero. La diferencia tiene que verse. */
+.q-lectura {
+  background: #fff; border: 2px solid var(--sh-line); border-radius: 8px;
+  padding: 0.9rem 1rem; display: grid; gap: 0.9rem;
+}
+.q-resumen { font-size: 0.95rem; line-height: 1.55; }
+.q-lectura h3 { margin-bottom: 0.45rem; }
+.q-ojo, .q-preguntar ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.q-ojo li {
+  font-size: 0.92rem; font-weight: 600; color: #7a2b00; line-height: 1.45;
+  background: #fff4ed; border-left: 4px solid var(--sh-hero); border-radius: 0 4px 4px 0;
+  padding: 0.5rem 0.7rem;
+}
+.q-preguntar li {
+  font-size: 0.93rem; line-height: 1.45; padding-left: 1.1rem; position: relative;
+}
+.q-preguntar li::before { content: "?"; position: absolute; left: 0; font-weight: 800; color: var(--sh-hero-ink); }
+.q-sug-btns { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.q-sug-btns button {
+  font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; min-height: 42px;
+  background: #fff; color: var(--sh-ink); border: 2px dashed var(--sh-hero);
+  border-radius: 6px; padding: 0.45rem 0.8rem;
+}
+.q-sug-btns button:hover { background: #fff4ed; }
+
 /* ---- precio ---- */
 .q-total {
   background: var(--sh-ink); color: #fff; border-radius: 8px; padding: 1rem 1.1rem;
