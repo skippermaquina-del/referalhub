@@ -240,6 +240,98 @@ export const JOBS: Job[] = [
       },
     ],
   },
+  {
+    id: "focos",
+    label: "Cambiar focos y luces",
+    name: { en: "Light bulbs replaced", es: "Focos cambiados", ru: "Замена лампочек" },
+    base: 70,
+    perUnit: { label: "Cuántas luces", max: 20 },
+    choices: [
+      {
+        id: "que",
+        label: "Qué hay que hacer",
+        options: [
+          { id: "bombilla", fromPhoto: true, label: "Solo cambiar la bombilla", delta: 0 },
+          { id: "bombillas", label: "Bombillas que compro yo", delta: 20, warn: "Las bombillas las paga el cliente aparte, con recibo. Sacale foto al zócalo antes de ir a comprarlas." },
+          {
+            id: "artefacto",
+            fromPhoto: true,
+            block: true,
+            label: "Cambiar o colgar el artefacto de luz",
+            delta: 0,
+            warn: "NO. Cambiar un artefacto es contratación eléctrica (Cap. 489, Parte II) y la exención de trabajo menor NO la cubre: ahí no hay monto chico que te salve. Pasale un electricista.",
+          },
+          {
+            id: "falta",
+            fromPhoto: true,
+            block: true,
+            label: "Falta un artefacto entero (base vacía)",
+            delta: 0,
+            warn: "NO. Colgar el artefacto que falta es trabajo eléctrico, igual que cambiarlo. Pasale un electricista.",
+          },
+        ],
+      },
+      {
+        id: "altura",
+        label: "A qué altura",
+        options: [
+          { id: "normal", fromPhoto: true, label: "Se llega con escalera chica", delta: 0 },
+          { id: "alto", fromPhoto: true, label: "Techo alto o escalera grande", delta: 40, warn: "Techo alto con escalera grande: no vayas solo si tenés que estirarte." },
+          { id: "colgante", fromPhoto: true, label: "Colgante sobre barra o mesada", delta: 25, warn: "Arriba de una mesada de piedra, tapala. Un foco que cae la pica." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "plomeria",
+    label: "Plomería menor",
+    name: { en: "Minor plumbing repair", es: "Arreglo de plomería", ru: "Мелкий сантехнический ремонт" },
+    base: 110,
+    choices: [
+      {
+        id: "que",
+        label: "Qué hay que hacer",
+        options: [
+          { id: "junta", label: "Junta, O-ring o cartucho de canilla", delta: 0 },
+          { id: "aireador", label: "Aireador o cabezal de ducha", delta: 0 },
+          { id: "flexible", label: "Manguera flexible de alimentación", delta: 15, warn: "Cerrá las llaves de paso y probá que cierren de verdad ANTES de desarmar nada." },
+          { id: "inodoro", label: "Herrajes del inodoro (flotante, sapito)", delta: 20 },
+          { id: "canilla", label: "Cambiar la canilla entera", delta: 60, warn: "Canilla entera: confirmá que las llaves de paso cierren, y que abajo del bacha haya lugar para la llave." },
+          { id: "destapar", label: "Destapar un desagüe", delta: 40, warn: "Destapar con chupón o sonda de mano está bien. Si hay que sacar el inodoro o abrir el sifón de pared, ya no." },
+          {
+            id: "caneria",
+            block: true,
+            label: "Mover o agregar cañería",
+            delta: 0,
+            warn: "NO. La exención cubre reparaciones menores, no líneas nuevas ni mover cañería. Eso es plomería con licencia.",
+          },
+          {
+            id: "abrirpared",
+            block: true,
+            label: "Hay que abrir la pared o el piso",
+            delta: 0,
+            warn: "NO. Si hay que abrir para llegar al caño, ya no es una reparación menor. Pasale un plomero.",
+          },
+          {
+            id: "calefon",
+            block: true,
+            label: "Calentador de agua",
+            delta: 0,
+            warn: "NO. Lleva permiso, y lo que lleva permiso necesita licencia aunque salga barato.",
+          },
+        ],
+      },
+      {
+        id: "estado",
+        label: "Cómo está",
+        options: [
+          { id: "sano", fromPhoto: true, label: "Se ve sano", delta: 0 },
+          { id: "oxido", fromPhoto: true, label: "Hay óxido o verdín en las bases", delta: 35, warn: "Las tuercas oxidadas se parten. Llevá repuestos y avisale al cliente ANTES de empezar que puede aparecer más trabajo." },
+          { id: "viejo", fromPhoto: true, label: "Instalación vieja, todo duro", delta: 45, warn: "Instalación vieja: una llave de paso que no cerró en 20 años puede no cerrar hoy. Si gotea, parás y llamás al plomero." },
+        ],
+      },
+    ],
+  },
 ];
 
 /** Recargos que aplican a cualquier trabajo. */
