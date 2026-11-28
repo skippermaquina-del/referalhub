@@ -1,0 +1,67 @@
+<!doctype html>
+<!--
+  SUPERHMAN — pantalla de pedido de reseña. 1080 x 1920 px.
+
+  No es una pieza impresa: es una imagen para el carrete del teléfono. Se abre
+  delante del cliente, al terminar el trabajo, y él escanea desde su propio
+  teléfono. Por eso el QR es enorme y el fondo es blanco: un lector necesita
+  oscuro sobre claro y mucho contraste para funcionar al sol, de un teléfono a
+  otro, con las dos pantallas brillando.
+
+  Por lo mismo la marca va chica abajo. Esta pantalla no vende nada: pide una
+  cosa sola y tiene que leerse en dos segundos.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — QR de reseña</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{ --ink:#0E1116; --hero:#FF5C1A; --muted:#6B6560; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:100vw;height:100vh;background:#FFFFFF;color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;overflow:hidden;padding:4vh 6vw;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .ask{font-size:5.4vh;font-weight:800;line-height:1.08;letter-spacing:-.02em}
+  .ask b{color:var(--hero)}
+  .sub{margin-top:2vh;font-size:2.7vh;font-weight:500;color:var(--muted);line-height:1.35}
+  /* Se mide por el ANCHO de la pantalla, no por el alto: en un teléfono
+     vertical el alto es casi el doble y un QR en vh se desborda a los lados. */
+  .qr{width:76vw;height:76vw;margin:4vh 0 2.6vh;display:block}
+  .scan{
+    font-size:2.3vh;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--hero);text-indent:.22em;
+  }
+  /* En el flujo normal, no absoluto: así no se le monta al QR. */
+  .foot{margin-top:4vh;display:flex;align-items:center;gap:1.4vh}
+  .mark{width:4vh;height:4vh;color:var(--hero);display:block}
+  .wordmark{font-size:2.3vh;font-weight:800;letter-spacing:.14em;color:var(--ink)}
+  .wordmark i{font-style:normal;color:var(--hero)}
+</style>
+</head>
+<body>
+  <div class="ask">¿Quedó bien?<br><b>Contalo en 30 segundos.</b></div>
+  <div class="sub">Was it done right?<br>Tell Google in 30 seconds.</div>
+
+  <!-- ==== EDIT ME: el enlace de reseña de Google ==== -->
+  <img class="qr" data-qr="https://g.page/r/CYUzmnfGGnkCEBM/review" src="./assets/qr-resena.svg" alt="">
+
+  <div class="scan">Escaneá · Scan me</div>
+
+  <div class="foot">
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <span class="wordmark">SUPER<i>H</i>MAN</span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<!--
+  SUPERHMAN — protocolo de trabajo. A4 vertical (210 x 297 mm).
+
+  Para el parasol de la van, al lado de la chuleta de los tres idiomas. No es
+  material para el cliente: es para mirarlo en el momento, con el teléfono
+  sonando o parado en la puerta de una casa.
+
+  Por eso está en castellano, numerado, y con frases cortas. El paso 6 lleva
+  tratamiento propio porque es donde se pierde la plata: el que empieza a
+  trabajar antes de re-cotizar ya no puede pedir más sin parecer que lo estiró.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SUPERHMAN — protocolo</title>
+<style>
+  @font-face{
+    font-family:'Archivo';
+    src:url('./assets/archivo.woff2') format('woff2');
+    font-weight:400 900; font-stretch:62% 125%; font-display:block;
+  }
+  :root{
+    --paper:#FBF8F4; --ink:#0E1116; --hero:#FF5C1A; --hero-ink:#C23A05;
+    --muted:#6B6560; --line:#E2DCD4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{ size:210mm 297mm; margin:0 }
+  html{font-family:'Archivo',system-ui,sans-serif}
+  body{
+    width:210mm;height:297mm;background:var(--paper);color:var(--ink);
+    padding:12mm 13mm;display:flex;flex-direction:column;overflow:hidden;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+
+  header{display:flex;align-items:center;gap:3mm;border-bottom:1mm solid var(--ink);padding-bottom:3mm}
+  .mark{width:9mm;height:9mm;color:var(--hero);flex:none}
+  .brand{font-size:13pt;font-weight:800;letter-spacing:.14em}
+  .brand i{font-style:normal;color:var(--hero)}
+  .title{margin-left:auto;font-size:10pt;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+  /* La decisión de arriba de todo: no se cobra visita, se cotiza por foto. */
+  .rule0{
+    margin-top:5mm;background:var(--ink);color:#F4F1EE;border-radius:2mm;
+    padding:5mm 6mm;display:flex;align-items:baseline;gap:5mm;
+  }
+  .rule0 b{color:var(--hero);font-size:11pt;font-weight:800;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+  .rule0 p{font-size:14.5pt;font-weight:600;line-height:1.35}
+  .rule0 span{color:#B8B2AC;font-weight:500}
+
+  .cols{display:flex;gap:9mm;margin-top:6mm;flex:1;min-height:0}
+  .col{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:6.5mm;min-width:0}
+
+  .step{display:flex;gap:3.5mm;align-items:flex-start}
+  .n{
+    font-size:20pt;font-weight:800;color:var(--hero-ink);line-height:1;
+    width:9mm;flex:none;font-variant-numeric:tabular-nums;padding-top:.4mm;
+  }
+  .t{font-size:15.5pt;font-weight:700;line-height:1.2}
+  .d{font-size:11.5pt;font-weight:500;color:var(--muted);line-height:1.35;margin-top:1mm}
+
+  /* El paso que paga el cartel. */
+  .step.key{background:#FFF0E7;border-left:1.2mm solid var(--hero);border-radius:1.5mm;padding:3.5mm 4mm 3.5mm 3mm}
+  .step.key .t{color:var(--hero-ink)}
+  .step.key .d{color:#4A443D}
+
+  .nums{margin-top:7mm;padding-top:5mm;border-top:1px solid var(--line);display:flex;gap:10mm}
+  .num{flex:1;min-width:0}
+  .num .k{font-size:9.5pt;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-ink)}
+  .num .v{font-size:15pt;font-weight:700;margin-top:1mm;line-height:1.2}
+  .num .w{font-size:11pt;font-weight:500;color:var(--muted);margin-top:1mm;line-height:1.35}
+
+  footer{margin-top:5mm;border-top:1mm solid var(--ink);padding-top:3mm;
+    font-size:11pt;font-weight:600;color:var(--muted);display:flex;gap:4mm}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+  <header>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="currentColor" fill-rule="evenodd"
+            d="M8 9h18v25h48V9h18v82H74V66H26v25H8Z M50 38 62 44v12l-12 6-12-6V44Z"/>
+    </svg>
+    <span class="brand">SUPER<i>H</i>MAN</span>
+    <span class="title">Protocolo de trabajo</span>
+  </header>
+
+  <div class="rule0">
+    <b>Regla 0</b>
+    <p>No cobres la visita. <span>Cotizá por foto y manejá solo cuando el trabajo ya está cerrado. Si no se puede ver en foto, cobrás diagnóstico y se lo descontás si te contrata.</span></p>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="step"><div class="n">1</div><div>
+        <div class="t">Contestar dentro de la hora</div>
+        <div class="d">El que contesta primero se queda con el trabajo. Gana más que el precio.</div></div></div>
+
+      <div class="step"><div class="n">2</div><div>
+        <div class="t">Pedir cuatro cosas</div>
+        <div class="d">Qué es · dónde · cuándo le viene bien · una foto. Nada más.</div></div></div>
+
+      <div class="step"><div class="n">3</div><div>
+        <div class="t">Cotizar el mismo día, con un número</div>
+        <div class="d">Nunca «depende». Un número, o un rango angosto con la condición dicha.</div></div></div>
+
+      <div class="step"><div class="n">4</div><div>
+        <div class="t">Confirmar por escrito</div>
+        <div class="d">WhatsApp: qué hacés, cuánto sale, qué día. Eso es tu contrato.</div></div></div>
+
+      <div class="step"><div class="n">5</div><div>
+        <div class="t">El día antes, confirmar</div>
+        <div class="d">Una línea. Te ahorra los viajes al vacío.</div></div></div>
+    </div>
+
+    <div class="col">
+      <div class="step key"><div class="n">6</div><div>
+        <div class="t">Mirar antes de tocar</div>
+        <div class="d">Si es más grande que la foto, <b>parás y re-cotizás antes de empezar</b>. Una vez que metiste mano ya no podés pedir más sin parecer que lo estiraste. Si dice que no, te vas sin cobrar y sin problema.</div></div></div>
+
+      <div class="step"><div class="n">7</div><div>
+        <div class="t">Foto del antes y del después</div>
+        <div class="d">Cinco minutos. Son tus reseñas, tu portfolio y tu contenido, de una.</div></div></div>
+
+      <div class="step"><div class="n">8</div><div>
+        <div class="t">Cobrar ahí mismo</div>
+        <div class="d">Zelle o efectivo. No factures para cobrar después: cobrar después es perseguir.</div></div></div>
+
+      <div class="step"><div class="n">9</div><div>
+        <div class="t">Pedir la reseña el mismo día</div>
+        <div class="d">Mientras está contento. Mostrale el QR del teléfono antes de irte.</div></div></div>
+
+    </div>
+  </div>
+
+    <div class="nums">
+      <div class="num">
+        <div class="k">Mínimo de salida</div>
+        <!-- ==== EDIT ME: mínimo ==== -->
+        <div class="v">$120</div>
+        <div class="w">Nadie maneja por $45. Si es más chico, ofrecé juntarlo con otra cosa de la casa.</div>
+      </div>
+      <div class="num">
+        <div class="k">Materiales</div>
+        <div class="v">No pongas plata tuya</div>
+        <div class="w">Lo chico va incluido. Lo grande lo compra el cliente, o con recibo a la vista.</div>
+      </div>
+    </div>
+
+  <footer>
+    <span><b>Nunca:</b> plomería · electricidad · A/C · techos</span>
+    <span style="margin-left:auto"><b>Siempre:</b> precio antes de empezar</span>
+  </footer>
+</body>
+</html>

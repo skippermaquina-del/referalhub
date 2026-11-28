@@ -31,7 +31,9 @@ const DPI = 300;
 // Brand assets rendered one-to-one at a fixed pixel size: [file, width, height].
 // Height defaults to width, so a square only needs the one number.
 const IMAGES = [["avatar.html", 2048], ["fb-cover.html", 1640, 624],
-                ["fb-cover-ilustrada.html", 1640, 624]];
+                ["fb-cover-ilustrada.html", 1640, 624],
+                // Para el carrete del teléfono, no para imprimir.
+                ["qr-resena.html", 1080, 1920]];
 // Posters printed whole AND sliced across sheets: the same artwork becomes
 // the cheap tiled version to put up today and the file a sign shop plots later.
 const POSTERS = [{
@@ -47,6 +49,7 @@ const PAGES = [
   ["print-van-logo.html", 297, 210],
   ["print-door.html", 210, 297],
   ["print-phone.html", 210, 297],
+  ["print-protocolo.html", 210, 297],
 ];
 
 function chromePath() {
@@ -276,7 +279,11 @@ try {
   }
 
   for (const [file, w, h = w] of IMAGES) {
-    if (!existsSync(join(designDir, file))) continue;
+    const imgPath = join(designDir, file);
+    if (!existsSync(imgPath)) continue;
+    // Una imagen también puede llevar QR. Sin esto el <img> apunta a un SVG
+    // que no existe y el PNG sale sin código, en silencio.
+    log.push(...(await writeQrs(readFileSync(imgPath, "utf8"))).map((l) => `QR  ${l}`));
     await cdp.send("Emulation.setDeviceMetricsOverride", {
       width: w, height: h, deviceScaleFactor: 1, mobile: false,
     });
