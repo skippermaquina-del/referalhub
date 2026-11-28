@@ -6,6 +6,7 @@ import {
   GLOBALES,
   JOBS,
   cotizar,
+  grupoVisible,
   mensaje,
   type Job,
   type Lang,
@@ -430,7 +431,7 @@ export function QuoteTool() {
         </div>
       )}
 
-      {[...job.choices, ...GLOBALES].map((c) => (
+      {[...job.choices, ...GLOBALES].filter((c) => grupoVisible(c, sel)).map((c) => (
         <fieldset className="q-group" key={`${job.id}-${c.id}`}>
           <legend>{c.label}</legend>
           <div className="q-opts">

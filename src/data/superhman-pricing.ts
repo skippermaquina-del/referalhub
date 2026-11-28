@@ -50,6 +50,16 @@ export type Choice = {
   label: string;
   /** Varias a la vez (casillas) en vez de una sola (opciones). */
   multiple?: boolean;
+  /**
+   * Mostrar este grupo solo si otro ya tiene cierto valor.
+   *
+   * No es cosmético. Un grupo que no viene al caso igual aporta su opción por
+   * defecto, con su recargo y su aviso: ajustar unas bisagras terminaba
+   * mostrando el aviso de cómo rellenar un agujero. Avisos que no
+   * corresponden enseñan a no leer los avisos, y entre ellos están los que
+   * frenan un trabajo con licencia.
+   */
+  showIf?: { choice: string; in: string[] };
   options: Option[];
 };
 
@@ -170,7 +180,7 @@ export const JOBS: Job[] = [
   {
     id: "puerta",
     label: "Arreglar puerta",
-    name: { en: "Door adjusted so it closes right", es: "Puerta ajustada para que cierre bien", ru: "Регулировка двери" },
+    name: { en: "Door repair", es: "Arreglo de la puerta", ru: "Ремонт двери" },
     base: 90,
     choices: [
       {
@@ -181,6 +191,8 @@ export const JOBS: Job[] = [
           { id: "herrajes", label: "Cambiar picaporte o cerradura", delta: 35 },
           { id: "recolgar", label: "Descolgar y volver a colgar", delta: 60 },
           { id: "marco", fromPhoto: true, label: "El marco está fuera de escuadra", delta: 95, warn: "Marco torcido puede ser asentamiento de la casa. Mirá bien antes de prometer que cierra." },
+          { id: "agujero", fromPhoto: true, label: "Agujero o golpe en la hoja", delta: 85, warn: "Va a quedar visible con luz rasante: decilo POR ESCRITO antes de empezar. Y lleva dos visitas, porque la espuma y la masilla tienen que secar." },
+          { id: "cambiarhoja", label: "Cambiar la hoja entera", delta: 150, warn: "Medí alto, ancho y espesor, y de qué lado abre. Fijate si la hoja nueva viene con los huecos del picaporte y las bisagras hechos: si no, es otra hora de trabajo." },
         ],
       },
       {
@@ -190,6 +202,16 @@ export const JOBS: Job[] = [
           { id: "interior", fromPhoto: true, label: "Interior", delta: 0 },
           { id: "exterior", fromPhoto: true, label: "Exterior", delta: 40 },
           { id: "corrediza", fromPhoto: true, label: "Corrediza de vidrio", delta: 70, warn: "Las corredizas pesan muchísimo. No la levantes solo." },
+        ],
+      },
+      {
+        id: "relleno",
+        label: "Hueca o maciza",
+        showIf: { choice: "que", in: ["agujero", "cambiarhoja"] },
+        options: [
+          { id: "hueca", fromPhoto: true, label: "Hueca (panel moldeado)", delta: 0, warn: "Hueca: adentro hay aire y cartón. Si la tapás, primero rellenás la cavidad (espuma o un refuerzo) y dejás curar, porque la masilla no se agarra de nada. Si la cambiás, la hoja sale $40-80 y queda perfecta: decile las dos opciones." },
+          { id: "maciza", fromPhoto: true, label: "Maciza o de madera", delta: 40, warn: "Maciza: la masilla tiene de dónde agarrarse, pero el color de la madera no se iguala. Si está barnizada y no pintada, avisale que se va a ver." },
+          { id: "nose", label: "No sé todavía", delta: 0, warn: "Golpeala con el nudillo: si suena a tambor es hueca. Confirmalo antes de dar el precio." },
         ],
       },
     ],
@@ -381,9 +403,18 @@ export type Resultado = {
   bloqueado: boolean;
 };
 
+/** ¿Este grupo viene al caso con lo que hay elegido? */
+export function grupoVisible(choice: Choice, sel: Seleccion): boolean {
+  if (!choice.showIf) return true;
+  const valor = sel[choice.showIf.choice];
+  const actuales = Array.isArray(valor) ? valor : [valor];
+  return actuales.some((v) => typeof v === "string" && choice.showIf!.in.includes(v));
+}
+
 function opcionesElegidas(choices: Choice[], sel: Seleccion): Option[] {
   const out: Option[] = [];
   for (const c of choices) {
+    if (!grupoVisible(c, sel)) continue;
     const v = sel[c.id];
     if (v === undefined) continue;
     const ids = Array.isArray(v) ? v : [v];

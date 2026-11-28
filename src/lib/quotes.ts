@@ -13,7 +13,7 @@
  */
 
 import { adminDb } from "@/lib/admin";
-import { GLOBALES, JOBS, cotizar, type Job, type Seleccion } from "@/data/superhman-pricing";
+import { GLOBALES, JOBS, cotizar, grupoVisible, type Job, type Seleccion } from "@/data/superhman-pricing";
 import type { Tenant } from "@/lib/tenants";
 
 const OUTCOMES = ["accepted", "rejected", "no_reply"] as const;
@@ -25,6 +25,9 @@ function limpiarOpciones(job: Job, raw: unknown): Seleccion {
   const limpio: Seleccion = {};
 
   for (const choice of [...job.choices, ...GLOBALES]) {
+    // Un grupo que no viene al caso no se guarda: si no, la fila diría que la
+    // puerta era hueca en un trabajo donde eso nunca se preguntó.
+    if (!grupoVisible(choice, dado as Seleccion)) continue;
     const validas = new Set(choice.options.map((o) => o.id));
     const valor = dado[choice.id];
 
